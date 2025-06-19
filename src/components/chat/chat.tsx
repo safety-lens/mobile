@@ -1,0 +1,166 @@
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Message from './message';
+import NewObservation from '../observationNew';
+import { ChatResponse, NewMessage, ResponseContentItem } from '@/types/chatTypes';
+import { Colors } from '@/constants/Colors';
+import { useTranslation } from 'react-i18next';
+import { TextInput } from 'react-native-paper';
+import { getValueStorage } from '@/utils/storage';
+import { useApiObservations } from '@/axios/api/observations';
+import { Message as IMessage } from '@/types/chatTypes';
+// import GradualAnimationTwo from '../GradualAnimation';
+import { KeyboardAnimationTest } from '../GradualAnimationText';
+
+const dataLang = { en: 'English', es: 'Spanish' };
+interface IChat {
+  startChatResponse?: ChatResponse;
+  loading?: boolean;
+  clearMessages?: () => void;
+}
+
+export default function Chat({ startChatResponse, loading, clearMessages }: IChat) {
+  const { t } = useTranslation();
+
+  const [searchText, setSearchText] = useState('');
+  const [messages, setMessagesNew] = useState<IMessage[]>([]);
+
+  const [loadedObservationImage, setLoadedObservationImage] = useState<string>('');
+
+  const { id } = startChatResponse || {};
+
+  const { startChat, isLoading } = useApiObservations();
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+  };
+
+  const sendMessage = async () => {
+    if (!id) return;
+    const lang = (await getValueStorage('language')) as 'en' | 'es';
+
+    const message: NewMessage = {
+      role: 'user',
+      content: [
+        {
+          type: 'text',
+          text: searchText,
+        },
+      ],
+    };
+    const messageResponse = await startChat({
+      conversation: id,
+      message,
+      language: dataLang[lang || 'en'],
+    });
+
+    setMessagesNew(messageResponse?.messages || []);
+    setSearchText('');
+  };
+
+  useEffect(() => {
+    setMessagesNew(startChatResponse?.messages || []);
+    setLoadedObservationImage(
+      (startChatResponse?.messages[0]?.content?.[0] as ResponseContentItem)?.image_url
+        ?.url as string
+    );
+  }, [startChatResponse]);
+
+  return (
+    <View style={styles.inner}>
+      <FlatList
+        data={messages}
+        contentContainerStyle={{
+          marginHorizontal: 6,
+          marginTop: 12,
+          gap: 32,
+          flexGrow: 1,
+          flexDirection: 'column-reverse',
+          // justifyContent: 'flex-end',
+        }}
+        keyboardDismissMode="interactive"
+        keyExtractor={(item, index) => `${item.id}-${index}`}
+        renderItem={({ item }) => <Message key={item.id} item={item} />}
+        showsVerticalScrollIndicator={false}
+        inverted={true}
+      />
+      {loading && <Text>...</Text>}
+      <View style={{ backgroundColor: 'white' }}>
+        {loadedObservationImage && (
+          <NewObservation
+            loadedObservationImage={loadedObservationImage}
+            clearMessages={clearMessages}
+          />
+        )}
+        <View style={styles.searchInputField}>
+          <TextInput
+            mode="outlined"
+            multiline={searchText.length > 30}
+            outlineStyle={styles.textInputOutline}
+            value={searchText}
+            contentStyle={{
+              color: 'black',
+            }}
+            textColor="black"
+            onChangeText={handleSearch}
+            right={
+              <TextInput.Icon
+                icon="send"
+                forceTextInputFocus
+                onPress={searchText.trim().length === 0 ? undefined : sendMessage}
+                loading={isLoading}
+                color="white"
+                style={[
+                  styles.sendButton,
+                  { opacity: searchText.trim().length === 0 ? 0.5 : 1 },
+                ]}
+              />
+            }
+          />
+        </View>
+        <View>
+          <Text style={styles.disclaimerText}>{t('resultDisclaimer')}</Text>
+        </View>
+        {/* <GradualAnimationTwo /> */}
+        <KeyboardAnimationTest value={230} />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  inner: {
+    flex: 1,
+    paddingBottom: 6,
+    overflow: 'hidden',
+  },
+
+  disclaimerText: {
+    marginVertical: 6,
+    color: Colors.light.gray,
+    textAlign: 'center',
+  },
+  searchInputField: {
+    position: 'relative',
+    backgroundColor: 'white',
+    borderRadius: 14,
+    marginTop: 12,
+
+    shadowColor: '#CEB4FB85',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 14.0,
+
+    elevation: 24,
+  },
+  sendButton: {
+    transform: [{ rotate: '-90deg' }],
+    backgroundColor: '#022140',
+  },
+  textInputOutline: {
+    display: 'none',
+  },
+});

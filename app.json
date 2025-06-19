@@ -1,0 +1,111 @@
+{
+  "expo": {
+    "newArchEnabled": true,
+    "name": "Safety Lens",
+    "slug": "safetylens-mobile",
+    "version": "1.0.4",
+    "orientation": "portrait",
+    "icon": "./assets/images/adaptive-icon.png",
+    "scheme": "safetylensmobile",
+    "platforms": ["ios", "android"],
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "safetylensmobile",
+      "version": "1.0.4",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to let you select and upload images.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "associatedDomains": [
+        "applinks:staging.safetylens.ai",
+        "applinks:safetylens.ai",
+        "applinks:app.safetylens.ai"
+      ]
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "package": "com.safetylensmobile",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "safetylens.ai"
+            },
+            {
+              "scheme": "https",
+              "host": "app.safetylens.ai"
+            },
+            {
+              "scheme": "https",
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/forgot-password"
+            },
+            {
+              "scheme": "https",
+              "host": "safetylens.ai",
+              "pathPrefix": "/forgot-password"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/icon.png",
+      "deepLink": ["https://staging.safetylens.ai", "https://safetylens.ai"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "SafetyLens uses your camera to capture images of work areas, which are analyzed to detect hazards and offer OSHA compliance recommendations.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-router"
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "SafetyLens accesses your photo library to allow you to upload and save hazard images for documentation and compliance reporting"
+        }
+      ],
+      "expo-localization"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7cfb5678-b978-4df9-ab0e-fd90c6ef10d2"
+      }
+    }
+  }
+}
