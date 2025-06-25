@@ -9,6 +9,7 @@ import {
   View,
   Alert,
   Keyboard,
+  Platform,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +49,7 @@ export default function Chat() {
     setConversationId(null);
     setSearchText('');
     setPreviewUri(null);
-    router.push('/auth/projects');
+    router.replace('/auth/projects');
   };
 
   const backPathOnClick = () => {
@@ -73,7 +74,9 @@ export default function Chat() {
   };
 
   const getConversationIdData = async () => {
+    if (conversationId) return conversationId;
     const res = await getConversationId({ accountId: user?.account.id || '' });
+    setConversationId(res?.id || null);
     return res?.id || null;
   };
 
@@ -83,9 +86,7 @@ export default function Chat() {
     const formData = previewUri && formDataFunc(previewUri);
     const image = formData && (await uploads({ file: formData }));
 
-    const res = await getConversationIdData();
-
-    const idConversation = id || res;
+    const idConversation = id || (await getConversationIdData());
 
     const message: NewMessage = {
       // role: user?.user.accountRole as 'user' | 'admin' | 'system' | 'assistant',
@@ -233,16 +234,24 @@ const styles = StyleSheet.create({
 
     marginTop: 10,
 
-    shadowColor: '#CEB4FB85',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 14.0,
-
-    elevation: 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#CEB4FB85',
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 14,
+        elevation: 24,
+      },
+      android: {
+        shadowColor: '#9055f6',
+        elevation: 10,
+      },
+    }),
   },
+
   sendButton: {
     transform: [{ rotate: '-90deg' }],
     backgroundColor: '#022140',

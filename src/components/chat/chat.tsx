@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Message from './message';
 import NewObservation from '../observationNew';
@@ -71,7 +71,6 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
       <FlatList
         data={messages}
         contentContainerStyle={{
-          marginHorizontal: 6,
           marginTop: 12,
           gap: 32,
           flexGrow: 1,
@@ -85,7 +84,7 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
         inverted={true}
       />
       {loading && <Text>...</Text>}
-      <View style={{ backgroundColor: 'white' }}>
+      <View>
         {loadedObservationImage && (
           <NewObservation
             loadedObservationImage={loadedObservationImage}
@@ -146,15 +145,22 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     marginTop: 12,
 
-    shadowColor: '#CEB4FB85',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 14.0,
-
-    elevation: 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#CEB4FB85',
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 14,
+        elevation: 24,
+      },
+      android: {
+        shadowColor: '#9055f6',
+        elevation: 4,
+      },
+    }),
   },
   sendButton: {
     transform: [{ rotate: '-90deg' }],

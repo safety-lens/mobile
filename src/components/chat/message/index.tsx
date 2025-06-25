@@ -20,7 +20,7 @@ export default function Message({ item }: IMessage) {
   }
 
   return (
-    <>
+    <View>
       <View>
         {typeof item.content !== 'string' &&
           item.content?.map((content) => (
@@ -48,7 +48,7 @@ export default function Message({ item }: IMessage) {
           }
         />
       </View>
-    </>
+    </View>
   );
 }
 

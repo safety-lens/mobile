@@ -53,9 +53,17 @@ export default function ChatList() {
     }, [])
   );
 
+  const backPathOnClick = () => {
+    router.back();
+  };
+
   return (
     <ScreenLayout>
-      <ScreenTopNav title={t('chat')} backPath={'/auth/chat'} />
+      <ScreenTopNav
+        title={t('chat')}
+        backPathOnClick={backPathOnClick}
+        isRoutable={false}
+      />
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         style={styles.mainBox}
@@ -67,6 +75,7 @@ export default function ChatList() {
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
             renderItem={({ item }) => (
               <TouchableOpacity
+                key={item._id}
                 onPress={() =>
                   router.push({
                     pathname: '/auth/chat',

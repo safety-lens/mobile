@@ -47,8 +47,8 @@ export default function MessageMarkdown({ text, customExpand, onChange }: IMessa
           lineHeight: 24,
         },
         bullet_list_icon: {
-          paddingTop: 15,
-          fontSize: 48,
+          paddingTop: 8,
+          fontSize: 32,
         },
       }}
       rules={customRules}
