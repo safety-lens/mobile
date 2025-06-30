@@ -108,7 +108,7 @@ export default function ObservationAction({
         selectedStatus={observation.status}
         projectId={observationId}
         observationId={observation._id}
-        value={observation.comment}
+        value={observation.locationComment}
         title={t('editComment')}
         visible={visibleEditComment}
         hideModal={showEditCommentModal}

@@ -57,27 +57,6 @@ export default function DropdownItem({
         </Text>
       )}
       <Dropdown
-        renderInputSearch={() => (
-          <View style={styles.searchContainer}>
-            <TextInput
-              value={searchText}
-              underlineStyle={{ display: 'none' }}
-              textColor="black"
-              style={styles.searchInputField}
-              placeholder={!isFocus ? placeholder : '...'}
-              onChangeText={handleSearch}
-              right={
-                searchText.length && (
-                  <TextInput.Icon
-                    icon="close"
-                    onPress={handleClear}
-                    forceTextInputFocus
-                  />
-                )
-              }
-            />
-          </View>
-        )}
         itemTextStyle={styles.selectedTextStyle}
         itemContainerStyle={{ borderRadius: 8 }}
         containerStyle={{ borderRadius: 8 }}
@@ -85,7 +64,9 @@ export default function DropdownItem({
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
-        data={data}
+        data={data.filter((item) =>
+          item.label.toLowerCase().includes(searchText.toLowerCase())
+        )}
         search={search}
         labelField="label"
         valueField="value"
@@ -98,6 +79,27 @@ export default function DropdownItem({
           onChange(item);
           setIsFocus(false);
         }}
+        renderInputSearch={() => (
+          <View style={styles.searchContainer}>
+            <TextInput
+              value={searchText}
+              underlineStyle={{ display: 'none' }}
+              textColor="black"
+              style={styles.searchInputField}
+              placeholder={!isFocus ? placeholder : '...'}
+              onChangeText={handleSearch}
+              right={
+                searchText.length ? (
+                  <TextInput.Icon
+                    icon="close"
+                    onPress={handleClear}
+                    forceTextInputFocus
+                  />
+                ) : null
+              }
+            />
+          </View>
+        )}
       />
     </View>
   );

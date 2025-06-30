@@ -7,7 +7,7 @@ import ScreenTopNav from '@/components/screenTopNav';
 import { useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
 import Pagination from '@/components/pagination';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 export default function ObservationList() {
@@ -36,9 +36,17 @@ export default function ObservationList() {
     }, [])
   );
 
+  const backPathOnClick = () => {
+    router.back();
+  };
+
   return (
     <ScreenLayout>
-      <ScreenTopNav title={t('observations')} backPath={'/auth/safetyObservation'} />
+      <ScreenTopNav
+        title={t('observations')}
+        backPathOnClick={backPathOnClick}
+        isRoutable={false}
+      />
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         style={styles.mainBox}
