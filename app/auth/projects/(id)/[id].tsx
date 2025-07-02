@@ -34,7 +34,11 @@ const ProjectId = memo(function ProjectId() {
       const singleProject = await getSingleProject({
         id: id as string,
       });
-      await getAllObservations({ projectId: singleProject?.id as string, page: 1 });
+      await getAllObservations({
+        projectId: singleProject?.id as string,
+        page: 1,
+        rowsPerPage: 1000,
+      });
     }
   };
 
