@@ -7,10 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "safetylensmobile",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -70,10 +67,7 @@
               "pathPrefix": "/forgot-password"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
@@ -81,10 +75,7 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/icon.png",
-      "deepLink": [
-        "https://staging.safetylens.ai",
-        "https://safetylens.ai"
-      ]
+      "deepLink": ["https://staging.safetylens.ai", "https://safetylens.ai"]
     },
     "plugins": [
       [
@@ -103,9 +94,7 @@
           "photosPermission": "SafetyLens accesses your photo library to allow you to upload and save hazard images for documentation and compliance reporting"
         }
       ],
-      "expo-localization",
-      "expo-font",
-      "expo-web-browser"
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
