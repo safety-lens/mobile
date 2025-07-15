@@ -35,7 +35,7 @@ export default function MyProfile() {
     <SafeAreaView style={styles.container}>
       <View style={styles.bottomBlock}>
         <View style={{ marginTop: '50%' }}>
-          {isStaging && <Text style={styles.userBlockText}>{'Stage version: 100'}</Text>}
+          {isStaging && <Text style={styles.userBlockText}>{'Stage version: 101'}</Text>}
           <View style={styles.userBlock}>
             <View style={styles.logoBox}>
               <SLLogo />
