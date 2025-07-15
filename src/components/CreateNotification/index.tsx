@@ -62,7 +62,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const { getAllProject } = useApiProject();
 
   const getProject = async () => {
-    await getAllProject({ page: 1, rowsPerPage: 100 });
+    await getAllProject({ page: 1, rowsPerPage: 1000 });
   };
 
   const showModal = () => {

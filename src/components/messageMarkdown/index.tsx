@@ -30,7 +30,7 @@ export default function MessageMarkdown({ text, customExpand, onChange }: IMessa
           style={styles.link}
           onPress={() => Linking.openURL(href)}
         >
-          {children[0] as string}
+          <Text style={{ marginBottom: -4 }}>{children[0] as string}</Text>
         </TouchableOpacity>
       );
     },
@@ -60,6 +60,7 @@ export default function MessageMarkdown({ text, customExpand, onChange }: IMessa
 
 const styles = StyleSheet.create({
   messageText: {
+    lineHeight: 24,
     fontSize: 18,
   },
 });

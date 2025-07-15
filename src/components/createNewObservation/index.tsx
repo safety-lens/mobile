@@ -76,7 +76,7 @@ export default function CreateNewObservation({
 
   const updateSingleProject = async (id: string) => {
     await getSingleProject({ id });
-    await getAllObservations({ projectId: id, page: 1 });
+    await getAllObservations({ projectId: id, page: 1, rowsPerPage: 1000 });
   };
 
   const close = () => {
@@ -108,7 +108,7 @@ export default function CreateNewObservation({
   };
 
   useEffect(() => {
-    getProjects({ status: 'Active', rowsPerPage: 100 });
+    getProjects({ status: 'Active', rowsPerPage: 1000 });
   }, []);
 
   useEffect(() => {

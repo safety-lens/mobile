@@ -8,7 +8,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import { Colors } from '@/constants/Colors';
 
 interface IField {
   onPress?: () => void;
@@ -26,7 +25,7 @@ interface IField {
 export default function CustomButton({
   title = 'Button',
   onPress,
-  backgroundColor = Colors.light.text,
+  backgroundColor = '#0A2540',
   padding,
   icon,
   styleBtn,

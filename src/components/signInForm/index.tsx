@@ -95,7 +95,12 @@ export default function SignInForm() {
         required={false}
       />
 
-      <CustomButton padding={4} title={t('logIn')} onPress={handleSubmit(onSubmit)} />
+      <CustomButton
+        padding={4}
+        backgroundColor={'#0A2540'}
+        title={t('logIn')}
+        onPress={handleSubmit(onSubmit)}
+      />
     </View>
   );
 }

@@ -27,10 +27,7 @@
         "applinks:staging.safetylens.ai",
         "applinks:safetylens.ai",
         "applinks:app.safetylens.ai"
-      ],
-      "entitlements": {
-        "com.apple.developer.apples-push-notifications": ["development", "production"]
-      }
+      ]
     },
     "android": {
       "googleServicesFile": "./google-services.json",
