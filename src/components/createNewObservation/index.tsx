@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
@@ -17,8 +17,13 @@ import DropdownItem from '../dropdown';
 import { useApiProject } from '@/axios/api/projects';
 import useUploadObservation from '@/hooks/useUploadObservation';
 import useGetAllProjects from '@/hooks/useGetAllProjects';
-import { useApiObservations } from '@/axios/api/observations';
+import { IGetAllCategory, useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
+import MultiSelectDropdown from '../MultiSelectDropdown';
+import { useApiUser } from '@/axios/api/users';
+import { UserList } from '@/axios/api/auth';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import useGetUserInfo from '@/hooks/getUserInfo';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -35,6 +40,9 @@ export interface ICreateObservation {
   imageMap?: '';
   //TODO 342
   locationComment?: '';
+  category?: string;
+  deadline?: Date;
+  assignees?: string[];
 }
 
 export default function CreateNewObservation({
@@ -44,13 +52,25 @@ export default function CreateNewObservation({
   clearMessages,
   loadedObservationImage,
 }: ICreateNewObservation) {
+  const { t } = useTranslation();
+  const [category, setCategory] = useState<IGetAllCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  const [users, setUsers] = useState<UserList[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string[]>([]);
+
+  const [date, setDate] = useState<Date>(new Date());
+
+  const { isAdmin } = useGetUserInfo();
+
   const { getProjects } = useGetAllProjects();
   const { singleProjects, projects, setSingleProject } = useProjects();
   const { getSingleProject } = useApiProject();
   const { uploads, isLoading: isLoadingUploads } = useApiUploads();
-  const { t } = useTranslation();
   const { getAllObservations } = useApiObservations();
   const { observation } = useObservations();
+  const { getAllCategory } = useApiObservations();
+  const { getUsersNameEmailList } = useApiUser();
 
   const {
     control,
@@ -77,6 +97,7 @@ export default function CreateNewObservation({
   const updateSingleProject = async (id: string) => {
     await getSingleProject({ id });
     await getAllObservations({ projectId: id, page: 1, rowsPerPage: 1000 });
+    await getUsersNameEmailList(id).then((res) => setUsers(res || []));
   };
 
   const close = () => {
@@ -101,14 +122,27 @@ export default function CreateNewObservation({
     if (image) {
       const formData = formDataFunc(image);
       const resultUploads = await uploads({ file: formData });
-      if (resultUploads) await uploadObservation({ imageUrl: resultUploads.url, data });
+      if (resultUploads)
+        await uploadObservation({
+          imageUrl: resultUploads.url,
+          data: { ...data, category: selectedCategory },
+        });
     } else {
-      await uploadObservation({ imageUrl: photoList as string, data });
+      await uploadObservation({
+        imageUrl: photoList as string,
+        data: {
+          ...data,
+          category: selectedCategory,
+          deadline: date,
+          assignees: selectedUser,
+        },
+      });
     }
   };
 
   useEffect(() => {
     getProjects({ status: 'Active', rowsPerPage: 1000 });
+    getAllCategory().then((res) => setCategory(res || []));
   }, []);
 
   useEffect(() => {
@@ -142,16 +176,49 @@ export default function CreateNewObservation({
             label={t('chooseProject')}
           />
 
+          <DropdownItem
+            required
+            search
+            data={category.map((item) => ({ label: item.name, value: item.name }))}
+            onChange={(e) => setSelectedCategory(e.value)}
+            label={'Choose Category'}
+          />
+
           {singleProjects && (
-            <PinOnMap
-              observations={observation.observations}
-              label={t('chooseLocation')}
-              imageMap={singleProjects?.mainPhoto}
-              pinType="observation"
-              setLocations={(e) => {
-                setValue('locations', e);
-              }}
-            />
+            <>
+              <PinOnMap
+                observations={observation.observations}
+                label={t('chooseLocation')}
+                imageMap={singleProjects?.mainPhoto}
+                pinType="observation"
+                setLocations={(e) => {
+                  setValue('locations', e);
+                }}
+              />
+
+              {isAdmin && (
+                <>
+                  <MultiSelectDropdown
+                    label={t('Assignee')}
+                    data={users}
+                    onChange={(selectedItems) => {
+                      setSelectedUser(selectedItems as string[]);
+                    }}
+                  />
+                  <View style={{ gap: 8 }}>
+                    <Text style={styles.label}>{t('deadlineToComplete')}</Text>
+                    <DateTimePicker
+                      value={date}
+                      minimumDate={new Date()}
+                      mode="datetime"
+                      onChange={(e) => {
+                        setDate(new Date(e.nativeEvent.timestamp));
+                      }}
+                    />
+                  </View>
+                </>
+              )}
+            </>
           )}
           {/* TODO 342 */}
           {singleProjects && (

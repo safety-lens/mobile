@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Markdown, { RenderRules } from 'react-native-markdown-display';
 import * as Linking from 'expo-linking';
@@ -10,8 +10,9 @@ interface IMessage {
 }
 
 export default function MessageMarkdown({ text, customExpand, onChange }: IMessage) {
+  const isAndroid = Platform.OS === 'android';
   const customRules: RenderRules = {
-    link: (node, children, parent, styles) => {
+    link: (node, children) => {
       const href = node.attributes.href;
       if (href && href.startsWith('action:')) {
         const action = href.replace('action:', '');
@@ -25,13 +26,9 @@ export default function MessageMarkdown({ text, customExpand, onChange }: IMessa
         );
       }
       return (
-        <TouchableOpacity
-          key={href}
-          style={styles.link}
-          onPress={() => Linking.openURL(href)}
-        >
-          <Text style={{ marginBottom: -4 }}>{children[0] as string}</Text>
-        </TouchableOpacity>
+        <Text onPress={() => Linking.openURL(href)} style={{ marginBottom: -4 }}>
+          {children[0] as string}
+        </Text>
       );
     },
   };
@@ -42,13 +39,9 @@ export default function MessageMarkdown({ text, customExpand, onChange }: IMessa
     <Markdown
       style={{
         body: styles.messageText,
-        list_item: {
-          marginTop: 12,
-          lineHeight: 24,
-        },
         bullet_list_icon: {
-          paddingTop: 8,
-          fontSize: 32,
+          paddingTop: isAndroid ? 0 : 5,
+          fontSize: isAndroid ? 24 : 32,
         },
       }}
       rules={customRules}

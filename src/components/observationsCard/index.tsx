@@ -102,6 +102,27 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
 
         <MessageImage imageUrl={imageUrl} />
 
+        <View style={{ gap: 8 }}>
+          {/* <View style={{ gap: 4 }}>
+            <Text style={styles.statusString}>Category:</Text>
+            <Text>{observation.item.category}</Text>
+          </View> */}
+
+          <View style={{ gap: 4 }}>
+            <Text style={styles.statusString}>Assignees: </Text>
+            {observation.item.assignees?.map((assignee) => (
+              <Text key={assignee.email}>{assignee.email}</Text>
+            ))}
+          </View>
+
+          <View style={{ gap: 4 }}>
+            <Text style={styles.statusString}>Deadline:</Text>
+            <Text>
+              {observation.item.deadline && dateFormat(observation.item.deadline)}
+            </Text>
+          </View>
+        </View>
+
         {observation.item.status === 'Addressed' && (
           <>
             <Text style={styles.observationTitle}>{t('correctiveActions')}</Text>

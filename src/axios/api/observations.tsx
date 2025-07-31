@@ -18,6 +18,9 @@ interface ICreateObservation {
   text: string;
   conversationId: string;
   locationComment?: string;
+  category?: string;
+  deadline?: Date;
+  assignees?: string[];
 }
 interface IGetAllObservations {
   projectId?: string;
@@ -44,6 +47,12 @@ interface IUpdateObservation {
   };
 }
 
+export interface IGetAllCategory {
+  links: string[];
+  name: string;
+  specification: string;
+}
+
 interface IGetConversationId {
   id?: string;
   accountId: string;
@@ -62,6 +71,7 @@ interface UseApiSignInReturn {
     data: IGetConversationId
   ) => Promise<IConversationIdResponse | undefined>;
   getChat: (id: string) => Promise<ChatResponse | void>;
+  getAllCategory: () => Promise<IGetAllCategory[] | void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -304,6 +314,25 @@ export const useApiObservations = (): UseApiSignInReturn => {
     }
   };
 
+  const getAllCategory = async (): Promise<IGetAllCategory[] | void> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response: AxiosResponse<IGetAllCategory[]> = await apiInstance({
+        method: 'get',
+        url: '/observations/categories',
+      });
+
+      return response.data;
+    } catch (error: any) {
+      handelError(error.response.data.message || 'Fetch error projects');
+      throw error.response.data.message;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     createObservation,
     getAllObservations,
@@ -313,6 +342,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
     startChat,
     getConversationId,
     getChat,
+    getAllCategory,
     isLoading,
     error,
   };

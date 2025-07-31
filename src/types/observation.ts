@@ -22,6 +22,14 @@ export interface Observation {
   text: string
   //TODO 342
   locationComment?: string
+
+  category?: string;
+  deadline?: Date;
+  assignees?: {
+    _id: string;
+    name: string;
+    email: string;
+  }[];
 }
 
 export interface ObservationsResponse {

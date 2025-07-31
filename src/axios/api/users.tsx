@@ -24,7 +24,7 @@ export interface GetAllCompanies {
 }
 
 interface UseApiSignInReturn {
-  getUsersNameEmailList: () => Promise<UserList[]>;
+  getUsersNameEmailList: (projectId?: string) => Promise<UserList[]>;
   isLoading: boolean;
   error: string | null;
 }
@@ -48,7 +48,7 @@ export const useApiUser = (): UseApiSignInReturn => {
     console.error(text);
   };
 
-  const getUsersNameEmailList = async (): Promise<UserList[]> => {
+  const getUsersNameEmailList = async (projectId?: string): Promise<UserList[]> => {
     try {
       setIsLoading(true);
       setError(null);
@@ -56,6 +56,9 @@ export const useApiUser = (): UseApiSignInReturn => {
       const response: AxiosResponse<UserList[]> = await apiInstance({
         method: 'get',
         url: '/users/members',
+        params: {
+          projectId: projectId,
+        },
       });
 
       return response.data;
