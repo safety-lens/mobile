@@ -20,7 +20,7 @@ interface IDropdown {
 
 export default function DropdownItem({
   data,
-  placeholder = '...',
+  placeholder = 'Select item',
   searchPlaceholder,
   search,
   styleContainer,
@@ -71,6 +71,7 @@ export default function DropdownItem({
         labelField="label"
         valueField="value"
         searchPlaceholder={resolvedSearchPlaceholder}
+        placeholder={placeholder}
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}

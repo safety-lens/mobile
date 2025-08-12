@@ -19,11 +19,10 @@ import useUploadObservation from '@/hooks/useUploadObservation';
 import useGetAllProjects from '@/hooks/useGetAllProjects';
 import { IGetAllCategory, useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
-import MultiSelectDropdown from '../MultiSelectDropdown';
 import { useApiUser } from '@/axios/api/users';
 import { UserList } from '@/axios/api/auth';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import useGetUserInfo from '@/hooks/getUserInfo';
+import { TimePickerModal, DatePickerModal } from 'react-native-paper-dates';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -53,6 +52,8 @@ export default function CreateNewObservation({
   loadedObservationImage,
 }: ICreateNewObservation) {
   const { t } = useTranslation();
+  const { lang } = useGetUserInfo();
+
   const [category, setCategory] = useState<IGetAllCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -60,6 +61,13 @@ export default function CreateNewObservation({
   const [selectedUser, setSelectedUser] = useState<string[]>([]);
 
   const [date, setDate] = useState<Date>(new Date());
+  const [visibleDatePicker, setVisibleDatePicker] = useState(false);
+  const [visibleTimePicker, setVisibleTimePicker] = useState(false);
+
+  const onDismiss = () => {
+    setVisibleDatePicker(false);
+    setVisibleTimePicker(false);
+  };
 
   const { isAdmin } = useGetUserInfo();
 
@@ -147,6 +155,11 @@ export default function CreateNewObservation({
 
   useEffect(() => {
     setSingleProject(null);
+    return () => {
+      setSelectedUser([]);
+      setSelectedCategory('');
+      setDate(new Date());
+    };
   }, [visible]);
 
   return (
@@ -181,7 +194,7 @@ export default function CreateNewObservation({
             search
             data={category.map((item) => ({ label: item.name, value: item.name }))}
             onChange={(e) => setSelectedCategory(e.value)}
-            label={'Choose Category'}
+            label={t('chooseCategory')}
           />
 
           {singleProjects && (
@@ -198,24 +211,45 @@ export default function CreateNewObservation({
 
               {isAdmin && (
                 <>
-                  <MultiSelectDropdown
-                    label={t('Assignee')}
-                    data={users}
-                    onChange={(selectedItems) => {
-                      setSelectedUser(selectedItems as string[]);
-                    }}
+                  <DropdownItem
+                    data={users.map((user) => ({
+                      label: user.name,
+                      value: user.id,
+                    }))}
+                    placeholder={t('chooseAssignee')}
+                    onChange={(e) => setSelectedUser([e.value])}
+                    label={t('assignees')}
                   />
-                  <View style={{ gap: 8 }}>
-                    <Text style={styles.label}>{t('deadlineToComplete')}</Text>
-                    <DateTimePicker
-                      value={date}
-                      minimumDate={new Date()}
-                      mode="datetime"
-                      onChange={(e) => {
-                        setDate(new Date(e.nativeEvent.timestamp));
-                      }}
-                    />
-                  </View>
+                  {selectedUser.length > 0 && (
+                    <View style={{ flexDirection: 'row', gap: 10 }}>
+                      <TouchableOpacity
+                        style={{ flex: 1, width: '100%' }}
+                        onPress={() => {
+                          setVisibleDatePicker(true);
+                        }}
+                      >
+                        <Text style={styles.dateTimeText}>
+                          <Text style={{ fontWeight: '700' }}>Date: </Text>
+                          {date?.toLocaleDateString()}
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={{ flex: 1, width: '100%' }}
+                        onPress={() => {
+                          setVisibleTimePicker(true);
+                        }}
+                      >
+                        <Text style={styles.dateTimeText}>
+                          <Text style={{ fontWeight: '700' }}>Time: </Text>
+                          {date?.toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                          })}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </>
               )}
             </>
@@ -248,6 +282,28 @@ export default function CreateNewObservation({
             onPress={handleSubmit(onSubmit)}
           />
         </View>
+
+        <TimePickerModal
+          visible={visibleTimePicker}
+          onDismiss={onDismiss}
+          onConfirm={({ minutes, hours }) => {
+            setDate(new Date(date.setHours(hours, minutes)));
+            onDismiss();
+          }}
+          use24HourClock
+        />
+
+        <DatePickerModal
+          locale={lang ?? 'en'}
+          mode="single"
+          date={date}
+          visible={visibleDatePicker}
+          onDismiss={onDismiss}
+          onConfirm={({ date }) => {
+            setDate(date as Date);
+            onDismiss();
+          }}
+        />
       </>
     </Modal>
   );
@@ -284,5 +340,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.light.text,
     lineHeight: 20,
+  },
+  dateTimeText: {
+    borderColor: '#D0D5DD',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
   },
 });

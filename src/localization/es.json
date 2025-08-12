@@ -23,10 +23,12 @@
     "uploadPhoto": "Subir una foto",
     "required": "Esto es obligatorio.",
     "chooseProject": "Elige un proyecto",
+    "chooseCategory": "Categoría de observación",
     "observationDetail": "Detalle de la observación",
     "comentario": "Comentario",
     "editComment": "Editar comentario",
-
+    "assignees": "Asignado a",
+    "chooseAssignee": "Elegir asignado",
     "search": "Buscar",
     "selectLanguage": "Seleccionar idioma",
 
@@ -64,6 +66,7 @@
     "pleaseSelectProject": "Por favor selecciona un proyecto",
     "tapOnLocation": "Toca la ubicación de la observación",
     "chooseLocation": "Elige una ubicación",
+    "deadlineToComplete": "Fecha límite para completar",
     "picturesOfObservation": "Imágene de observación",
     "addPictures": "Añadir fotos de la observación",
     "createObservation": "Crear observación",

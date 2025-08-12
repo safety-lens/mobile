@@ -23,6 +23,19 @@ export default function MyProfile() {
 
   const isStaging = apiInstance.defaults.baseURL?.includes('staging');
 
+  const isDevBuild = __DEV__;
+  const isLocalBuild = apiInstance.defaults.baseURL?.includes('localhost');
+  const isProductionBuild = !isDevBuild && !isLocalBuild && !isStaging;
+
+  useEffect(() => {
+    console.log('Build type:', {
+      isDev: isDevBuild,
+      isLocal: isLocalBuild,
+      isStaging: isStaging,
+      isProduction: isProductionBuild,
+    });
+  }, []);
+
   const goToObservations = () => {
     router.navigate('/auth/myProfile/notification');
   };

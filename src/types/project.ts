@@ -28,6 +28,7 @@ export interface IProjectCart {
     lastOpenedAt: string;
     createdAt: Date;
     updatedAt: Date;
+    assignees?: string[];
   }
 
   export interface IGetProjects {

@@ -5,12 +5,12 @@ import ChangeStatusButton from '../changeStatusButton';
 import { Colors } from '@/constants/Colors';
 import { IStatus, Observation } from '@/types/observation';
 import { ListRenderItemInfo } from '@shopify/flash-list';
-import { dateFormat } from '@/utils/dateFormat';
+import { dateFormat, dateTimeFormat } from '@/utils/dateFormat';
 import ObservationAction from '../observationAction';
 import MessageMarkdown from '../messageMarkdown';
 import MessageImage from '../messageImage';
 import MapLocation from '../../../assets/svgs/mapLocation';
-import { router } from 'expo-router';
+import { Href, Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 interface IObservationsCard {
@@ -61,6 +61,38 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
     });
   };
 
+  const convertSpecificationToArray = () => {
+    const specification = observation.item?.category?.specification;
+    const links = observation.item?.category?.links;
+
+    if (!specification || !links?.length) {
+      return [];
+    }
+
+    const specificationItems = specification.split('&').map((item) => item.trim());
+
+    return (
+      <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap' }}>
+        {specificationItems.map((item, index) => (
+          <Link href={links[index] as Href} key={item}>
+            <Text
+              style={[
+                styles.categorySpecificationText,
+                {
+                  textDecorationLine: 'underline',
+                },
+              ]}
+            >
+              {index == 0 && '('}
+              {item}
+              {index == specificationItems.length - 1 && ')'}
+            </Text>
+          </Link>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <View style={styles.cardBox}>
       <View>
@@ -103,24 +135,44 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
         <MessageImage imageUrl={imageUrl} />
 
         <View style={{ gap: 8 }}>
-          {/* <View style={{ gap: 4 }}>
-            <Text style={styles.statusString}>Category:</Text>
-            <Text>{observation.item.category}</Text>
-          </View> */}
+          {observation.item?.category?.name && (
+            <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap' }}>
+              <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+                <Text style={styles.statusString}>Category:</Text>
+                <Text style={[styles.observationTitle]}>
+                  {observation.item?.category?.name}
+                </Text>
+              </View>
+              {convertSpecificationToArray()}
+            </View>
+          )}
 
-          <View style={{ gap: 4 }}>
-            <Text style={styles.statusString}>Assignees: </Text>
-            {observation.item.assignees?.map((assignee) => (
-              <Text key={assignee.email}>{assignee.email}</Text>
-            ))}
-          </View>
+          {observation.item.assignees?.length && (
+            <View
+              style={{
+                gap: 4,
+                flexDirection: 'row',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              <Text style={styles.statusString}>Assignees: </Text>
+              {observation.item.assignees?.map((assignee) => (
+                <Text key={assignee.email}>{assignee.email}</Text>
+              ))}
+            </View>
+          )}
 
-          <View style={{ gap: 4 }}>
-            <Text style={styles.statusString}>Deadline:</Text>
-            <Text>
-              {observation.item.deadline && dateFormat(observation.item.deadline)}
-            </Text>
-          </View>
+          {observation.item.deadline && (
+            <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.statusString}>Deadline:</Text>
+              <Text>
+                {observation.item.deadline && dateFormat(observation.item.deadline)}
+                {', '}
+                {dateTimeFormat(observation.item.deadline)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {observation.item.status === 'Addressed' && (
@@ -217,4 +269,13 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   menuItem: {},
+  categorySpecification: {
+    gap: 4,
+    flexDirection: 'row',
+  },
+  categorySpecificationText: {
+    color: Colors.light.icon,
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });

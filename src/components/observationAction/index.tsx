@@ -8,6 +8,8 @@ import { Observation } from '@/types/observation';
 import ChangeStatus from '../changeStatus';
 import { useTranslation } from 'react-i18next';
 import EditComment from '../admin/modals/editComment';
+import ChangeAssignee from '../admin/modals/changeAssignee';
+import ChangeDeadline from '../admin/modals/changeDeadline';
 
 interface IObservationsCard {
   observation: Observation;
@@ -28,7 +30,8 @@ export default function ObservationAction({
   const [removeModal, setRemoveModal] = useState(false);
   const [visibleChangeStatus, setVisibleChangeStatus] = useState(false);
   const [visibleEditComment, setVisibleEditComment] = useState(false);
-
+  const [visibleChangeAssignee, setVisibleChangeAssignee] = useState(false);
+  const [visibleChangeDeadline, setVisibleChangeDeadline] = useState(false);
   const openVisibleMenu = () => {
     setVisibleMenu(!visibleMenu);
   };
@@ -50,6 +53,16 @@ export default function ObservationAction({
 
   const showEditCommentModal = () => {
     setVisibleEditComment(!visibleEditComment);
+    setVisibleMenu(false);
+  };
+
+  const showChangeAssignee = () => {
+    setVisibleChangeAssignee(!visibleChangeAssignee);
+    setVisibleMenu(false);
+  };
+
+  const showChangeDeadline = () => {
+    setVisibleChangeDeadline(!visibleChangeDeadline);
     setVisibleMenu(false);
   };
 
@@ -83,6 +96,16 @@ export default function ObservationAction({
         />
         <Menu.Item
           titleStyle={styles.menuItem}
+          onPress={showChangeDeadline}
+          title={t('changeDeadline')}
+        />
+        <Menu.Item
+          title={t('changeAssignee')}
+          titleStyle={styles.menuItem}
+          onPress={showChangeAssignee}
+        />
+        <Menu.Item
+          titleStyle={styles.menuItem}
           onPress={showRemoveModal}
           title={t('delete')}
         />
@@ -103,6 +126,24 @@ export default function ObservationAction({
         title={t('renameObservation')}
         visible={visibleRename}
         hideModal={showRenameModal}
+      />
+      <ChangeAssignee
+        id={observationId}
+        observationId={observation._id}
+        title={t('changeAssignee')}
+        visible={visibleChangeAssignee}
+        hideModal={showChangeAssignee}
+        selectedStatus={observation.status}
+        projectId={observationId}
+        defaultValue={observation.assignees || []}
+      />
+      <ChangeDeadline
+        projectId={observationId}
+        observationId={observation._id}
+        title={t('changeDeadline')}
+        visible={visibleChangeDeadline}
+        hideModal={showChangeDeadline}
+        defaultValue={observation.deadline || new Date()}
       />
       <EditComment
         selectedStatus={observation.status}

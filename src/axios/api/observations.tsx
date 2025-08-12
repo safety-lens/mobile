@@ -44,6 +44,8 @@ interface IUpdateObservation {
     status?: StatusTitle;
     name?: string;
     locationComment?: string;
+    deadline?: Date;
+    assignees?: string[];
   };
 }
 

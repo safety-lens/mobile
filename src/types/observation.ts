@@ -23,7 +23,11 @@ export interface Observation {
   //TODO 342
   locationComment?: string
 
-  category?: string;
+  category?: {
+    links: string[];
+    name: string;
+    specification: string;
+  };
   deadline?: Date;
   assignees?: {
     _id: string;
