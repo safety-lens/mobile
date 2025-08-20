@@ -27,8 +27,15 @@ export default function useUploadObservation({ callback }: IUseUploadObservation
     imageUrl: string;
     data: ICreateObservation;
   }) => {
-    const { name, photoList, locations, locationComment, category, deadline, assignees } =
-      data;
+    const {
+      name,
+      photoList,
+      locations,
+      locationComment,
+      categories,
+      deadline,
+      assignees,
+    } = data;
     const checkX = Boolean(0 > Number(locations?.length && locations?.[0].x));
 
     if (!singleProjects?.id) {
@@ -49,7 +56,7 @@ export default function useUploadObservation({ callback }: IUseUploadObservation
         conversationId: observationResult?.id,
         locationComment,
         text: observationResult?.messages[1].content as string,
-        category,
+        categories,
         deadline,
         assignees,
       })

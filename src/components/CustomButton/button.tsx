@@ -25,7 +25,7 @@ interface IField {
 export default function CustomButton({
   title = 'Button',
   onPress,
-  backgroundColor = '#0A2540',
+  backgroundColor = '#010101',
   padding,
   icon,
   styleBtn,

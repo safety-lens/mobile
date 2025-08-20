@@ -2,11 +2,11 @@ import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { ISvg } from './types';
 
-function Edit({ width = 20, height = 20 }: ISvg) {
+function Edit({ width = 20, height = 20, fill = '#0A2540' }: ISvg) {
   return (
     <Svg width={width} height={height} fill="none" viewBox="0 0 20 20">
       <Path
-        stroke="#0A2540"
+        stroke={fill}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"

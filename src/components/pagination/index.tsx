@@ -6,10 +6,11 @@ interface IPagination {
   currentPage: number;
   count: number;
   onPageChange: (page: number) => void;
+  pageSize?: number;
 }
 
-const Pagination = ({ currentPage, count, onPageChange }: IPagination) => {
-  const totalPages = Math.ceil(count / 6);
+const Pagination = ({ currentPage, count, onPageChange, pageSize = 6 }: IPagination) => {
+  const totalPages = Math.ceil(count / pageSize);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {

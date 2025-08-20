@@ -61,38 +61,6 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
     });
   };
 
-  const convertSpecificationToArray = () => {
-    const specification = observation.item?.category?.specification;
-    const links = observation.item?.category?.links;
-
-    if (!specification || !links?.length) {
-      return [];
-    }
-
-    const specificationItems = specification.split('&').map((item) => item.trim());
-
-    return (
-      <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap' }}>
-        {specificationItems.map((item, index) => (
-          <Link href={links[index] as Href} key={item}>
-            <Text
-              style={[
-                styles.categorySpecificationText,
-                {
-                  textDecorationLine: 'underline',
-                },
-              ]}
-            >
-              {index == 0 && '('}
-              {item}
-              {index == specificationItems.length - 1 && ')'}
-            </Text>
-          </Link>
-        ))}
-      </View>
-    );
-  };
-
   return (
     <View style={styles.cardBox}>
       <View>
@@ -135,27 +103,35 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
         <MessageImage imageUrl={imageUrl} />
 
         <View style={{ gap: 8 }}>
-          {observation.item?.category?.name && (
+          {observation.item?.categories?.length && (
             <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap' }}>
-              <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', gap: 4 }}>
                 <Text style={styles.statusString}>Category:</Text>
-                <Text style={[styles.observationTitle]}>
-                  {observation.item?.category?.name}
-                </Text>
+                <View style={{ gap: 12 }}>
+                  {observation.item?.categories?.map((category) => (
+                    <View key={category.name} style={styles.categorySpecification}>
+                      <Text>{category.name} </Text>
+                      <Link href={category.links[0] as unknown as Href}>
+                        <Text
+                          style={[
+                            styles.categorySpecificationText,
+                            {
+                              textDecorationLine: 'underline',
+                            },
+                          ]}
+                        >
+                          ({category.specification})
+                        </Text>
+                      </Link>
+                    </View>
+                  ))}
+                </View>
               </View>
-              {convertSpecificationToArray()}
             </View>
           )}
 
           {observation.item.assignees?.length && (
-            <View
-              style={{
-                gap: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-              }}
-            >
+            <View style={styles.assigneesBox}>
               <Text style={styles.statusString}>Assignees: </Text>
               {observation.item.assignees?.map((assignee) => (
                 <Text key={assignee.email}>{assignee.email}</Text>
@@ -234,11 +210,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.light.text,
   },
-  observationBody: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: Colors.light.text,
-  },
   changeStatusButton: {
     marginTop: 32,
   },
@@ -251,31 +222,21 @@ const styles = StyleSheet.create({
   notAddressed: {
     backgroundColor: '#FF0D31',
   },
-
-  dotsBox: {
-    paddingHorizontal: 10,
-  },
-  dots: {
-    fontWeight: '900',
-    fontSize: 30,
-    marginTop: -18,
-    color: Colors.light.text,
-  },
-  menuContentStyle: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-  },
-  menu: {
-    paddingTop: 25,
-  },
-  menuItem: {},
-  categorySpecification: {
+  assigneesBox: {
     gap: 4,
     flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   categorySpecificationText: {
     color: Colors.light.icon,
     fontSize: 14,
     fontWeight: '500',
+  },
+  categorySpecification: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    maxWidth: 250,
   },
 });

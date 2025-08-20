@@ -23,6 +23,7 @@ import { useApiUser } from '@/axios/api/users';
 import { UserList } from '@/axios/api/auth';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import { TimePickerModal, DatePickerModal } from 'react-native-paper-dates';
+import MultiSelectDropdown from '../MultiSelectDropdown';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -39,9 +40,11 @@ export interface ICreateObservation {
   imageMap?: '';
   //TODO 342
   locationComment?: '';
-  category?: string;
+  categories?: string[];
   deadline?: Date;
   assignees?: string[];
+  generalContractor?: string;
+  subContractor?: string;
 }
 
 export default function CreateNewObservation({
@@ -55,7 +58,7 @@ export default function CreateNewObservation({
   const { lang } = useGetUserInfo();
 
   const [category, setCategory] = useState<IGetAllCategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
 
   const [users, setUsers] = useState<UserList[]>([]);
   const [selectedUser, setSelectedUser] = useState<string[]>([]);
@@ -133,14 +136,14 @@ export default function CreateNewObservation({
       if (resultUploads)
         await uploadObservation({
           imageUrl: resultUploads.url,
-          data: { ...data, category: selectedCategory },
+          data: { ...data, categories: selectedCategory },
         });
     } else {
       await uploadObservation({
         imageUrl: photoList as string,
         data: {
           ...data,
-          category: selectedCategory,
+          categories: selectedCategory,
           deadline: date,
           assignees: selectedUser,
         },
@@ -157,10 +160,18 @@ export default function CreateNewObservation({
     setSingleProject(null);
     return () => {
       setSelectedUser([]);
-      setSelectedCategory('');
+      setSelectedCategory([]);
       setDate(new Date());
     };
   }, [visible]);
+
+  console.log(
+    category.map((item) => ({
+      label: item.name,
+      value: item.name,
+      id: item.name,
+    }))
+  );
 
   return (
     <Modal visible={visible} hideModal={close}>
@@ -188,13 +199,33 @@ export default function CreateNewObservation({
             onChange={(e) => updateSingleProject(e.value)}
             label={t('chooseProject')}
           />
-
-          <DropdownItem
+          <MultiSelectDropdown
             required
             search
-            data={category.map((item) => ({ label: item.name, value: item.name }))}
-            onChange={(e) => setSelectedCategory(e.value)}
+            data={category.map((item) => ({
+              label: item.specification,
+              id: item.name,
+              name: item.name,
+            }))}
+            placeholderInput="chooseCategory"
             label={t('chooseCategory')}
+            onChange={(selectedItems) => {
+              setSelectedCategory(selectedItems as string[]);
+            }}
+          />
+
+          <TextField<ICreateObservation>
+            control={control}
+            errors={errors}
+            label={t('generalContractor')}
+            name="generalContractor"
+          />
+
+          <TextField<ICreateObservation>
+            control={control}
+            errors={errors}
+            label={t('subContractor')}
+            name="subContractor"
           />
 
           {singleProjects && (

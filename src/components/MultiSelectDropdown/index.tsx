@@ -6,8 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
 import { UserList } from '@/axios/api/auth';
 
-interface IDropdown {
-  data: UserList[];
+interface IDropdownData {
+  label: string;
+  value: string;
+  id?: string;
+}
+
+interface IDropdown<T = UserList> {
+  data: T[] | IDropdownData[];
   placeholder?: string;
   searchPlaceholder?: string;
   search?: boolean;
@@ -17,11 +23,13 @@ interface IDropdown {
   required?: boolean;
   error?: boolean;
   defaultValue?: unknown[];
+  placeholderInput?: string;
 }
 
-export default function MultiSelectDropdown({
+export default function MultiSelectDropdown<T = UserList>({
   data,
   placeholder = '...',
+  placeholderInput = 'selectUser',
   searchPlaceholder,
   search,
   styleContainer,
@@ -30,7 +38,7 @@ export default function MultiSelectDropdown({
   onChange,
   error,
   defaultValue = [],
-}: IDropdown) {
+}: IDropdown<T>) {
   const { t } = useTranslation();
   const [value, setValue] = useState<string[]>(defaultValue as string[]);
   const [searchText, setSearchText] = useState<string>('');
@@ -61,6 +69,19 @@ export default function MultiSelectDropdown({
       )}
       <MultiSelect
         ref={dropdownRef}
+        renderItem={(item) => (
+          <View
+            key={item.id}
+            style={{
+              borderRadius: 4,
+              padding: 14,
+              gap: 8,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '500' }}>{item.name}</Text>
+            {item.label && <Text>{item.label}</Text>}
+          </View>
+        )}
         renderInputSearch={() => (
           <View style={styles.searchContainer}>
             <TextInput
@@ -97,10 +118,11 @@ export default function MultiSelectDropdown({
               marginTop: 4,
               backgroundColor: '#00000006',
               gap: 12,
+              marginRight: 4,
             }}
           >
             <Text>
-              {item.name} - {item.email}
+              {item.name} {`${item.email ? `- ${item?.email} ` : ''}`}
             </Text>
             <View
               style={{
@@ -129,7 +151,7 @@ export default function MultiSelectDropdown({
         labelField="name"
         valueField="id"
         searchPlaceholder={resolvedSearchPlaceholder}
-        placeholder={t('selectUser')}
+        placeholder={t(placeholderInput)}
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}

@@ -9,9 +9,13 @@ import { useObservations } from '@/context/observationProvider';
 export default function ProjectDropdown({
   currentId,
   redirect,
+  onChange,
+  label,
 }: {
   currentId?: string;
   redirect?: boolean;
+  onChange?: (id: string, name?: string) => void;
+  label?: string;
 }) {
   const { projects, setSingleProject } = useProjects();
   const { setObservation } = useObservations();
@@ -23,7 +27,11 @@ export default function ProjectDropdown({
     label: projects.name,
   }));
 
-  const onChange = async (id: string) => {
+  const handleChange = async (id: string, name?: string) => {
+    if (onChange) {
+      onChange(id, name);
+      return;
+    }
     if (currentId === id) return;
     if (redirect) {
       setSingleProject(null);
@@ -45,8 +53,8 @@ export default function ProjectDropdown({
       search
       data={renamedData}
       defaultValue={currentId}
-      onChange={(e) => onChange(e.value)}
-      label={t('chooseProject')}
+      onChange={(e) => handleChange(e.value, e.label)}
+      label={label || t('chooseProject')}
     />
   );
 }

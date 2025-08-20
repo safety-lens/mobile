@@ -18,7 +18,7 @@ interface ICreateObservation {
   text: string;
   conversationId: string;
   locationComment?: string;
-  category?: string;
+  categories?: string[];
   deadline?: Date;
   assignees?: string[];
 }
@@ -46,6 +46,7 @@ interface IUpdateObservation {
     locationComment?: string;
     deadline?: Date;
     assignees?: string[];
+    note?: string;
   };
 }
 
@@ -74,6 +75,12 @@ interface UseApiSignInReturn {
   ) => Promise<IConversationIdResponse | undefined>;
   getChat: (id: string) => Promise<ChatResponse | void>;
   getAllCategory: () => Promise<IGetAllCategory[] | void>;
+  reportShare: (data: {
+    comment: string;
+    email: string;
+    format: string;
+    s3Uri: string;
+  }) => Promise<ChatResponse | void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -316,6 +323,37 @@ export const useApiObservations = (): UseApiSignInReturn => {
     }
   };
 
+  const reportShare = async (data: {
+    comment: string;
+    email: string;
+    format: string;
+    s3Uri: string;
+  }): Promise<ChatResponse | void> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response: AxiosResponse<ChatResponse> = await apiInstance({
+        method: 'post',
+        url: `/observations/report/share`,
+        data: {
+          comment: data.comment,
+          email: data.email,
+          format: data.format,
+          s3Uri: data.s3Uri,
+        },
+      });
+      if (response.data) {
+        console.log('API startConversation', response.data);
+        return response.data;
+      }
+    } catch (error: any) {
+      handelError(error.response.data.message || 'error startConversation');
+      throw error.response.data.message;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getAllCategory = async (): Promise<IGetAllCategory[] | void> => {
     try {
       setIsLoading(true);
@@ -345,6 +383,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
     getConversationId,
     getChat,
     getAllCategory,
+    reportShare,
     isLoading,
     error,
   };

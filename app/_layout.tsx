@@ -7,24 +7,34 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Router from './router';
 import { AuthProvider } from '@/context/AuthProvider';
 import NotificationProvider from '@/context/NotificationProvider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 registerTranslation('en', en);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function RootLayout() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      <GestureHandlerRootView>
-        {/* <KeyboardProvider> */}
-        <AuthProvider>
-          <NotificationProvider>
-            <PaperProvider>
-              <Router />
-            </PaperProvider>
-          </NotificationProvider>
-        </AuthProvider>
-        {/* </KeyboardProvider> */}
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView>
+          {/* <KeyboardProvider> */}
+          <AuthProvider>
+            <NotificationProvider>
+              <PaperProvider>
+                <Router />
+              </PaperProvider>
+            </NotificationProvider>
+          </AuthProvider>
+          {/* </KeyboardProvider> */}
+        </GestureHandlerRootView>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

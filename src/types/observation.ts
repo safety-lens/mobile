@@ -9,6 +9,7 @@ export interface Observation {
   }
   _id: string;
   name: string;
+
   projectId: string;
   photoList: string[];
   x: number;
@@ -23,10 +24,27 @@ export interface Observation {
   //TODO 342
   locationComment?: string
 
-  category?: {
+  location?: string
+  subContractor?: string
+  closedDate?: Date
+  followUp?: string
+
+  generalContractor?: string;
+
+  reporter?: string;
+  note?: string;
+  contractor?: string;
+
+  category?: string[];
+  categories?: {
     links: string[];
     name: string;
     specification: string;
+  }[];
+  createdBy?: {
+    _id: string;
+    name: string;
+    email: string;
   };
   deadline?: Date;
   assignees?: {

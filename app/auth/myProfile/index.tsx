@@ -14,6 +14,7 @@ import LanguageSelect from '@/components/languageSelect';
 import Notification from '../../../assets/svgs/notification';
 import { NotificationContext } from '@/context/NotificationProvider';
 import { apiInstance } from '@/axios';
+import ReportIcon from '../../../assets/svgs/reportIcon';
 
 export default function MyProfile() {
   const { logout } = useApiSignIn();
@@ -38,6 +39,10 @@ export default function MyProfile() {
 
   const goToObservations = () => {
     router.navigate('/auth/myProfile/notification');
+  };
+
+  const goToReports = () => {
+    router.navigate('/auth/myProfile/Reports');
   };
 
   useEffect(() => {
@@ -74,6 +79,11 @@ export default function MyProfile() {
               )}
               <Notification fill="white" />
               <Text style={styles.drawerItem}>{t('notification')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.reports} onPress={goToReports}>
+              <ReportIcon />
+              <Text style={styles.drawerItem}>{t('Reports')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -135,6 +145,12 @@ const styles = StyleSheet.create({
   },
   logoBox: { backgroundColor: 'white', borderRadius: 8, padding: 4 },
   notification: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  reports: {
+    marginTop: 18,
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',

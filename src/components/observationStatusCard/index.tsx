@@ -1,9 +1,9 @@
+import React from 'react';
 import { Colors } from '@/constants/Colors';
 import { useObservations } from '@/context/observationProvider';
 import { IStatus } from '@/types/observation';
 import { statusTitleText } from '@/utils/statusTitle';
 import { router } from 'expo-router';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
