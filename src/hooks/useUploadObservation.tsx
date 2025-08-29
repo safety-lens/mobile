@@ -35,6 +35,8 @@ export default function useUploadObservation({ callback }: IUseUploadObservation
       categories,
       deadline,
       assignees,
+      contractor,
+      subContractor,
     } = data;
     const checkX = Boolean(0 > Number(locations?.length && locations?.[0].x));
 
@@ -59,14 +61,20 @@ export default function useUploadObservation({ callback }: IUseUploadObservation
         categories,
         deadline,
         assignees,
+        contractor: contractor,
+        subContractor,
       })
         .then(async () => {
-          router.navigate(
-            singleProjects.id
-              ? `/auth/projects/(id)/${singleProjects.id}`
-              : '/auth/projects'
-          );
-          await getAllObservations({});
+          if (singleProjects.id) {
+            router.navigate(`/auth/projects/(id)/${singleProjects.id}`);
+          } else {
+            router.navigate('/auth/projects');
+          }
+          await getAllObservations({
+            projectId: singleProjects.id,
+            page: 1,
+            rowsPerPage: 100,
+          });
           callback?.();
         })
         .catch((error) => {

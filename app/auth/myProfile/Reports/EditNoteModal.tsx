@@ -67,7 +67,7 @@ export default function EditNoteModal({
 
         <View style={styles.content}>
           <TextInput
-            style={styles.inputField}
+            style={[styles.inputField, { textAlignVertical: 'top' }]}
             onChangeText={setNote}
             value={note}
             multiline={true}

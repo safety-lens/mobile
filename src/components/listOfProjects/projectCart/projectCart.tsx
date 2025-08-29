@@ -13,13 +13,15 @@ interface IProjectCarts {
 
 export default function ProjectCart({ projectData }: IProjectCarts) {
   const { t } = useTranslation();
-  const push = (projectData: IProjectCart) => {
+
+  const push = () => {
     if (projectData.id) router.navigate(`/auth/projects/(id)/${projectData.id}`);
   };
+
   const status = projectData.status !== 'Active' ? t('archive') : t('active');
 
   return (
-    <TouchableOpacity onPress={() => push(projectData)}>
+    <TouchableOpacity onPress={push}>
       <ImageBox url={projectData.mainPhoto} />
       <View style={styles.description}>
         <View style={[styles.statusBox, styles[projectData.status]]}>

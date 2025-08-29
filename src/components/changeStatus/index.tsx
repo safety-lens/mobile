@@ -107,9 +107,8 @@ export default function ChangeStatus({
           <View style={styles.textBox}>
             <Text style={styles.textTitle}>{t('implementedActions')}</Text>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { textAlignVertical: 'top' }]}
               multiline={true}
-              numberOfLines={4}
               onChangeText={setText}
               onChange={() => setTextError(false)}
             />

@@ -1,5 +1,5 @@
 import Modal from '@/modal';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import IconClose from '../../../../assets/svgs/iconClose';
@@ -22,13 +22,19 @@ export default function ShareProjectModal({
   isLoadingReportShare?: boolean;
 }) {
   const { t } = useTranslation();
-  const [email, setEmail] = React.useState('oleh@springsapps.com');
+  const [email, setEmail] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [checked, setChecked] = React.useState<TChecked>('PDF');
 
   const handleShare = () => {
     handleSharePdf(email, message, checked);
   };
+
+  useEffect(() => {
+    setEmail('');
+    setMessage('');
+    setChecked('PDF');
+  }, [visible]);
 
   return (
     <Modal visible={visible} hideModal={hideModal}>
@@ -45,7 +51,12 @@ export default function ShareProjectModal({
         <View style={styles.content}>
           <View>
             <Text>{t('shareThisDocumentTo')}</Text>
-            <TextInput style={styles.inputField} value={email} onChangeText={setEmail} />
+            <TextInput
+              style={styles.inputField}
+              value={email}
+              onChangeText={setEmail}
+              placeholder={t('enterEmailAddress')}
+            />
           </View>
 
           <Text style={{ marginTop: 24 }}>{t('selectTheFormatForYourReport')}</Text>
@@ -72,9 +83,10 @@ export default function ShareProjectModal({
           <View style={{ marginTop: 24 }}>
             <Text>{t('messageOptional')}</Text>
             <TextInput
-              style={styles.inputField}
+              style={[styles.inputField, { textAlignVertical: 'top' }]}
               value={message}
               onChangeText={setMessage}
+              placeholder={t('enterYourMessage')}
             />
           </View>
         </View>
@@ -120,7 +132,8 @@ const styles = StyleSheet.create({
   },
   radioButtonContainer: {
     flexDirection: 'row',
-    gap: 32,
+    justifyContent: 'space-between',
+    width: '80%',
     marginTop: 12,
   },
   radioButton: {

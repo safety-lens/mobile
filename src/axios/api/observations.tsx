@@ -21,6 +21,8 @@ interface ICreateObservation {
   categories?: string[];
   deadline?: Date;
   assignees?: string[];
+  contractor?: string;
+  subContractor?: string;
 }
 interface IGetAllObservations {
   projectId?: string;

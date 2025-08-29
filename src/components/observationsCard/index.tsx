@@ -104,8 +104,20 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
 
         <View style={{ gap: 8 }}>
           {observation.item?.categories?.length && (
-            <View style={{ flexDirection: 'row', gap: 4, flexWrap: 'wrap' }}>
-              <View style={{ flexDirection: 'row', gap: 4 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 4,
+                flexWrap: 'wrap',
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 4,
+                  maxWidth: 320,
+                }}
+              >
                 <Text style={styles.statusString}>Category:</Text>
                 <View style={{ gap: 12 }}>
                   {observation.item?.categories?.map((category) => (
@@ -147,6 +159,27 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
                 {', '}
                 {dateTimeFormat(observation.item.deadline)}
               </Text>
+            </View>
+          )}
+
+          {observation.item.closeDate && (
+            <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.statusString}>{t('closeDate')}:</Text>
+              <Text>{dateFormat(observation.item.closeDate)}</Text>
+            </View>
+          )}
+
+          {observation.item.contractor && (
+            <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.statusString}>{t('contractor')}:</Text>
+              <Text>{observation.item.contractor}</Text>
+            </View>
+          )}
+
+          {observation.item.subContractor && (
+            <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.statusString}>{t('subContractor')}:</Text>
+              <Text>{observation.item.subContractor}</Text>
             </View>
           )}
         </View>

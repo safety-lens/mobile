@@ -8,7 +8,7 @@
     "new": "Nuevo",
     "projectName": "Nombre del Proyecto",
     "name": "Nombre",
-    "generalContractor": "Contratista general",
+    "contractor": "Contratista general",
     "subContractor": "Contratista subcontratista",
     "projectNumber": "Número del Proyecto",
     "mainPhoto": "Foto principal",
@@ -121,6 +121,8 @@
     "resultDisclaimer": "Las inspecciones de seguridad de SafetyLens pueden no ser siempre precisas. Verifique la información importante.",
 
     "enterYourEmail": "Ingrese su correo electrónico",
+    "enterEmailAddress": "Ingrese su correo electrónico",
+    "enterYourMessage": "Ingrese su mensaje",
     "forgotPassword": "¿Olvidó su contraseña?",
 
     "notification": "Notificación",
@@ -149,6 +151,7 @@
     "assignee": "Asignado a",
     "clear": "Limpiar",
     "applyNow": "Aplicar ahora",
+    "resetAll": "Restablecer todos",
     "shareThisDocumentTo": "Compartir este documento a:",
     "selectTheFormatForYourReport": "Selecciona el formato para tu informe:",
     "messageOptional": "Mensaje (Opcional)",
@@ -158,7 +161,7 @@
     "reporter": "Reportero",
     "categoryOfObservation": "Categoría de la observación",
     "statusOfObservation": "Estado de la observación",
-    "closedDate": "Fecha de cierre",
+    "closeDate": "Fecha de cierre",
     "followUp": "Seguimiento",
     "notesComments": "Notas/Comentarios",
     "allTime": "Todos los tiempos",
@@ -169,6 +172,21 @@
     "selectDateRange": "Seleccionar rango de fechas",
     "selectProject": "Por favor selecciona un proyecto",
     "allMembers": "Todos los miembros",
-    "all": "Todos"
-  }}
-  
+    "all": "Todos",
+
+  "months": {
+    "January": "Enero",
+    "February": "Febrero",
+    "March": "Marzo",
+    "April": "Abril",
+    "May": "Mayo",
+    "June": "Junio",
+    "July": "Julio",
+    "August": "Agosto",
+    "September": "Septiembre",
+    "October": "Octubre",
+    "November": "Noviembre",
+    "December": "Diciembre"
+  }
+}
+}

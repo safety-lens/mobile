@@ -122,6 +122,7 @@ export default function ChangeDeadline({
         <DatePickerModal
           locale={lang ?? 'en'}
           mode="single"
+          date={date}
           visible={visibleDatePicker}
           onDismiss={onDismiss}
           onConfirm={({ date }) => {
@@ -141,6 +142,7 @@ export default function ChangeDeadline({
           <CustomButton
             title={t('save')}
             onPress={onSubmit}
+            disabled={!date}
             styleAppBtn={{
               flex: 1,
             }}

@@ -26,10 +26,10 @@ export interface Observation {
 
   location?: string
   subContractor?: string
-  closedDate?: Date
+  closeDate?: Date
   followUp?: string
 
-  generalContractor?: string;
+  contractor?: string;
 
   reporter?: string;
   note?: string;

@@ -1,11 +1,14 @@
 import { Observation } from '@/types/observation';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { fileNameGenerator } from './generateFiles/nameConvent';
 
 interface IGenerateObservationCSV {
   projectName: string;
   data: Observation[];
   showShare?: boolean;
+  projectLocation: string;
+  range?: string;
 }
 
 const escapeCSVValue = (value: string): string => {
@@ -36,6 +39,8 @@ export const generateObservationCSV = async ({
   projectName,
   data,
   showShare = false,
+  projectLocation,
+  range,
 }: IGenerateObservationCSV): Promise<{ uri: string }> => {
   const observations = Array.isArray(data) ? data : [data];
 
@@ -48,7 +53,7 @@ export const generateObservationCSV = async ({
       Date: observation.createdAt
         ? new Date(observation.createdAt).toLocaleDateString()
         : '-',
-      Location: observation.note || observation.location || '-',
+      Location: projectLocation || '-',
       'General Contractor': observation.contractor || '-',
       'Sub Contractor': observation.subContractor || '-',
       'Category of Observation':
@@ -60,8 +65,8 @@ export const generateObservationCSV = async ({
       'Deadline to Complete': observation.deadline
         ? new Date(observation.deadline).toLocaleDateString()
         : '-',
-      'Closed Date': observation.closedDate
-        ? new Date(observation.closedDate).toLocaleDateString()
+      'Closed Date': observation.closeDate
+        ? new Date(observation.closeDate).toLocaleDateString()
         : '-',
       'Follow Up': observation.implementedActions || observation.followUp || '-',
       'Notes/Comments': observation.note || '-',
@@ -77,9 +82,7 @@ export const generateObservationCSV = async ({
 
   const csvString = convertToCSV(csvData);
 
-  const fileName = `${projectName.replace(/[^a-z0-9]/gi, '_')}_observations_${
-    new Date().toISOString().split('T')[0]
-  }.csv`;
+  const fileName = fileNameGenerator(projectName, 'csv', range);
 
   const uri = FileSystem.documentDirectory + fileName;
 

@@ -2,17 +2,22 @@ import { Observation } from '@/types/observation';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { fileNameGenerator } from './generateFiles/nameConvent';
 
 interface IGenerateObservationXLS {
   projectName: string;
   data: Observation[];
   showShare?: boolean;
+  projectLocation: string;
+  range?: string;
 }
 
 export const generateObservationXLS = async ({
   projectName,
   data,
   showShare = false,
+  projectLocation,
+  range,
 }: IGenerateObservationXLS): Promise<{ uri: string }> => {
   const observations = Array.isArray(data) ? data : [data];
 
@@ -24,7 +29,7 @@ export const generateObservationXLS = async ({
     Date: observation.createdAt
       ? new Date(observation.createdAt).toLocaleDateString()
       : '-',
-    Location: observation.note || observation.location || '-',
+    Location: projectLocation || '-',
     'General Contractor': observation.contractor || '-',
     'Sub Contractor': observation.subContractor || '-',
     'Category of Observation':
@@ -36,14 +41,12 @@ export const generateObservationXLS = async ({
     'Deadline to Complete': observation.deadline
       ? new Date(observation.deadline).toLocaleDateString()
       : '-',
-    'Closed Date': observation.closedDate
-      ? new Date(observation.closedDate).toLocaleDateString()
+    'Closed Date': observation.closeDate
+      ? new Date(observation.closeDate).toLocaleDateString()
       : '-',
     'Follow Up': observation.implementedActions || observation.followUp || '-',
     'Notes/Comments': observation.note || '-',
   }));
-
-  console.log(worksheetData);
 
   const ws = XLSX.utils.json_to_sheet(worksheetData);
   const wb = XLSX.utils.book_new();
@@ -71,7 +74,7 @@ export const generateObservationXLS = async ({
 
   const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
 
-  const fileName = `${projectName.replace(/[^a-z0-9]/gi, '_')}_observations_${new Date().toISOString().split('T')[0]}.xlsx`;
+  const fileName = fileNameGenerator(projectName, 'xlsx', range);
   const uri = FileSystem.documentDirectory + fileName;
 
   await FileSystem.writeAsStringAsync(uri, wbout, {

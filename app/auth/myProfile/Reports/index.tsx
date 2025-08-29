@@ -27,6 +27,7 @@ import { useApiUploads } from '@/axios/api/uploads';
 import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
 import { generateObservationCSV } from '@/utils/generateObservationCSV';
+import { useProjects } from '@/context/projectsProvider';
 
 interface IRange {
   startDate: Date | undefined;
@@ -45,6 +46,7 @@ type TSelectRangeLabel =
 export default function Reports() {
   const { t } = useTranslation();
   const { lang } = useGetUserInfo();
+  const scrollViewRef = React.useRef<ScrollView>(null);
 
   const screenWidth = Dimensions.get('window').width;
 
@@ -56,7 +58,7 @@ export default function Reports() {
   const [isLoadingShare, setIsLoadingShare] = React.useState(false);
 
   const [open, setOpen] = React.useState(false);
-  const [range, setRange] = React.useState<IRange>({
+  const [rangeCopy, setRangeCopy] = React.useState<IRange>({
     startDate: undefined,
     endDate: undefined,
   });
@@ -73,7 +75,7 @@ export default function Reports() {
 
   const [filters, setFilters] = React.useState<IReportsFilter>({
     location: '',
-    generalContractor: '',
+    contractor: '',
     category: '',
     status: '',
     assigneeId: '',
@@ -81,6 +83,13 @@ export default function Reports() {
 
   const { uploads } = useApiUploads();
   const { reportShare } = useApiObservations();
+  const { projects } = useProjects();
+
+  const getProjectData = (projectId: string) => {
+    const project = projects.projects.find((project) => project.id === projectId);
+    if (!project) return '-';
+    return `${project.address}, ${project.city}, ${project.country}`;
+  };
 
   const calculateLastDays = (days: number) => {
     const endDate = new Date();
@@ -124,8 +133,8 @@ export default function Reports() {
     },
     selectDateRange: {
       label:
-        range.startDate && range.endDate && selectRangeLabel === 'selectDateRange'
-          ? `${dateFormat(range.startDate)} - ${dateFormat(range.endDate)}`
+        dateRange.startDate && dateRange.endDate && selectRangeLabel === 'selectDateRange'
+          ? `${dateFormat(dateRange.startDate)} - ${dateFormat(dateRange.endDate)}`
           : t('selectDateRange'),
       value: 'selectDateRange',
       range: { startDate: dateRange.startDate, endDate: dateRange.endDate },
@@ -134,7 +143,12 @@ export default function Reports() {
 
   const dataRange = Object.values(dataRangeCopy);
 
-  const openMenu = () => setVisible(true);
+  const openMenu = () => {
+    scrollViewRef.current?.scrollTo({ y: 130, animated: true });
+    setTimeout(() => {
+      setVisible(true);
+    }, 250);
+  };
   const closeMenu = () => setVisible(false);
 
   const onDismiss = () => {
@@ -143,12 +157,20 @@ export default function Reports() {
 
   const handleSelectRange = (value: TSelectRangeLabel) => {
     setSelectRangeLabel(value);
-    setRange(dataRangeCopy[value as keyof typeof dataRangeCopy]?.range);
+    setRangeCopy({
+      startDate: undefined,
+      endDate: undefined,
+    });
+    setDateRange(dataRangeCopy[value as keyof typeof dataRangeCopy]?.range);
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onConfirm = ({ startDate, endDate }: any) => {
     setDateRange({
+      startDate: startDate,
+      endDate: endDate,
+    });
+    setRangeCopy({
       startDate: startDate,
       endDate: endDate,
     });
@@ -161,14 +183,14 @@ export default function Reports() {
       page: currentPage,
       pageSize: 10,
       projectId,
-      startPeriod: range.startDate,
-      finishPeriod: range.endDate,
+      startPeriod: dateRange.startDate,
+      finishPeriod: dateRange.endDate,
       ...filters,
     };
   };
 
   const { data: reports, isLoading } = useQuery({
-    queryKey: ['observations', currentPage, projectId, range, filters],
+    queryKey: ['observations', currentPage, projectId, dateRange, filters],
     queryFn: async () => {
       const response: AxiosResponse<ObservationsResponse> = await apiInstance.get(
         `/observations`,
@@ -181,11 +203,11 @@ export default function Reports() {
   });
 
   const createPdf = async () => {
-    const range = dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label;
     await generateObservationPdf({
       projectName,
       data: reports?.observations || [],
-      range: range,
+      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
+      projectLocation: getProjectData(projectId),
     });
   };
 
@@ -193,6 +215,8 @@ export default function Reports() {
     await generateObservationXLS({
       projectName,
       data: reports?.observations || [],
+      projectLocation: getProjectData(projectId),
+      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
     });
   };
 
@@ -200,6 +224,8 @@ export default function Reports() {
     await generateObservationCSV({
       projectName,
       data: reports?.observations || [],
+      projectLocation: getProjectData(projectId),
+      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
     });
   };
 
@@ -213,6 +239,7 @@ export default function Reports() {
         data: reports?.observations || [],
         showShare: true,
         range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
+        projectLocation: getProjectData(projectId),
       });
       if (!pdfUri) return;
       uriString = pdfUri;
@@ -221,6 +248,8 @@ export default function Reports() {
         projectName,
         data: reports?.observations || [],
         showShare: true,
+        projectLocation: getProjectData(projectId),
+        range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
       });
       uriString = xlsUri;
     } else if (format === 'CSV') {
@@ -228,6 +257,8 @@ export default function Reports() {
         projectName,
         data: reports?.observations || [],
         showShare: true,
+        projectLocation: getProjectData(projectId),
+        range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
       });
       uriString = csvUri;
     }
@@ -264,7 +295,9 @@ export default function Reports() {
             setShareProjectModalVisible(false);
           }
         })
-        .finally(() => setIsLoadingShare(false));
+        .finally(() => {
+          setIsLoadingShare(false);
+        });
     }
   };
 
@@ -273,7 +306,7 @@ export default function Reports() {
       <View style={styles.topNavContainer}>
         <ScreenTopNav title={t('Reports')} backPath="/auth/myProfile" />
       </View>
-      <ScrollView style={styles.bottomBlock}>
+      <ScrollView style={styles.bottomBlock} ref={scrollViewRef}>
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <CustomButton
             title={t('download')}
@@ -315,6 +348,7 @@ export default function Reports() {
               setProjectId(id);
               setProjectName(name || '');
             }}
+            placeholder={t('selectProject')}
             label={t('project')}
           />
         </View>
@@ -342,6 +376,7 @@ export default function Reports() {
             {dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label})
           </Text>
           <Menu
+            anchorPosition="top"
             contentStyle={[styles.menuContent, { width: screenWidth - 30 }]}
             visible={visible}
             onDismiss={closeMenu}
@@ -351,7 +386,8 @@ export default function Reports() {
                 styleAppBtn={{
                   width: 100,
                   borderWidth: 1,
-                  borderColor: 'grey',
+                  borderColor: '#EBEBEB',
+                  elevation: 0,
                 }}
                 styleBtn={{ color: 'black' }}
                 backgroundColor="white"
@@ -379,7 +415,7 @@ export default function Reports() {
         <TableReports
           reports={reports?.observations || []}
           isLoading={isLoading}
-          projectId={projectId}
+          projectLocation={getProjectData(projectId)}
         />
 
         <Pagination
@@ -397,8 +433,8 @@ export default function Reports() {
         mode="range"
         visible={open}
         onDismiss={onDismiss}
-        startDate={dateRange.startDate}
-        endDate={dateRange.endDate}
+        startDate={rangeCopy.startDate}
+        endDate={rangeCopy.endDate}
         onConfirm={onConfirm}
       />
 

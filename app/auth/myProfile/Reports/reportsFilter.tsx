@@ -9,10 +9,11 @@ import { apiInstance } from '@/axios';
 import { IGetAllCategory } from '@/axios/api/observations';
 import { AxiosResponse } from 'axios';
 import { UserList } from '@/axios/api/auth';
+import { Colors } from '@/constants/Colors';
 
 export interface IReportsFilter {
   location: string;
-  generalContractor: string;
+  contractor: string;
   category: string;
   status: string;
   assigneeId: string;
@@ -36,12 +37,13 @@ export default function ReportsFilter({
 }) {
   const { t } = useTranslation();
 
-  const [generalContractor, setGeneralContractor] = useState('');
+  const [contractor, setGeneralContractor] = useState('');
+  const [location, setLocation] = useState('');
 
   const { setValue, getValues } = useForm<IReportsFilter>({
     defaultValues: {
       location: '',
-      generalContractor: '',
+      contractor: '',
       category: '',
       status: '',
       assigneeId: '',
@@ -49,7 +51,9 @@ export default function ReportsFilter({
   });
 
   const clear = () => {
-    setValue('generalContractor', '');
+    setGeneralContractor('');
+    setLocation('');
+    setValue('contractor', '');
     setValue('category', '');
     setValue('status', '');
     setValue('assigneeId', '');
@@ -75,17 +79,46 @@ export default function ReportsFilter({
     },
   });
 
+  const assigneeTitle = [{ id: '', email: t('all') }, ...(users || [])];
+
   return (
     <View style={{ gap: 18 }}>
       <View style={{ gap: 10 }}>
-        <Text style={{ fontSize: 16, fontWeight: '500' }}>{t('generalContractor')}</Text>
+        <Text style={{ fontSize: 16, fontWeight: '500' }}>{t('contractor')}</Text>
         <TextInput
-          style={{ borderWidth: 1, borderColor: '#D0D5DD', padding: 10, borderRadius: 8 }}
+          style={{
+            borderWidth: 1,
+            borderColor: '#D0D5DD',
+            padding: 10,
+            borderRadius: 8,
+            textAlignVertical: 'top',
+          }}
           onChangeText={(e) => {
-            setValue('generalContractor', e);
+            setValue('contractor', e);
             setGeneralContractor(e);
           }}
-          value={generalContractor || filters.generalContractor}
+          placeholderTextColor={Colors.light.text}
+          placeholder={t('contractor')}
+          value={contractor || filters.contractor}
+        />
+      </View>
+
+      <View style={{ gap: 10 }}>
+        <Text style={{ fontSize: 16, fontWeight: '500' }}>{t('location')}</Text>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: '#D0D5DD',
+            padding: 10,
+            borderRadius: 8,
+          }}
+          onChangeText={(e) => {
+            setValue('location', e);
+            setLocation(e);
+          }}
+          placeholderTextColor={Colors.light.text}
+          placeholder={t('location')}
+          value={location || filters.location}
         />
       </View>
 
@@ -111,16 +144,10 @@ export default function ReportsFilter({
 
       <DropdownItem
         search
-        data={[
-          {
-            label: t('all'),
-            value: '',
-          },
-          ...(users?.map((user) => ({
-            label: user.email || user.name,
-            value: user.id,
-          })) || []),
-        ]}
+        data={assigneeTitle.map((user) => ({
+          label: user.email,
+          value: user.id,
+        }))}
         onChange={(e) => setValue('assigneeId', e.value)}
         label={t('assignee')}
         defaultValue={filters.assigneeId}
@@ -128,8 +155,8 @@ export default function ReportsFilter({
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <CustomButton
-          title={t('clear')}
-          styleAppBtn={{ flex: 1, borderWidth: 1, borderColor: 'grey' }}
+          title={t('resetAll')}
+          styleAppBtn={{ flex: 1, borderWidth: 1, borderColor: 'grey', elevation: 0 }}
           styleBtn={{ color: 'black' }}
           backgroundColor="white"
           onPress={() => {
@@ -138,7 +165,7 @@ export default function ReportsFilter({
         />
         <CustomButton
           title={t('applyNow')}
-          styleAppBtn={{ flex: 1 }}
+          styleAppBtn={{ flex: 1, elevation: 0 }}
           onPress={() => {
             onApply(getValues());
             onClose();

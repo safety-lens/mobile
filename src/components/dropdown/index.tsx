@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
 
 interface IDropdown {
-  data: { label: string; value: string }[];
+  data: { label: string; value: string | undefined }[];
   placeholder?: string;
   searchPlaceholder?: string;
   search?: boolean;
@@ -65,7 +65,7 @@ export default function DropdownItem({
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         data={data.filter((item) =>
-          item.label.toLowerCase().includes(searchText.toLowerCase())
+          item?.label?.toLowerCase()?.includes(searchText.toLowerCase())
         )}
         search={search}
         labelField="label"

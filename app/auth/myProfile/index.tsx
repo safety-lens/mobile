@@ -21,6 +21,7 @@ export default function MyProfile() {
   const { user, refreshUserInfo } = useGetUserInfo();
   const { t } = useTranslation();
   const { unreadNotifications } = useContext(NotificationContext);
+  const { isAdmin } = useGetUserInfo();
 
   const isStaging = apiInstance.defaults.baseURL?.includes('staging');
 
@@ -81,10 +82,12 @@ export default function MyProfile() {
               <Text style={styles.drawerItem}>{t('notification')}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.reports} onPress={goToReports}>
-              <ReportIcon />
-              <Text style={styles.drawerItem}>{t('Reports')}</Text>
-            </TouchableOpacity>
+            {isAdmin && (
+              <TouchableOpacity style={styles.reports} onPress={goToReports}>
+                <ReportIcon />
+                <Text style={styles.drawerItem}>{t('Reports')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <DrawerItem

@@ -43,7 +43,7 @@ export interface ICreateObservation {
   categories?: string[];
   deadline?: Date;
   assignees?: string[];
-  generalContractor?: string;
+  contractor?: string;
   subContractor?: string;
 }
 
@@ -217,8 +217,8 @@ export default function CreateNewObservation({
           <TextField<ICreateObservation>
             control={control}
             errors={errors}
-            label={t('generalContractor')}
-            name="generalContractor"
+            label={t('contractor')}
+            name="contractor"
           />
 
           <TextField<ICreateObservation>
@@ -314,15 +314,17 @@ export default function CreateNewObservation({
           />
         </View>
 
-        <TimePickerModal
-          visible={visibleTimePicker}
-          onDismiss={onDismiss}
-          onConfirm={({ minutes, hours }) => {
-            setDate(new Date(date.setHours(hours, minutes)));
-            onDismiss();
-          }}
-          use24HourClock
-        />
+        <View>
+          <TimePickerModal
+            visible={visibleTimePicker}
+            onDismiss={onDismiss}
+            onConfirm={({ minutes, hours }) => {
+              setDate(new Date(date.setHours(hours, minutes)));
+              onDismiss();
+            }}
+            use24HourClock
+          />
+        </View>
 
         <DatePickerModal
           locale={lang ?? 'en'}
@@ -377,6 +379,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingHorizontal: 10,
   },
 });

@@ -95,7 +95,7 @@ export default function ChangeAssignee({
         </View>
 
         <DropdownItem
-          data={[{ name: 'None', id: 'none' }, ...users].map((user) => ({
+          data={users.map((user) => ({
             label: user.name,
             value: user.id,
           }))}

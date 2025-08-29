@@ -9,7 +9,7 @@
     "new": "New",
     "projectName": "Project Name",
     "name": "Name",
-    "generalContractor": "General Contractor",
+    "contractor": "Contractor",
     "subContractor": "Sub Contractor",
     "projectNumber": "Project Number",
     "mainPhoto": "Main photo",
@@ -129,6 +129,8 @@
     "manageMembers": "Manage Members",
 
     "enterYourEmail": "Enter Your Email",
+    "enterEmailAddress": "Enter Email address",
+    "enterYourMessage": "Enter your message",
     "forgotPassword": "Forgot Password?",
 
     "notification": "Notifications",
@@ -159,6 +161,7 @@
     "assignee": "Assignee",
     "clear": "Clear",
     "applyNow": "Apply Now",
+    "resetAll": "Reset All",
     "shareThisDocumentTo": "Share this document to:",
     "selectTheFormatForYourReport": "Select the format for your report:",
     "messageOptional": "Message (Optional)",
@@ -168,7 +171,7 @@
     "reporter": "Reporter",
     "categoryOfObservation": "Category of Observation",
     "statusOfObservation": "Status of Observation",
-    "closedDate": "Closed Date",
+    "closeDate": "Closed Date",
     "followUp": "Follow Up",
     "notesComments": "Notes/Comments",
     "allTime": "All Time",
@@ -178,5 +181,20 @@
     "last6months": "Last 6 months",
     "last1year": "Last 1 year",
     "selectDateRange": "Select Date Range",
-    "selectProject": "Please select a project"
+    "selectProject": "Select a project",
+
+    "months": {
+      "January": "January",
+      "February": "February",
+      "March": "March",
+      "April": "April",
+      "May": "May",
+      "June": "June",
+      "July": "July",
+      "August": "August",
+      "September": "September",
+      "October": "October",
+      "November": "November",
+      "December": "December"
+    }
 }}

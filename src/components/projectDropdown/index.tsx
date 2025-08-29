@@ -11,11 +11,13 @@ export default function ProjectDropdown({
   redirect,
   onChange,
   label,
+  placeholder,
 }: {
   currentId?: string;
   redirect?: boolean;
   onChange?: (id: string, name?: string) => void;
   label?: string;
+  placeholder?: string;
 }) {
   const { projects, setSingleProject } = useProjects();
   const { setObservation } = useObservations();
@@ -55,6 +57,7 @@ export default function ProjectDropdown({
       defaultValue={currentId}
       onChange={(e) => handleChange(e.value, e.label)}
       label={label || t('chooseProject')}
+      placeholder={placeholder || t('chooseProject')}
     />
   );
 }

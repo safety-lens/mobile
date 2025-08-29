@@ -1,5 +1,5 @@
 import { Observation } from '@/types/observation';
-import { dateFormat, dateTimeFormat } from '@/utils/dateFormat';
+import { dateFormat, dateTimeFormat, fullDateTimeFormat } from '@/utils/dateFormat';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useProjects } from '@/context/projectsProvider';
 import EditNoteModal from './EditNoteModal';
 import Edit from '../../../../assets/svgs/edit';
 import { useTranslation } from 'react-i18next';
@@ -17,10 +16,11 @@ import { useTranslation } from 'react-i18next';
 export default function TableReports({
   reports,
   isLoading,
+  projectLocation,
 }: {
   reports: Observation[];
   isLoading: boolean;
-  projectId: string;
+  projectLocation: string;
 }) {
   const { t } = useTranslation();
   const [editNoteModalVisible, setEditNoteModalVisible] = React.useState(false);
@@ -30,14 +30,6 @@ export default function TableReports({
   if (isLoading) {
     return <ActivityIndicator size="large" />;
   }
-
-  const { projects } = useProjects();
-
-  const getProjectData = (projectId: string) => {
-    const project = projects.projects.find((project) => project.id === projectId);
-    if (!project) return '-';
-    return `${project.address}, ${project.city}, ${project.country}`;
-  };
 
   return (
     <>
@@ -50,13 +42,13 @@ export default function TableReports({
             <Text style={[styles.headerCell]}>{t('date')}</Text>
             <Text style={[styles.headerCell]}>{t('location')}</Text>
             <Text style={[styles.headerCell]}>{t('reporter')}</Text>
-            <Text style={[styles.headerCell]}>{t('generalContractor')}</Text>
+            <Text style={[styles.headerCell]}>{t('contractor')}</Text>
             <Text style={[styles.headerCell]}>{t('subContractor')}</Text>
             <Text style={[styles.headerCell]}>{t('categoryOfObservation')}</Text>
             <Text style={[styles.headerCell]}>{t('statusOfObservation')}</Text>
             <Text style={[styles.headerCell]}>{t('assignee')}</Text>
             <Text style={[styles.headerCell]}>{t('deadlineToComplete')}</Text>
-            <Text style={[styles.headerCell]}>{t('closedDate')}</Text>
+            <Text style={[styles.headerCell]}>{t('closeDate')}</Text>
             <Text style={[styles.headerCell]}>{t('followUp')}</Text>
             <Text style={[styles.headerCell, { borderRightWidth: 0 }]}>
               {t('notesComments')}
@@ -66,15 +58,9 @@ export default function TableReports({
             <View key={item._id} style={styles.dataRow}>
               <Text style={[styles.dataCell, { borderRightWidth: 0 }]}>{item.name}</Text>
               <Text style={[styles.dataCell]}>
-                {item.createdAt ? (
-                  <>
-                    {dateFormat(item.createdAt)}, {dateTimeFormat(item.createdAt)}
-                  </>
-                ) : (
-                  '-'
-                )}
+                {item.createdAt ? <>{fullDateTimeFormat(item.createdAt)}</> : '-'}
               </Text>
-              <Text style={[styles.dataCell]}>{getProjectData(item.projectId)}</Text>
+              <Text style={[styles.dataCell]}>{projectLocation}</Text>
               <Text style={[styles.dataCell]}>{item?.createdBy?.name || '-'}</Text>
               <Text style={[styles.dataCell]}>{item.contractor || '-'}</Text>
               <Text style={[styles.dataCell]}>{item.subContractor || '-'}</Text>
@@ -95,9 +81,9 @@ export default function TableReports({
                 )}
               </Text>
               <Text style={[styles.dataCell]}>
-                {item.closedDate ? (
+                {item.closeDate ? (
                   <>
-                    {dateFormat(item.closedDate)}, {dateTimeFormat(item.closedDate)}
+                    {dateFormat(item.closeDate)}, {dateTimeFormat(item.closeDate)}
                   </>
                 ) : (
                   '-'

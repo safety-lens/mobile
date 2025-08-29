@@ -10,6 +10,7 @@ interface IDropdownData {
   label: string;
   value: string;
   id?: string;
+  name?: string;
 }
 
 interface IDropdown<T = UserList> {
@@ -58,6 +59,8 @@ export default function MultiSelectDropdown<T = UserList>({
   useEffect(() => {
     if (defaultValue.length) setValue(defaultValue as string[]);
   }, [defaultValue]);
+
+  console.log('isFocus', isFocus);
 
   return (
     <View>
@@ -146,14 +149,20 @@ export default function MultiSelectDropdown<T = UserList>({
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
-        data={data}
+        data={data.filter((item) =>
+          //@ts-expect-error  TODO: fix this
+          item.name?.toLowerCase().includes(searchText.toLowerCase())
+        )}
         search={search}
         labelField="name"
         valueField="id"
         searchPlaceholder={resolvedSearchPlaceholder}
         placeholder={t(placeholderInput)}
         value={value}
-        onFocus={() => setIsFocus(true)}
+        onFocus={() => {
+          setIsFocus(true);
+          handleClear();
+        }}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item);
