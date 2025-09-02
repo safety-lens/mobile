@@ -80,6 +80,7 @@ export default function DropdownItem({
           onChange(item);
           setIsFocus(false);
         }}
+        autoScroll={false}
         renderInputSearch={() => (
           <View style={styles.searchContainer}>
             <TextInput

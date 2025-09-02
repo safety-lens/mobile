@@ -54,6 +54,7 @@ export default function Reports() {
   const [projectId, setProjectId] = React.useState('');
   const [projectName, setProjectName] = React.useState('');
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(10);
 
   const [isLoadingShare, setIsLoadingShare] = React.useState(false);
 
@@ -181,7 +182,7 @@ export default function Reports() {
   const getParams = () => {
     return {
       page: currentPage,
-      pageSize: 10,
+      pageSize: limit,
       projectId,
       startPeriod: dateRange.startDate,
       finishPeriod: dateRange.endDate,
@@ -190,7 +191,7 @@ export default function Reports() {
   };
 
   const { data: reports, isLoading } = useQuery({
-    queryKey: ['observations', currentPage, projectId, dateRange, filters],
+    queryKey: ['observations', currentPage, projectId, dateRange, filters, limit],
     queryFn: async () => {
       const response: AxiosResponse<ObservationsResponse> = await apiInstance.get(
         `/observations`,
@@ -341,7 +342,6 @@ export default function Reports() {
             icon={<ShareIcon />}
           />
         </View>
-
         <View style={{ marginTop: 24 }}>
           <ProjectDropdown
             onChange={(id, name) => {
@@ -352,7 +352,6 @@ export default function Reports() {
             label={t('project')}
           />
         </View>
-
         <View style={{ marginTop: 24 }}>
           <DropdownItem
             search
@@ -369,7 +368,6 @@ export default function Reports() {
             label={t('dateRange')}
           />
         </View>
-
         <View style={styles.userActivityContainer}>
           <Text style={styles.userActivityText}>
             User Activity (
@@ -411,21 +409,33 @@ export default function Reports() {
             </ScrollView>
           </Menu>
         </View>
-
         <TableReports
           reports={reports?.observations || []}
           isLoading={isLoading}
           projectLocation={getProjectData(projectId)}
         />
-
-        <Pagination
-          currentPage={currentPage}
-          count={reports?.count || 0}
-          pageSize={10}
-          onPageChange={(page) => {
-            setCurrentPage(page);
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
-        />
+        >
+          <Pagination
+            size="small"
+            isLimitSelector
+            currentPage={currentPage}
+            count={reports?.count || 0}
+            pageSize={limit}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+            }}
+            onLimitChange={(value) => {
+              setCurrentPage(1);
+              setLimit(value.value);
+            }}
+          />
+        </View>
       </ScrollView>
 
       <DatePickerModal

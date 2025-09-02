@@ -7,8 +7,9 @@ import CustomButton from '@/components/CustomButton/button';
 import { useTranslation } from 'react-i18next';
 import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
-import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
+import { DatePickerModal } from 'react-native-paper-dates';
 import useGetUserInfo from '@/hooks/getUserInfo';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 type status = 'Active' | 'Archived';
 
@@ -109,16 +110,20 @@ export default function ChangeDeadline({
           </TouchableOpacity>
         </View>
 
-        <TimePickerModal
-          visible={visibleTimePicker}
-          onDismiss={onDismiss}
-          onConfirm={({ minutes, hours }) => {
-            setDate(new Date(date.setHours(hours, minutes)));
-            onDismiss();
-          }}
-          use24HourClock
-        />
-
+        {visibleTimePicker && (
+          <RNDateTimePicker
+            mode="time"
+            value={date}
+            is24Hour={true}
+            initialInputMode="default"
+            fullscreen={true}
+            display="spinner"
+            onChange={(_, date) => {
+              setDate(date as Date);
+              onDismiss();
+            }}
+          />
+        )}
         <DatePickerModal
           locale={lang ?? 'en'}
           mode="single"

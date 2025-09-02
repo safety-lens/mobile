@@ -22,8 +22,9 @@ import { useObservations } from '@/context/observationProvider';
 import { useApiUser } from '@/axios/api/users';
 import { UserList } from '@/axios/api/auth';
 import useGetUserInfo from '@/hooks/getUserInfo';
-import { TimePickerModal, DatePickerModal } from 'react-native-paper-dates';
+import { DatePickerModal } from 'react-native-paper-dates';
 import MultiSelectDropdown from '../MultiSelectDropdown';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -260,7 +261,7 @@ export default function CreateNewObservation({
                         }}
                       >
                         <Text style={styles.dateTimeText}>
-                          <Text style={{ fontWeight: '700' }}>Date: </Text>
+                          <Text style={{ fontWeight: '700' }}>{t('date')}: </Text>
                           {date?.toLocaleDateString()}
                         </Text>
                       </TouchableOpacity>
@@ -272,7 +273,7 @@ export default function CreateNewObservation({
                         }}
                       >
                         <Text style={styles.dateTimeText}>
-                          <Text style={{ fontWeight: '700' }}>Time: </Text>
+                          <Text style={{ fontWeight: '700' }}>{t('time')}: </Text>
                           {date?.toLocaleTimeString([], {
                             hour: 'numeric',
                             minute: '2-digit',
@@ -315,15 +316,20 @@ export default function CreateNewObservation({
         </View>
 
         <View>
-          <TimePickerModal
-            visible={visibleTimePicker}
-            onDismiss={onDismiss}
-            onConfirm={({ minutes, hours }) => {
-              setDate(new Date(date.setHours(hours, minutes)));
-              onDismiss();
-            }}
-            use24HourClock
-          />
+          {visibleTimePicker && (
+            <RNDateTimePicker
+              mode="time"
+              value={date}
+              is24Hour={true}
+              initialInputMode="default"
+              fullscreen={true}
+              display="spinner"
+              onChange={(event, date) => {
+                setDate(date as Date);
+                onDismiss();
+              }}
+            />
+          )}
         </View>
 
         <DatePickerModal
