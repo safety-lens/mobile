@@ -1,48 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import CustomButton from '@/components/CustomButton/button';
-import IconClose from '../../../assets/svgs/iconClose';
-import DropdownItem from '../dropdown';
-import { useApiObservations } from '@/axios/api/observations';
-import { Observation, StatusTitle } from '@/types/observation';
+import { IGetAllCategory, useApiObservations } from '@/axios/api/observations';
+import { Observation } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
+import IconClose from '../../../../../assets/svgs/iconClose';
+import MultiSelectDropdown from '@/components/MultiSelectDropdown';
 
-interface IChangeStatus {
+interface IChangeCategories {
   visible: boolean;
   hideModal: () => void;
   observationId: string;
-  currentStatus?: StatusTitle;
   returnSameStatus?: Observation | boolean;
+  defaultValue?: string[];
 }
 
-const dataStatus = (t: (key: string) => string) => [
-  { label: t('addressed'), value: 'Addressed' },
-  { label: t('inProgress'), value: 'In progress' },
-  { label: t('notAddressed'), value: 'Not addressed' },
-];
-
-export default function ChangeStatus({
+export default function ChangeCategories({
   visible = false,
   hideModal,
   observationId,
-  currentStatus,
   returnSameStatus,
-}: IChangeStatus) {
-  const { updateObservations, getFilterObservations, getAllObservations } =
-    useApiObservations();
-  const { t } = useTranslation();
-  const data = dataStatus(t);
+  defaultValue,
+}: IChangeCategories) {
+  const {
+    updateObservations,
+    getAllCategory,
+    getFilterObservations,
+    getAllObservations,
+  } = useApiObservations();
 
+  const { t } = useTranslation();
+
+  const [category, setCategory] = useState<IGetAllCategory[]>([]);
   const [text, setText] = useState<string>('');
   const [textError, setTextError] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<StatusTitle | undefined>(
-    currentStatus
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+
+  console.log(textError);
 
   const onSubmit = async () => {
-    if (selectedStatus === 'Addressed') {
+    if (selectedCategory.length === 0) {
       if (!text) {
         setTextError(true);
         return;
@@ -51,7 +50,7 @@ export default function ChangeStatus({
     await updateObservations({
       observationId,
       data: {
-        status: selectedStatus,
+        categories: selectedCategory,
         implementedActions: text || undefined,
       },
     }).then(async () => {
@@ -69,7 +68,7 @@ export default function ChangeStatus({
         await getAllObservations({});
       }
       // setStatusFilter((returnSameStatus as Observation).status);
-      setSelectedStatus(undefined);
+      setSelectedCategory([]);
       hideModal();
     });
   };
@@ -77,17 +76,22 @@ export default function ChangeStatus({
   useEffect(() => {
     setText('');
     setTextError(false);
-  }, [selectedStatus]);
+  }, [selectedCategory]);
 
   useEffect(() => {
-    setSelectedStatus(currentStatus);
-  }, [currentStatus]);
+    getAllCategory().then((res) => setCategory(res || []));
+  }, []);
+
+  console.log(
+    'defaultValue',
+    defaultValue?.map((item) => item)
+  );
 
   return (
     <Modal visible={visible} hideModal={hideModal} keyboardUp>
       <>
         <View style={styles.formHead}>
-          <Text style={styles.formHeadText}>{t('changeStatus')}</Text>
+          <Text style={styles.formHeadText}>{t('changeCategories')}</Text>
 
           <TouchableOpacity onPress={hideModal}>
             <IconClose />
@@ -95,26 +99,22 @@ export default function ChangeStatus({
         </View>
 
         <View style={styles.dropdownItem}>
-          <DropdownItem
-            defaultValue={currentStatus}
-            placeholder="Select Status"
-            data={data}
-            onChange={(e) => setSelectedStatus(e.value as StatusTitle)}
+          <MultiSelectDropdown
+            required
+            search
+            data={category.map((item) => ({
+              label: item.specification,
+              id: item.name,
+              name: item.name,
+            }))}
+            defaultValue={defaultValue}
+            placeholderInput="chooseCategory"
+            label={t('chooseCategory')}
+            onChange={(selectedItems) => {
+              setSelectedCategory(selectedItems as string[]);
+            }}
           />
         </View>
-
-        {selectedStatus === 'Addressed' && (
-          <View style={styles.textBox}>
-            <Text style={styles.textTitle}>{t('implementedActions')}</Text>
-            <TextInput
-              style={[styles.textInput, { textAlignVertical: 'top' }]}
-              multiline={true}
-              onChangeText={setText}
-              onChange={() => setTextError(false)}
-            />
-            {textError && <Text style={styles.error}>{t('required')}</Text>}
-          </View>
-        )}
 
         <View style={styles.buttonBox}>
           <CustomButton
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   dropdownItem: {
-    marginTop: 40,
+    marginTop: 20,
   },
   textBox: {
     marginTop: 24,

@@ -60,8 +60,6 @@ export default function MultiSelectDropdown<T = UserList>({
     if (defaultValue.length) setValue(defaultValue as string[]);
   }, [defaultValue]);
 
-  console.log('isFocus', isFocus);
-
   return (
     <View>
       {label && (
@@ -72,6 +70,7 @@ export default function MultiSelectDropdown<T = UserList>({
       )}
       <MultiSelect
         ref={dropdownRef}
+        value={value}
         renderItem={(item) => (
           <View
             key={item.id}
@@ -97,6 +96,7 @@ export default function MultiSelectDropdown<T = UserList>({
               right={
                 searchText.length && (
                   <TextInput.Icon
+                    style={{ left: 10 }}
                     icon="close"
                     onPress={handleClear}
                     forceTextInputFocus
@@ -158,7 +158,6 @@ export default function MultiSelectDropdown<T = UserList>({
         valueField="id"
         searchPlaceholder={resolvedSearchPlaceholder}
         placeholder={t(placeholderInput)}
-        value={value}
         onFocus={() => {
           setIsFocus(true);
           handleClear();

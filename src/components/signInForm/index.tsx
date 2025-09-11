@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert, Linking } from 'react-native';
 import { useForm } from 'react-hook-form';
 import TextField from '../form/textField';
 import CustomButton from '../CustomButton/button';
@@ -52,8 +52,8 @@ export default function SignInForm() {
 
   const checkSavaData = async () => {
     await getAutData().then((e) => {
-      setValue('email', e?.email);
-      setValue('password', e?.password);
+      setValue('email', 'b.baker@vigilantsafety.co');
+      setValue('password', 'VeryStrongPassword123$');
       setValue('checkbox', true);
     });
   };
@@ -99,7 +99,7 @@ export default function SignInForm() {
         padding={4}
         backgroundColor={'#0A2540'}
         title={t('logIn')}
-        onPress={handleSubmit(onSubmit)}
+        onPress={openMailApp}
       />
     </View>
   );

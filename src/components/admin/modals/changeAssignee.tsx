@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 24,
+    marginBottom: 20,
   },
   textAreaBox: {
     marginVertical: 40,

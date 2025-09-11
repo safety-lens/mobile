@@ -47,11 +47,12 @@ export default function CustomButton({
     >
       {icon && <View>{icon}</View>}
       <Text
+        numberOfLines={1}
         style={[
           styles.appButtonText,
           styleBtn,
           outline && styles.outlineBtn,
-          { padding: padding },
+          { padding: padding, maxWidth: '80%' },
         ]}
       >
         {title}

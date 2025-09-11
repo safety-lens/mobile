@@ -16,6 +16,7 @@ export default function DownloadModal({
   createPdf,
   createXLS,
   createCSV,
+  dateRange,
 }: {
   visible: boolean;
   hideModal: () => void;
@@ -23,6 +24,7 @@ export default function DownloadModal({
   createPdf: () => void;
   createXLS: () => void;
   createCSV: () => void;
+  dateRange: string;
 }) {
   const { t } = useTranslation();
   const [checked, setChecked] = React.useState<TChecked>('PDF');
@@ -43,7 +45,7 @@ export default function DownloadModal({
       <>
         <View style={styles.header}>
           <Text style={styles.title}>
-            {t('downloadReport')} &quot;{projectName}&quot;
+            {t('downloadReport')} &quot;{projectName} ({dateRange})&quot;
           </Text>
           <TouchableOpacity onPress={hideModal}>
             <IconClose />
@@ -107,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#0A2540',
+    maxWidth: '85%',
   },
   content: {
     marginTop: 20,
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   },
   radioButton: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 4,
     alignItems: 'center',
   },
   footer: {

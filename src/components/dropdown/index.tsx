@@ -67,13 +67,17 @@ export default function DropdownItem({
         data={data.filter((item) =>
           item?.label?.toLowerCase()?.includes(searchText.toLowerCase())
         )}
+        dropdownPosition="bottom"
         search={search}
         labelField="label"
         valueField="value"
         searchPlaceholder={resolvedSearchPlaceholder}
         placeholder={placeholder}
         value={value}
-        onFocus={() => setIsFocus(true)}
+        onFocus={() => {
+          setIsFocus(true);
+          handleClear();
+        }}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item.value);
@@ -93,6 +97,7 @@ export default function DropdownItem({
               right={
                 searchText.length ? (
                   <TextInput.Icon
+                    style={{ left: 10 }}
                     icon="close"
                     onPress={handleClear}
                     forceTextInputFocus

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Repeat from '../../../assets/svgs/repeat';
-import ChangeStatus from '../changeStatus';
+import ChangeStatus from '../admin/modals/changeStatus';
 import { Observation, StatusTitle } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 

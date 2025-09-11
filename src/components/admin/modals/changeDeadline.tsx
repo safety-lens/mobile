@@ -7,9 +7,7 @@ import CustomButton from '@/components/CustomButton/button';
 import { useTranslation } from 'react-i18next';
 import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
-import { DatePickerModal } from 'react-native-paper-dates';
-import useGetUserInfo from '@/hooks/getUserInfo';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import SelectTime from '@/components/SelectTime/SelectTime';
 
 type status = 'Active' | 'Archived';
 
@@ -34,14 +32,11 @@ export default function ChangeDeadline({
   projectId,
   defaultValue,
 }: IChangeDeadline) {
-  const { lang } = useGetUserInfo();
-
   const { updateObservations, getFilterObservations, getAllObservations } =
     useApiObservations();
 
   const [date, setDate] = useState(new Date(defaultValue || new Date()));
-  const [visibleTimePicker, setVisibleTimePicker] = useState(false);
-  const [visibleDatePicker, setVisibleDatePicker] = useState(false);
+
   const { t } = useTranslation();
 
   const onSubmit = async () => {
@@ -70,11 +65,6 @@ export default function ChangeDeadline({
     hideModal();
   };
 
-  const onDismiss = () => {
-    setVisibleTimePicker(false);
-    setVisibleDatePicker(false);
-  };
-
   return (
     <Modal visible={visible} hideModal={hideModal}>
       <>
@@ -85,56 +75,9 @@ export default function ChangeDeadline({
           </TouchableOpacity>
         </View>
 
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <TouchableOpacity
-            style={{ flex: 1, width: '100%' }}
-            onPress={() => setVisibleDatePicker(true)}
-          >
-            <Text style={styles.dateTimeText}>
-              <Text style={{ fontWeight: '700' }}>Date: </Text>
-              {date?.toLocaleDateString()}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ flex: 1, width: '100%' }}
-            onPress={() => setVisibleTimePicker(true)}
-          >
-            <Text style={styles.dateTimeText}>
-              <Text style={{ fontWeight: '700' }}>Time: </Text>
-              {date?.toLocaleTimeString([], {
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-            </Text>
-          </TouchableOpacity>
+        <View>
+          <SelectTime handleDateChange={setDate} />
         </View>
-
-        {visibleTimePicker && (
-          <RNDateTimePicker
-            mode="time"
-            value={date}
-            is24Hour={true}
-            initialInputMode="default"
-            fullscreen={true}
-            display="spinner"
-            onChange={(_, date) => {
-              setDate(date as Date);
-              onDismiss();
-            }}
-          />
-        )}
-        <DatePickerModal
-          locale={lang ?? 'en'}
-          mode="single"
-          date={date}
-          visible={visibleDatePicker}
-          onDismiss={onDismiss}
-          onConfirm={({ date }) => {
-            setDate(date as Date);
-            onDismiss();
-          }}
-        />
 
         <View style={styles.buttonBox}>
           <CustomButton
@@ -170,6 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 24,
+    marginBottom: 20,
   },
   textAreaBox: {
     marginVertical: 40,

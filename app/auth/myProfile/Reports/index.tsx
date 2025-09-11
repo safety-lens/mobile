@@ -11,7 +11,7 @@ import { Divider, Menu } from 'react-native-paper';
 import ReportsFilter, { IReportsFilter } from './reportsFilter';
 import { DatePickerModal } from 'react-native-paper-dates';
 import useGetUserInfo from '@/hooks/getUserInfo';
-import { dateFormat } from '@/utils/dateFormat';
+import { dateFormatFull } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { apiInstance } from '@/axios';
@@ -135,7 +135,7 @@ export default function Reports() {
     selectDateRange: {
       label:
         dateRange.startDate && dateRange.endDate && selectRangeLabel === 'selectDateRange'
-          ? `${dateFormat(dateRange.startDate)} - ${dateFormat(dateRange.endDate)}`
+          ? `${dateFormatFull(dateRange.startDate)} - ${dateFormatFull(dateRange.endDate)}`
           : t('selectDateRange'),
       value: 'selectDateRange',
       range: { startDate: dateRange.startDate, endDate: dateRange.endDate },
@@ -307,7 +307,11 @@ export default function Reports() {
       <View style={styles.topNavContainer}>
         <ScreenTopNav title={t('Reports')} backPath="/auth/myProfile" />
       </View>
-      <ScrollView style={styles.bottomBlock} ref={scrollViewRef}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.bottomBlock}
+        ref={scrollViewRef}
+      >
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <CustomButton
             title={t('download')}
@@ -447,16 +451,16 @@ export default function Reports() {
         endDate={rangeCopy.endDate}
         onConfirm={onConfirm}
       />
-
       <ShareProjectModal
+        dateRange={dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label}
         projectName={projectName}
         visible={shareProjectModalVisible}
         hideModal={() => setShareProjectModalVisible(false)}
         handleSharePdf={(email, message, format) => shareFile(email, message, format)}
         isLoadingReportShare={isLoadingShare}
       />
-
       <DownloadModal
+        dateRange={dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label}
         projectName={projectName}
         visible={downloadModalVisible}
         hideModal={() => setDownloadModalVisible(false)}
@@ -467,7 +471,6 @@ export default function Reports() {
     </ScreenLayout>
   );
 }
-
 const styles = StyleSheet.create({
   bottomBlock: {
     flex: 1,

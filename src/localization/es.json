@@ -28,7 +28,10 @@
     "chooseCategory": "Categoría de observación",
     "observationDetail": "Detalle de la observación",
     "comentario": "Comentario",
+    "comment": "Comentario",
     "editComment": "Editar comentario",
+    "editCommentary": "Editar comentario",
+    "addNote": "Agregar nota",
     "assignees": "Asignado a",
     "chooseAssignee": "Elegir asignado",
     "search": "Buscar",
@@ -50,6 +53,10 @@
     "tapExpandMore": "Toque para expandir más",
     "viewDetails": "Ver detalles",
     "postObservation": "Observación posterior",
+
+    "changeDeadline": "Cambiar fecha límite",
+    "changeCategories": "Cambiar categorías",
+    "changeAssignee": "Cambiar asignado",
   
     "editProject": "Editar proyecto",
     "deleteProject": "Eliminar proyecto",
@@ -99,6 +106,7 @@
     "profile": "Perfil",
 
     "noProjectsYet": "La lista de proyectos está vacía, comuníquese con el administrador",
+    "time": "Hora",
 
     "hazardsIdentified": "Peligros identificados",
     "showMore": "Mostrar más", 
@@ -119,6 +127,11 @@
     "permission.openSettings": "Abrir configuración",
 
     "resultDisclaimer": "Las inspecciones de seguridad de SafetyLens pueden no ser siempre precisas. Verifique la información importante.",
+
+    "projectMembers": "Miembros del proyecto",
+    "selectUser": "Elegir usuario",
+    "members": "Miembros",
+    "manageMembers": "Gestionar miembros",
 
     "enterYourEmail": "Ingrese su correo electrónico",
     "enterEmailAddress": "Ingrese su correo electrónico",

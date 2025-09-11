@@ -7,6 +7,8 @@ import CustomButton from '@/components/CustomButton/button';
 import { RadioButton } from 'react-native-paper';
 import { TChecked } from './DownloadModal';
 import { useTranslation } from 'react-i18next';
+import TextField from '@/components/form/textField';
+import { useForm } from 'react-hook-form';
 
 export default function ShareProjectModal({
   visible,
@@ -14,24 +16,37 @@ export default function ShareProjectModal({
   projectName,
   handleSharePdf,
   isLoadingReportShare,
+  dateRange,
 }: {
   visible: boolean;
   hideModal: () => void;
   projectName: string;
   handleSharePdf: (email: string, message: string, format: TChecked) => void;
   isLoadingReportShare?: boolean;
+  dateRange: string;
 }) {
   const { t } = useTranslation();
-  const [email, setEmail] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [checked, setChecked] = React.useState<TChecked>('PDF');
 
-  const handleShare = () => {
-    handleSharePdf(email, message, checked);
+  const {
+    control,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const handleShare = (data: { email: string }) => {
+    handleSharePdf(data.email, message, checked);
   };
 
   useEffect(() => {
-    setEmail('');
+    setValue('email', '');
     setMessage('');
     setChecked('PDF');
   }, [visible]);
@@ -41,7 +56,7 @@ export default function ShareProjectModal({
       <>
         <View style={styles.header}>
           <Text style={styles.title}>
-            {t('share')} &quot;{projectName}&quot;
+            {t('share')} &quot;{projectName} ({dateRange})&quot;
           </Text>
           <TouchableOpacity onPress={hideModal}>
             <IconClose />
@@ -50,12 +65,17 @@ export default function ShareProjectModal({
 
         <View style={styles.content}>
           <View>
-            <Text>{t('shareThisDocumentTo')}</Text>
-            <TextInput
-              style={styles.inputField}
-              value={email}
-              onChangeText={setEmail}
+            <Text style={{ marginBottom: 8 }}>{t('shareThisDocumentTo')}</Text>
+
+            <TextField
+              control={control}
+              errors={errors}
+              pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
+              label={''}
+              name="email"
               placeholder={t('enterEmailAddress')}
+              required
+              keyboardType="email-address"
             />
           </View>
 
@@ -107,8 +127,8 @@ export default function ShareProjectModal({
           <CustomButton
             styleAppBtn={{ flex: 1 }}
             title={t('share')}
-            disabled={!email || isLoadingReportShare}
-            onPress={handleShare}
+            disabled={!watch('email') || isLoadingReportShare}
+            onPress={handleSubmit(handleShare)}
           />
         </View>
       </>
@@ -126,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#0A2540',
+    maxWidth: '85%',
   },
   content: {
     marginTop: 20,

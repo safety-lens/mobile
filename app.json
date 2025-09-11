@@ -3,7 +3,7 @@
     "newArchEnabled": true,
     "name": "Safety Lens",
     "slug": "safetylens-mobile",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "safetylensmobile",
@@ -17,8 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "safetylensmobile",
-      "usesNotifications": true,
-      "version": "1.0.5",
+      "version": "1.0.6",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to let you select and upload images.",
         "ITSAppUsesNonExemptEncryption": false

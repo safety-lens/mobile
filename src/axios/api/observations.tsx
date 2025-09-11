@@ -49,6 +49,7 @@ interface IUpdateObservation {
     deadline?: Date;
     assignees?: string[];
     note?: string;
+    categories?: string[];
   };
 }
 

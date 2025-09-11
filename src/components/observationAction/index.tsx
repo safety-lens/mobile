@@ -5,11 +5,13 @@ import { Colors } from '@/constants/Colors';
 import RenameObservation from '../admin/modals/renameObservation';
 import RemoveObservation from '../admin/modals/removeObservation';
 import { Observation } from '@/types/observation';
-import ChangeStatus from '../changeStatus';
+import ChangeStatus from '../admin/modals/changeStatus';
 import { useTranslation } from 'react-i18next';
 import EditComment from '../admin/modals/editComment';
 import ChangeAssignee from '../admin/modals/changeAssignee';
 import ChangeDeadline from '../admin/modals/changeDeadline';
+import useGetUserInfo from '@/hooks/getUserInfo';
+import ChangeCategories from '../admin/modals/changeCategories';
 
 interface IObservationsCard {
   observation: Observation;
@@ -24,6 +26,8 @@ export default function ObservationAction({
 }: IObservationsCard) {
   const { t } = useTranslation();
 
+  const { isAdmin } = useGetUserInfo();
+
   const [visibleMenu, setVisibleMenu] = useState(false);
 
   const [visibleRename, setVisibleRename] = useState(false);
@@ -32,6 +36,7 @@ export default function ObservationAction({
   const [visibleEditComment, setVisibleEditComment] = useState(false);
   const [visibleChangeAssignee, setVisibleChangeAssignee] = useState(false);
   const [visibleChangeDeadline, setVisibleChangeDeadline] = useState(false);
+  const [visibleChangeCategories, setVisibleChangeCategories] = useState(false);
   const openVisibleMenu = () => {
     setVisibleMenu(!visibleMenu);
   };
@@ -66,6 +71,11 @@ export default function ObservationAction({
     setVisibleMenu(false);
   };
 
+  const showChangeCategories = () => {
+    setVisibleChangeCategories(!visibleChangeCategories);
+    setVisibleMenu(false);
+  };
+
   return (
     <View>
       <Menu
@@ -94,10 +104,17 @@ export default function ObservationAction({
           onPress={openChangeStatus}
           title={t('changeStatus')}
         />
+        {isAdmin && (
+          <Menu.Item
+            titleStyle={styles.menuItem}
+            onPress={showChangeDeadline}
+            title={t('changeDeadline')}
+          />
+        )}
         <Menu.Item
+          title={t('changeCategories')}
           titleStyle={styles.menuItem}
-          onPress={showChangeDeadline}
-          title={t('changeDeadline')}
+          onPress={showChangeCategories}
         />
         <Menu.Item
           title={t('changeAssignee')}
@@ -154,6 +171,13 @@ export default function ObservationAction({
         visible={visibleEditComment}
         hideModal={showEditCommentModal}
       />
+      <ChangeCategories
+        observationId={observation._id}
+        visible={visibleChangeCategories}
+        hideModal={showChangeCategories}
+        defaultValue={observation.categories?.map((item) => item.name) || []}
+      />
+
       <RemoveObservation
         observationId={observation._id}
         observationName={`${observation.name || ''}`}

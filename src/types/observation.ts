@@ -33,7 +33,6 @@ export interface Observation {
 
   reporter?: string;
   note?: string;
-  contractor?: string;
 
   category?: string[];
   categories?: {
