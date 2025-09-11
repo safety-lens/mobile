@@ -199,7 +199,7 @@ export const useApiSignIn = (): UseApiSignInReturn => {
   };
 
   const logout = async () => {
-    // await deleteUserPushToken(`${Device.deviceName}${Device.osBuildId}`);
+    await deleteUserPushToken(`${Device.deviceName}${Device.osBuildId}`);
     await setValueStorage('auth', '');
     await setValueStorage('accounts', '');
     setUser(null);
