@@ -54,6 +54,7 @@ export default function Router() {
         gestureEnabled: false,
         presentation: 'card',
         animation: 'fade',
+        animationDuration: 100,
       }}
     >
       <Stack.Screen name="auth" />
