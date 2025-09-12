@@ -89,9 +89,11 @@ export default function RootLayout() {
     registerForPushNotificationsAsync()
       .then((token) => {
         if (token) {
-          console.log(`token save! ${token}`);
           saveUserPushToken({
-            deviceId: `${Device.deviceName}${Device.osBuildId}`,
+            deviceId: `${Device.deviceName}${Device.osBuildId}`.replace(
+              /[^a-zA-Z0-9]/g,
+              ''
+            ),
             token: token,
           });
         }

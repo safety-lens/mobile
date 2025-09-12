@@ -52,9 +52,13 @@ export default function Router() {
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
+        presentation: 'card',
+        animation: 'fade',
       }}
     >
       <Stack.Screen name="auth" />
+      <Stack.Screen name="check-email" />
+      <Stack.Screen name="enter-screen" />
       <Stack.Screen name="forgot-password" />
       <Stack.Screen name="reset-password" />
       <Stack.Screen name="+not-found" />

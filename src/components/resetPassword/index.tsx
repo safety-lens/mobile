@@ -75,6 +75,7 @@ export default function ResetPassword() {
           errors={errors}
           label={t('enterYourEmail')}
           name="email"
+          pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
           required
           keyboardType="email-address"
         />

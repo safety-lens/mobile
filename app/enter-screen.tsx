@@ -1,17 +1,18 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
-import SLLogoFull from '../assets/svgs/SLlogoFull';
-import CustomButton from '@/components/CustomButton/button';
-import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import SignInForm from '@/components/signInForm';
+import { useLocalSearchParams } from 'expo-router';
 
-export default function HomeScreen() {
+export default function CheckEmail() {
   const { t } = useTranslation();
   const { keyboardStatus } = useKeyboardHeight();
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
+  const { email: emailParam } = useLocalSearchParams();
+
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd();
   };
@@ -24,29 +25,27 @@ export default function HomeScreen() {
     <ScreenLayout>
       <KeyboardAwareScrollView
         ref={scrollViewRef}
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flex: 1, justifyContent: 'center' }}
       >
-        <View style={styles.iconBox}>
-          <SLLogoFull width={200} height={200} />
+        <View style={styles.container}>
+          <Text style={styles.title}>{t('authFlow.enterEmail')}</Text>
+          <Text>{t('authFlow.enterEmailDescription')}</Text>
+          <SignInForm email={emailParam as string} />
         </View>
-        <CustomButton
-          padding={4}
-          backgroundColor={'#0A2540'}
-          title={t('authFlow.getStarted')}
-          styleAppBtn={{ width: '80%' }}
-          onPress={() => router.navigate('/check-email')}
-        />
       </KeyboardAwareScrollView>
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  iconBox: {
-    marginLeft: 50,
+  container: {
+    padding: 24,
+    gap: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    lineHeight: 25,
   },
 });

@@ -19,6 +19,8 @@ interface UseApiSignInReturn {
   saveLastVisitedProject: (data: string) => Promise<void>;
   getForgotPassword: (data: IForgotPassword) => Promise<unknown>;
   logout: () => Promise<void>;
+  checkEmail: (email: string) => Promise<{ available: boolean } | undefined>;
+  sendRegistrationLink: (email: string) => Promise<unknown>;
   isLoading: boolean;
   error: string | null;
 }
@@ -198,8 +200,53 @@ export const useApiSignIn = (): UseApiSignInReturn => {
     }
   };
 
+  const checkEmail = async (
+    email: string
+  ): Promise<{ available: boolean } | undefined> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response: AxiosResponse<{ available: boolean }> = await apiPublicInstance({
+        method: 'get',
+        url: `/auth/check_email?email=${email}`,
+      });
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error: any) {
+      handelError(error.response.data.message || 'error checkEmail');
+      throw error.response.data.message;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendRegistrationLink = async (email: string): Promise<unknown> => {
+    console.log('email', `/auth/finish_registration/${email}`);
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response: AxiosResponse<unknown> = await apiPublicInstance({
+        method: 'post',
+        url: `/auth/finish_registration/`,
+        data: { email },
+      });
+      if (response) {
+        return response.status;
+      }
+    } catch (error: any) {
+      console.log('error', error.response);
+      handelError(error.response.data.message || 'error sendRegistrationLink');
+      throw error.response.data.message;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async () => {
-    await deleteUserPushToken(`${Device.deviceName}${Device.osBuildId}`);
+    await deleteUserPushToken(
+      `${Device.deviceName}${Device.osBuildId}`.replace(/[^a-zA-Z0-9]/g, '')
+    );
     await setValueStorage('auth', '');
     await setValueStorage('accounts', '');
     setUser(null);
@@ -213,6 +260,8 @@ export const useApiSignIn = (): UseApiSignInReturn => {
     getLastVisitedProject,
     saveLastVisitedProject,
     getForgotPassword,
+    checkEmail,
+    sendRegistrationLink,
     isLoading,
     error,
   };

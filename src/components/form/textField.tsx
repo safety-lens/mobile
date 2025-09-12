@@ -30,6 +30,7 @@ interface ITextField<T extends FieldValues> {
   pattern?: ValidationRule<RegExp> | undefined;
   secureText?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  hideRequiredSymbol?: boolean;
 }
 
 export default function TextField<T extends FieldValues>({
@@ -39,6 +40,7 @@ export default function TextField<T extends FieldValues>({
   placeholder,
   label,
   required,
+  hideRequiredSymbol = false,
   pattern,
   secureText,
   keyboardType,
@@ -51,7 +53,9 @@ export default function TextField<T extends FieldValues>({
       {label && (
         <Text style={styles.label}>
           {label}
-          {required && <Text style={styles.labelRequired}>{'*'}</Text>}
+          {required && !hideRequiredSymbol && (
+            <Text style={styles.labelRequired}>{'*'}</Text>
+          )}
         </Text>
       )}
       <Controller

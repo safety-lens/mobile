@@ -198,5 +198,18 @@
       "October": "October",
       "November": "November",
       "December": "December"
+    },
+
+    "authFlow": {
+      "enterEmail": "Enter your email address to continue",
+      "enterEmailDescription": "Enter your email to sign in or create your account",
+      "logIn": "Log in",
+      "getStarted": "Get Started",
+      "completeYourAccountSetup": "Complete your account setup",
+      "completeYourAccountSetupDescription": "We will send a registration link to {{email}} that will allow you to use SafetyLens",
+      "emailWillBeSentTo": "Email will be sent to {{email}}, please check your inbox",
+      "sendLink": "Send Link",
+      "sendedLink": "Sended Link"
     }
-}}
+  }
+}
