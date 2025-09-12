@@ -65,6 +65,16 @@
               "scheme": "https",
               "host": "safetylens.ai",
               "pathPrefix": "/forgot-password"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/enter-screen"
+            },
+            {
+              "scheme": "https",
+              "host": "safetylens.ai",
+              "pathPrefix": "/enter-screen"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]

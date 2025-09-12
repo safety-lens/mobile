@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import ScreenLayout from '@/components/screenLayout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import TextField from '@/components/form/textField';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import CustomButton from '@/components/CustomButton/button';
 import { useApiSignIn } from '@/axios/api/auth';
 import { router } from 'expo-router';
+import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 
 interface IData {
   email: string;
@@ -16,8 +15,6 @@ interface IData {
 
 export default function CheckEmail() {
   const { t } = useTranslation();
-  const { keyboardStatus } = useKeyboardHeight();
-  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const { checkEmail } = useApiSignIn();
   const {
@@ -26,7 +23,7 @@ export default function CheckEmail() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: '',
+      email: 'b.baker@vigilantsafety.co',
     },
   });
 
@@ -47,43 +44,30 @@ export default function CheckEmail() {
     });
   };
 
-  const scrollToEnd = () => {
-    scrollViewRef.current?.scrollToEnd();
-  };
-
-  useEffect(() => {
-    scrollToEnd();
-  }, [keyboardStatus]);
-
   return (
     <ScreenLayout>
-      <KeyboardAwareScrollView
-        ref={scrollViewRef}
-        style={{ flex: 1 }}
-        contentContainerStyle={{ flex: 1, justifyContent: 'center' }}
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>{t('authFlow.enterEmail')}</Text>
-          <Text>{t('authFlow.enterEmailDescription')}</Text>
-          <TextField
-            hideRequiredSymbol
-            control={control}
-            errors={errors}
-            label={t('email')}
-            pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
-            name="email"
-            required
-            placeholder={t('enterYourEmail')}
-            keyboardType="email-address"
-          />
-          <CustomButton
-            padding={4}
-            backgroundColor={'#0A2540'}
-            title={t('logIn')}
-            onPress={handleSubmit(onSubmit)}
-          />
-        </View>
-      </KeyboardAwareScrollView>
+      <View style={styles.container}>
+        <Text style={styles.title}>{t('authFlow.enterEmail')}</Text>
+        <Text>{t('authFlow.enterEmailDescription')}</Text>
+        <TextField
+          hideRequiredSymbol
+          control={control}
+          errors={errors}
+          label={t('email')}
+          pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
+          name="email"
+          required
+          placeholder={t('enterYourEmail')}
+          keyboardType="email-address"
+        />
+        <CustomButton
+          padding={4}
+          backgroundColor={'#0A2540'}
+          title={t('logIn')}
+          onPress={handleSubmit(onSubmit)}
+        />
+        <KeyboardAnimationTest value={220} />
+      </View>
     </ScreenLayout>
   );
 }
@@ -94,6 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 24,
     gap: 16,
+    flex: 1,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,

@@ -1,8 +1,7 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import ScreenLayout from '@/components/screenLayout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import useKeyboardHeight from '@/hooks/useKeyboardHeight';
+
 import SLLogoFull from '../assets/svgs/SLlogoFull';
 import CustomButton from '@/components/CustomButton/button';
 import { router } from 'expo-router';
@@ -10,26 +9,10 @@ import { useTranslation } from 'react-i18next';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { keyboardStatus } = useKeyboardHeight();
-  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
-  const scrollToEnd = () => {
-    scrollViewRef.current?.scrollToEnd();
-  };
-
-  useEffect(() => {
-    scrollToEnd();
-  }, [keyboardStatus]);
 
   return (
     <ScreenLayout>
-      <KeyboardAwareScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <View style={styles.container}>
         <View style={styles.iconBox}>
           <SLLogoFull width={200} height={200} />
         </View>
@@ -40,13 +23,20 @@ export default function HomeScreen() {
           styleAppBtn={{ width: '80%' }}
           onPress={() => router.navigate('/check-email')}
         />
-      </KeyboardAwareScrollView>
+      </View>
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   iconBox: {
+    backgroundColor: 'red',
+    width: 'auto',
     marginLeft: 50,
   },
 });
