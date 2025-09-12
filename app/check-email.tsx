@@ -23,7 +23,7 @@ export default function CheckEmail() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: 'b.baker@vigilantsafety.co',
+      email: '',
     },
   });
 

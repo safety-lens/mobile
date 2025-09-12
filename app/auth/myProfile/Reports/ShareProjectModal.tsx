@@ -103,10 +103,11 @@ export default function ShareProjectModal({
           <View style={{ marginTop: 24 }}>
             <Text>{t('messageOptional')}</Text>
             <TextInput
-              style={[styles.inputField, { textAlignVertical: 'top' }]}
+              style={[styles.inputField, { textAlignVertical: 'top', height: 80 }]}
               value={message}
               onChangeText={setMessage}
               placeholder={t('enterYourMessage')}
+              multiline
             />
           </View>
         </View>

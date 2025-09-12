@@ -62,14 +62,14 @@ export default function CheckEmail() {
           title={isShowTips ? t('authFlow.sendedLink') : t('authFlow.sendLink')}
           onPress={onSubmit}
         />
+        {isShowTips && (
+          <View style={styles.tipsContainer}>
+            <Text style={styles.tipsText}>
+              {t('authFlow.emailWillBeSentTo', { email: emailParam })}
+            </Text>
+          </View>
+        )}
       </View>
-      {isShowTips && (
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsText}>
-            {t('authFlow.emailWillBeSentTo', { email: emailParam })}
-          </Text>
-        </View>
-      )}
       <KeyboardAnimationTest value={240} />
     </ScreenLayout>
   );
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tipsText: {
-    marginHorizontal: 48,
     color: '#717680',
   },
 });

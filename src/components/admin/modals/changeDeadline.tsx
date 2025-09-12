@@ -76,7 +76,7 @@ export default function ChangeDeadline({
         </View>
 
         <View>
-          <SelectTime handleDateChange={setDate} />
+          <SelectTime handleDateChange={setDate} defaultValue={defaultValue} />
         </View>
 
         <View style={styles.buttonBox}>

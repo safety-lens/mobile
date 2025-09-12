@@ -62,6 +62,9 @@ export default function NewObservation({
             anchorChild(openVisibleMenu)
           ) : (
             <CustomButton
+              styleAppBtn={{
+                minWidth: 190,
+              }}
               onPress={openVisibleMenu}
               icon={<EyeObservation />}
               title={!loadedObservationImage ? t('newObservation') : t('postObservation')}

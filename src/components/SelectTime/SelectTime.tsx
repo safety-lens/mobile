@@ -7,15 +7,17 @@ import useGetUserInfo from '@/hooks/getUserInfo';
 
 export default function SelectTime({
   handleDateChange,
+  defaultValue,
 }: {
   handleDateChange: (date: Date) => void;
+  defaultValue?: Date;
 }) {
   const { t } = useTranslation();
   const { lang } = useGetUserInfo();
 
   const isAndroid = Platform.OS === 'android';
 
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(new Date(defaultValue || new Date()));
   const [visibleTimePicker, setVisibleTimePicker] = useState(false);
   const [visibleDatePicker, setVisibleDatePicker] = useState(false);
 
