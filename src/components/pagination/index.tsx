@@ -144,7 +144,7 @@ const Pagination = ({
           style={{
             opacity: currentPage === 1 ? 0.3 : 1,
             padding: 20,
-            paddingHorizontal: size === 'small' ? 6 : 12,
+            paddingHorizontal: size === 'small' ? 4 : 12,
             paddingLeft: size === 'small' ? 0 : 20,
           }}
         >
@@ -159,7 +159,7 @@ const Pagination = ({
           style={{
             opacity: currentPage === totalPages ? 0.3 : 1,
             padding: 20,
-            paddingHorizontal: size === 'small' ? 0 : 12,
+            paddingHorizontal: size === 'small' ? 4 : 12,
           }}
         >
           <View style={{ transform: 'rotate(180deg)' }}>

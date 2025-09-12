@@ -12,6 +12,7 @@ import {
 import EditNoteModal from './EditNoteModal';
 import Edit from '../../../../assets/svgs/edit';
 import { useTranslation } from 'react-i18next';
+import { FlashList } from '@shopify/flash-list';
 
 export default function TableReports({
   reports,
@@ -19,8 +20,8 @@ export default function TableReports({
   projectLocation,
 }: {
   reports: Observation[];
-  isLoading: boolean;
-  projectLocation: string;
+  isLoading?: boolean;
+  projectLocation?: string;
 }) {
   const { t } = useTranslation();
   const [editNoteModalVisible, setEditNoteModalVisible] = React.useState(false);
@@ -54,70 +55,78 @@ export default function TableReports({
               {t('notesComments')}
             </Text>
           </View>
-          {reports?.map((item) => (
-            <View key={item._id} style={styles.dataRow}>
-              <Text style={[styles.dataCell, { borderRightWidth: 0 }]}>{item.name}</Text>
-              <Text style={[styles.dataCell]}>
-                {item.createdAt ? <>{fullDateTimeFormat(item.createdAt)}</> : '-'}
-              </Text>
-              <Text style={[styles.dataCell]}>{projectLocation}</Text>
-              <Text style={[styles.dataCell]}>{item?.createdBy?.name || '-'}</Text>
-              <Text style={[styles.dataCell]}>{item.contractor || '-'}</Text>
-              <Text style={[styles.dataCell]}>{item.subContractor || '-'}</Text>
-              <Text style={[styles.dataCell]}>
-                {item?.categories?.map((category) => category?.name).join(', ')}
-              </Text>
-              <Text style={[styles.dataCell]}>{item.status}</Text>
-              <Text style={[styles.dataCell]}>
-                {item.assignees?.map((assignee) => assignee?.email).join(', ')}
-              </Text>
-              <Text style={[styles.dataCell]}>
-                {item.deadline ? (
-                  <>
-                    {dateFormat(item.deadline)}, {dateTimeFormat(item.deadline)}
-                  </>
-                ) : (
-                  '-'
-                )}
-              </Text>
-              <Text style={[styles.dataCell]}>
-                {item.closeDate ? (
-                  <>
-                    {dateFormat(item.closeDate)}, {dateTimeFormat(item.closeDate)}
-                  </>
-                ) : (
-                  '-'
-                )}
-              </Text>
-              <Text style={[styles.dataCell]}>{item.followUp || '-'}</Text>
-
-              <View style={styles.editButtonContainer}>
-                <Text style={[styles.dataCellNote]}>
-                  {item.note?.slice(0, 40)}
-                  {item?.note?.length && item?.note?.length > 40 && '...'}
+          <FlashList
+            keyExtractor={(item) => item._id}
+            estimatedItemSize={50}
+            data={reports}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
+              <View key={item._id} style={styles.dataRow}>
+                <Text style={[styles.dataCell, { borderRightWidth: 0 }]}>
+                  {item.name}
                 </Text>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 12,
-                  }}
-                  onPress={() => {
-                    setDefaultNote(item.note || '');
-                    setDefaultObservationId(item._id);
-                    setEditNoteModalVisible(true);
-                  }}
-                >
-                  {!item.note?.length && (
-                    <Text style={styles.editButtonText}>{t('Add Comment')}</Text>
+                <Text style={[styles.dataCell]}>
+                  {item.createdAt ? <>{fullDateTimeFormat(item.createdAt)}</> : '-'}
+                </Text>
+                <Text style={[styles.dataCell]}>{projectLocation}</Text>
+                <Text style={[styles.dataCell]}>{item?.createdBy?.name || '-'}</Text>
+                <Text style={[styles.dataCell]}>{item.contractor || '-'}</Text>
+                <Text style={[styles.dataCell]}>{item.subContractor || '-'}</Text>
+                <Text style={[styles.dataCell]}>
+                  {item?.categories?.map((category) => category?.name).join(', ')}
+                </Text>
+                <Text style={[styles.dataCell]}>{item.status}</Text>
+                <Text style={[styles.dataCell]}>
+                  {item.assignees?.map((assignee) => assignee?.email).join(', ')}
+                </Text>
+                <Text style={[styles.dataCell]}>
+                  {item.deadline ? (
+                    <>
+                      {dateFormat(item.deadline)}, {dateTimeFormat(item.deadline)}
+                    </>
+                  ) : (
+                    '-'
                   )}
-                  <View style={styles.editButton}>
-                    <Edit width={16} height={16} fill="#007AFF" />
-                  </View>
-                </TouchableOpacity>
+                </Text>
+                <Text style={[styles.dataCell]}>
+                  {item.closeDate ? (
+                    <>
+                      {dateFormat(item.closeDate)}, {dateTimeFormat(item.closeDate)}
+                    </>
+                  ) : (
+                    '-'
+                  )}
+                </Text>
+                <Text style={[styles.dataCell]}>{item.followUp || '-'}</Text>
+
+                <View style={styles.editButtonContainer}>
+                  <Text style={[styles.dataCellNote]}>
+                    {item.note?.slice(0, 40)}
+                    {item?.note?.length && item?.note?.length > 40 && '...'}
+                  </Text>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 12,
+                    }}
+                    onPress={() => {
+                      setDefaultNote(item.note || '');
+                      setDefaultObservationId(item._id);
+                      setEditNoteModalVisible(true);
+                    }}
+                  >
+                    {!item.note?.length && (
+                      <Text style={styles.editButtonText}>{t('Add Comment')}</Text>
+                    )}
+                    <View style={styles.editButton}>
+                      <Edit width={16} height={16} fill="#007AFF" />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ))}
+            )}
+          />
         </View>
       </ScrollView>
 

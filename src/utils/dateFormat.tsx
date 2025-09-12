@@ -27,7 +27,7 @@ export const dateTimeFormat = (date: Date) => {
   });
 };
 
-export const fullDateTimeFormat = async (date: Date) => {
+export const fullDateTimeFormat = (date: Date) => {
   const newDate = new Date(date);
 
   const monthsLang = {
