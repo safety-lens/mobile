@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconBox: {
-    backgroundColor: 'red',
     width: 'auto',
     marginLeft: 50,
   },
