@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "safetylensmobile",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to let you select and upload images.",
         "ITSAppUsesNonExemptEncryption": false
