@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   KeyboardTypeOptions,
+  TextInputProps,
 } from 'react-native';
 import {
   Control,
@@ -30,6 +31,8 @@ interface ITextField<T extends FieldValues> {
   pattern?: ValidationRule<RegExp> | undefined;
   secureText?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  autoComplete?: TextInputProps['autoComplete'];
+  autoCapitalize?: TextInputProps['autoCapitalize'];
   hideRequiredSymbol?: boolean;
 }
 
@@ -43,6 +46,8 @@ export default function TextField<T extends FieldValues>({
   hideRequiredSymbol = false,
   pattern,
   secureText,
+  autoComplete,
+  autoCapitalize,
   keyboardType,
 }: ITextField<T>) {
   const message = errors?.[name]?.message as string;
@@ -83,6 +88,8 @@ export default function TextField<T extends FieldValues>({
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
+              autoComplete={autoComplete}
+              autoCapitalize={autoCapitalize}
               style={[styles.textField, errors?.[name] ? styles.error : null]}
             />
           </View>
