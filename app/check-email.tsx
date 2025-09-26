@@ -59,6 +59,7 @@ export default function CheckEmail() {
           required
           placeholder={t('enterYourEmail')}
           keyboardType="email-address"
+          autoCapitalize="none"
         />
         <CustomButton
           padding={4}
@@ -74,7 +75,7 @@ export default function CheckEmail() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 12,
     borderRadius: 16,
     marginHorizontal: 24,
     gap: 16,
