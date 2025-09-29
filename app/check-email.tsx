@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import TextField from '@/components/form/textField';
@@ -8,6 +8,7 @@ import CustomButton from '@/components/CustomButton/button';
 import { useApiSignIn } from '@/axios/api/auth';
 import { router } from 'expo-router';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
+import { Typography } from '@/components/Typography';
 
 interface IData {
   email: string;
@@ -47,8 +48,10 @@ export default function CheckEmail() {
   return (
     <ScreenLayout>
       <View style={styles.container}>
-        <Text style={styles.title}>{t('authFlow.enterEmail')}</Text>
-        <Text>{t('authFlow.enterEmailDescription')}</Text>
+        <Typography preset="header">{t('authFlow.enterEmail')}</Typography>
+        <Typography size="sm" color="light">
+          {t('authFlow.enterEmailDescription')}
+        </Typography>
         <TextField
           hideRequiredSymbol
           control={control}
@@ -63,7 +66,7 @@ export default function CheckEmail() {
         />
         <CustomButton
           padding={4}
-          backgroundColor={'#0A2540'}
+          backgroundColor={'#313131'}
           title={t('logIn')}
           onPress={handleSubmit(onSubmit)}
         />
@@ -76,15 +79,10 @@ export default function CheckEmail() {
 const styles = StyleSheet.create({
   container: {
     padding: 12,
+    paddingHorizontal: 26,
     borderRadius: 16,
-    marginHorizontal: 24,
     gap: 16,
     flex: 1,
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    lineHeight: 25,
   },
 });

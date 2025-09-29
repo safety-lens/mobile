@@ -18,9 +18,9 @@ export default function HomeScreen() {
         </View>
         <CustomButton
           padding={4}
-          backgroundColor={'#0A2540'}
+          backgroundColor="#313131"
           title={t('authFlow.getStarted')}
-          styleAppBtn={{ width: '80%' }}
+          styleAppBtn={styles.button}
           onPress={() => router.navigate('/check-email')}
         />
       </View>
@@ -33,9 +33,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 36,
   },
   iconBox: {
     width: 'auto',
     marginLeft: 50,
+  },
+  button: {
+    width: '100%',
   },
 });

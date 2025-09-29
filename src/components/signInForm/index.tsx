@@ -95,7 +95,7 @@ export default function SignInForm({ email }: { email: string }) {
 
       <CustomButton
         padding={4}
-        backgroundColor={'#0A2540'}
+        backgroundColor="#313131"
         title={t('logIn')}
         onPress={handleSubmit(onSubmit)}
       />

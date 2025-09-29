@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import SignInForm from '@/components/signInForm';
 import { useLocalSearchParams } from 'expo-router';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
+import { Typography } from '@/components/Typography';
 
 export default function CheckEmail() {
   const { t } = useTranslation();
@@ -25,8 +26,10 @@ export default function CheckEmail() {
   return (
     <ScreenLayout>
       <View style={styles.container}>
-        <Text style={styles.title}>{t('authFlow.enterEmail')}</Text>
-        <Text>{t('authFlow.enterEmailDescription')}</Text>
+        <Typography preset="header">{t('authFlow.enterEmail')}</Typography>
+        <Typography size="sm" color="light">
+          {t('authFlow.enterEmailDescription')}
+        </Typography>
         <SignInForm email={emailParam as string} />
       </View>
       <KeyboardAnimationTest value={240} />
@@ -40,10 +43,5 @@ const styles = StyleSheet.create({
     gap: 16,
     flex: 1,
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    lineHeight: 25,
   },
 });
