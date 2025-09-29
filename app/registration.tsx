@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '@/components/CustomButton/button';
-import { useApiSignIn } from '@/axios/api/auth';
 import { useLocalSearchParams } from 'expo-router';
-import Toast from 'react-native-toast-message';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
+import { useApiSignIn } from '@/axios/api/auth';
+import Toast from 'react-native-toast-message';
 
 export default function CheckEmail() {
   const { email: emailParam } = useLocalSearchParams();
@@ -59,7 +59,7 @@ export default function CheckEmail() {
         <CustomButton
           padding={4}
           backgroundColor={'#0A2540'}
-          title={isShowTips ? t('authFlow.sendedLink') : t('authFlow.sendLink')}
+          title={isShowTips ? t('authFlow.linkSent') : t('authFlow.sendLink')}
           onPress={onSubmit}
         />
         {isShowTips && (
@@ -77,7 +77,6 @@ export default function CheckEmail() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
     borderRadius: 16,
     marginHorizontal: 24,
     gap: 16,

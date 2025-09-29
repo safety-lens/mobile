@@ -1,6 +1,6 @@
 {
   "translation": {
-    "welcome": "Welcome", 
+    "welcome": "Welcome",
     "SignIn": "Sign in to SafetyLens",
     "email": "Email",
     "password": "Password",
@@ -24,8 +24,8 @@
     "createButton": "Create",
     "confirm": "Confirm",
     "uploadPhoto": "Upload a photo",
-    "required":"This is required.",
-    "chooseProject": "Choose a project", 
+    "required": "This is required.",
+    "chooseProject": "Choose a project",
     "chooseCategory": "Observation Category",
     "observationDetail": "Location detail",
     "comment": "Comment",
@@ -34,9 +34,9 @@
     "search": "Search",
     "selectLanguage": "Select Language",
     "addNote": "Add note",
-    "theProject":"the project",
+    "theProject": "the project",
     "edit": "Edit",
-    "active":"Active",
+    "active": "Active",
     "archive": "Archive",
     "delete": "Delete",
     "restore": "Restore",
@@ -56,7 +56,7 @@
     "safetyObservation": "Safety Observation",
 
     "noObservationsYet": "Add a new observation by tapping the button",
-    "noObservationsHistoryYet":"There are no observations in observation history yet",
+    "noObservationsHistoryYet": "There are no observations in observation history yet",
     "observations": "Observations",
     "newObservation": "New Observation",
     "createNewObservation": "Post new observation",
@@ -70,8 +70,8 @@
 
     "addPictures": "Add pictures of observation",
     "picturesOfObservation": "Picture of observation",
-    "uploadFromLibrary":"Upload from library",
-    "takePhoto":"Take a photo",
+    "uploadFromLibrary": "Upload from library",
+    "takePhoto": "Take a photo",
     "createObservation": "Create observation",
     "postObservation": "Post Observation",
     "changeStatus": "Change Status",
@@ -80,8 +80,8 @@
     "changeAssignee": "Change Assignee",
     "change": "Change",
     "implementedActions": "Implemented Actions",
-    "renameObservation":"Rename Observation",
-    "deleteObservation":"Delete Observation",
+    "renameObservation": "Rename Observation",
+    "deleteObservation": "Delete Observation",
     "rename": "Rename",
     "createProject": "Create new Project",
     "archiveProjectText": "Are you sure you want to {{statusProjectText}} the project",
@@ -95,7 +95,7 @@
     "logout": "Logout",
     "signInError": "User doesn't exist or password is invalid",
 
-    "home":"My projects",
+    "home": "My projects",
     "profile": "Profile",
     "observation": "Create Observation",
     "pinpointLocation": "Click on the map to pinpoint a location.",
@@ -105,10 +105,10 @@
     "showLess": "Show less",
     "backObservations": "Back to observations",
     "correctiveActions": "Suggested corrective actions",
-    "dateFilter":"Date Filter",
+    "dateFilter": "Date Filter",
 
-    "noProjectsYetActive":"There are not any active projects at this time. Contact Admin for Support",
-    "noProjectsYetArchived":"There are not any archived projects at this time",
+    "noProjectsYetActive": "There are not any active projects at this time. Contact Admin for Support",
+    "noProjectsYetArchived": "There are not any archived projects at this time",
 
     "rememberMe": "Remember Me",
 
@@ -123,7 +123,7 @@
     "permission.openSettings": "Open Settings",
 
     "resultDisclaimer": "SafetyLens safety inspections may not always be accurate. Please verify critical information.",
-    
+
     "projectMembers": "Project members",
     "selectUser": "Select User",
     "members": "Members",
@@ -141,7 +141,7 @@
     "createNotification": "Create Notification",
     "createNotificationDescription": "Send notifications by selecting the target project and its priority",
     "projectNotifications": "Project for notifications",
-    "notificationPriority":"Notification Priority",
+    "notificationPriority": "Notification Priority",
     "notificationMessage": "Enter notification message here",
     "sendNotification": "Send Notification",
 
@@ -209,7 +209,7 @@
       "completeYourAccountSetupDescription": "We will send a registration link to {{email}} that will allow you to use SafetyLens",
       "emailWillBeSentTo": "Email will be sent to {{email}}, please check your inbox",
       "sendLink": "Send Link",
-      "sendedLink": "Sended Link"
+      "linkSent": "Link Sent"
     }
   }
 }
