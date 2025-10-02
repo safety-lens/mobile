@@ -25,7 +25,7 @@
       "env": {
         "APP_ENV": "staging"
       },
-      "distribution": "internal"
+      "distribution": "store"
     },
     "production": {
       "autoIncrement": true,
