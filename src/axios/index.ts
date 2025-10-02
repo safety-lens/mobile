@@ -1,22 +1,22 @@
 import axios, { AxiosResponse } from 'axios';
 import { getValueStorage } from '@/utils/storage';
 import { useRefreshTokenFn } from './refresh';
+import { API_URL } from '@/constants/api';
 
 export const apiPublicInstance = axios.create({
-  baseURL: 'https://api-staging.safetylens.ai/',
-  // baseURL: 'https://api.safetylens.ai',
+  baseURL: API_URL,
 });
 
 export const apiInstance = axios.create({
   // baseURL: 'https://api.safetylens.ai',
-  baseURL: 'https://api-staging.safetylens.ai/',
+  baseURL: API_URL,
 });
 
 apiInstance.interceptors.request.use(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async (config: any) => {
     const auth = await getValueStorage('auth');
-    const {accessToken} = JSON.parse(auth || "")
+    const { accessToken } = JSON.parse(auth || '');
     console.log('accessToken', accessToken);
     if (accessToken) {
       config.headers = {
@@ -38,7 +38,7 @@ apiInstance.interceptors.response.use(
     if (error.response?.status === 401 && !config._retry) {
       config._retry = true;
 
-      const accessToken = await useRefreshTokenFn()
+      const accessToken = await useRefreshTokenFn();
       console.log('accessToken after refresh in interceptor', accessToken);
 
       if (accessToken) {
