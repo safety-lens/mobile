@@ -10,8 +10,10 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "build:ios": "eas build --platform ios",
-    "build:android": "eas build --platform android --local"
+    "build:ios:staging": "eas build --platform ios --profile staging",
+    "build:android:staging": "eas build --platform android --profile staging",
+    "build:ios:production": "eas build --platform ios --profile production",
+    "build:android:production": "eas build --platform android --profile production"
   },
   "jest": {
     "preset": "jest-expo"
