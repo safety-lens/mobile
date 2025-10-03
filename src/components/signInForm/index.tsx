@@ -66,6 +66,7 @@ export default function SignInForm({ email }: { email: string }) {
         control={control}
         errors={errors}
         label={t('email')}
+        placeholder={t('enterYourEmail')}
         pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
         name="email"
         required
@@ -77,6 +78,7 @@ export default function SignInForm({ email }: { email: string }) {
         errors={errors}
         secureText
         label={t('password')}
+        placeholder={t('enterYourPassword')}
         name="password"
         required
       />

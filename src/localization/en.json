@@ -129,7 +129,8 @@
     "members": "Members",
     "manageMembers": "Manage Members",
 
-    "enterYourEmail": "Enter Your Email",
+    "enterYourEmail": "Enter your email",
+    "enterYourPassword": "Enter your password",
     "enterEmailAddress": "Enter Email address",
     "enterYourMessage": "Enter your message",
     "forgotPassword": "Forgot Password?",
