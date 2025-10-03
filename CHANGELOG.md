@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/safety-lens/mobile/compare/v1.1.0...v1.1.1) (2025-10-03)
+
+
+### Bug Fixes
+
+* **api:** choose url conditionally base on app variant ([706a1d9](https://github.com/safety-lens/mobile/commit/706a1d938e898f8219bb4fdbf9cb5e755a4dac73))
+* **auth:** add placeholders to sign in form ([eff36b8](https://github.com/safety-lens/mobile/commit/eff36b89598985dead20d37ea779c97cea4792ce))
+* **auth:** change log in text to sign in ([c781713](https://github.com/safety-lens/mobile/commit/c7817135070764f6b376cabf602adb22b8be3708))
+* **auth:** change sigh in header ([8738429](https://github.com/safety-lens/mobile/commit/87384296950e2a8fc41cc1bacc6c6a00d5f04259))
+* **env:** replace environment variables with EXPO_PUBLIC ([ce263a0](https://github.com/safety-lens/mobile/commit/ce263a021ce7a5aabe6b317e929a6f9fdc89c17d))
+
 ## 1.1.0 (2025-10-02)
 
 
