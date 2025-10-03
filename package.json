@@ -8,6 +8,7 @@
     "ios": "expo run:ios",
     "test": "jest --watchAll",
     "lint": "expo lint",
+    "release": "npx standard-version -a",
     "build:ios:staging": "eas build --platform ios --profile staging",
     "build:android:staging": "eas build --platform android --profile staging",
     "build:ios:production": "eas build --platform ios --profile production",

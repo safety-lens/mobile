@@ -25,6 +25,9 @@
       "env": {
         "EXPO_PUBLIC_APP_ENV": "staging"
       },
+      "android": {
+        "buildType": "apk"
+      },
       "distribution": "store"
     },
     "production": {
