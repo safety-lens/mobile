@@ -4,7 +4,7 @@
     "SignIn": "Inicia sesión en SafetyLens",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "logIn": "Iniciar sesión",
+    "signIn": "Iniciar sesión",
     "myProjects": "Mis Proyectos",
     "new": "Nuevo",
     "projectName": "Nombre del Proyecto",
@@ -206,7 +206,7 @@
     "authFlow": {
       "enterEmail": "Ingresa tu dirección de correo electrónico para continuar",
       "enterEmailDescription": "Ingresa tu correo electrónico para iniciar sesión o crear tu cuenta",
-      "logIn": "Iniciar sesión",
+      "signIn": "Iniciar sesión",
       "getStarted": "Comenzar",
       "completeYourAccountSetup": "Completa la configuración de tu cuenta",
       "completeYourAccountSetupDescription": "Enviaremos un enlace de registro a {{email}} que te permitirá usar SafetyLens",

@@ -67,7 +67,7 @@ export default function CheckEmail() {
         <CustomButton
           padding={4}
           backgroundColor={'#313131'}
-          title={t('logIn')}
+          title={t('signIn')}
           onPress={handleSubmit(onSubmit)}
         />
         <KeyboardAnimationTest value={220} />
