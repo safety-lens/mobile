@@ -26,7 +26,7 @@ export default function CheckEmail() {
   return (
     <ScreenLayout>
       <View style={styles.container}>
-        <Typography preset="header">{t('authFlow.enterEmail')}</Typography>
+        <Typography preset="header">{t('authFlow.enterPasswordToContinue')}</Typography>
         <Typography size="sm" color="light">
           {t('authFlow.enterEmailDescription')}
         </Typography>

@@ -203,6 +203,7 @@
 
     "authFlow": {
       "enterEmail": "Enter your email address to continue",
+      "enterPasswordToContinue": "Enter your password to continue",
       "enterEmailDescription": "Enter your email to sign in or create your account",
       "signIn": "Sign In",
       "getStarted": "Get Started",
