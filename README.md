@@ -65,17 +65,18 @@ Environment is determined by the `EXPO_PUBLIC_APP_ENV` variable and configured i
 
 ### Available Scripts
 
-| Script                          | Description                      |
-| ------------------------------- | -------------------------------- |
-| `yarn start`                    | Start Expo development server    |
-| `yarn android`                  | Run on Android device/emulator   |
-| `yarn ios`                      | Run on iOS device/simulator      |
-| `yarn test`                     | Run Jest tests in watch mode     |
-| `yarn lint`                     | Run ESLint                       |
-| `yarn build:ios:staging`        | Build iOS app for staging        |
-| `yarn build:android:staging`    | Build Android app for staging    |
-| `yarn build:ios:production`     | Build iOS app for production     |
-| `yarn build:android:production` | Build Android app for production |
+| Script                          | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| `yarn start`                    | Start Expo development server               |
+| `yarn android`                  | Run on Android device/emulator              |
+| `yarn ios`                      | Run on iOS device/simulator                 |
+| `yarn test`                     | Run Jest tests in watch mode                |
+| `yarn lint`                     | Run ESLint                                  |
+| `yarn release`                  | Bump release version and generate changelog |
+| `yarn build:ios:staging`        | Build iOS app for staging                   |
+| `yarn build:android:staging`    | Build Android app for staging               |
+| `yarn build:ios:production`     | Build iOS app for production                |
+| `yarn build:android:production` | Build Android app for production            |
 
 ### Development Workflow
 
@@ -90,7 +91,60 @@ Environment is determined by the `EXPO_PUBLIC_APP_ENV` variable and configured i
    - `src/` - Source code (components, utilities, services)
    - `assets/` - Static assets (images, fonts, animations)
 
-## 📦 Building for Production
+## Versioning & Changelog
+
+### Conventional Commits
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) to maintain a clear commit history and generate automatic changelogs. Format: `<type>[scope]: <description>`
+
+**Common types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+
+**Examples:**
+
+```bash
+feat(auth): add biometric authentication
+fix(camera): resolve image capture on Android
+docs: update README with deployment instructions
+chore(deps): update expo to version 53
+```
+
+**Recommended Tool:** Use [Commitizen](https://github.com/commitizen/cz-cli) for interactive commit creation:
+
+```bash
+npm install -g commitizen cz-conventional-changelog
+git add . && cz
+```
+
+📖 **Learn More:**
+
+- [Conventional Commits Specification](https://www.conventionalcommits.org/)
+- [Commitizen Documentation](https://github.com/commitizen/cz-cli)
+- [Standard Version Guide](https://github.com/conventional-changelog/standard-version)
+
+### Creating Releases
+
+To create a new release with automatic changelog generation:
+
+```bash
+yarn release
+git push --follow-tags
+```
+
+This command will:
+
+1. Analyze conventional commits since the last release
+2. Determine the next version number (following semantic versioning)
+3. Generate/update CHANGELOG.md
+4. Create a git tag
+5. Commit the changes
+
+The release process uses [standard-version](https://github.com/conventional-changelog/standard-version) which follows semantic versioning:
+
+- **MAJOR**: Breaking changes
+- **MINOR**: New features
+- **PATCH**: Bug fixes
+
+## Building for Production
 
 ### EAS Build
 
