@@ -1,61 +1,228 @@
-# Welcome to your Expo app 👋
+# Safety Lens Mobile App 🔍
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application built with Expo for workplace safety observation and hazard detection. The app helps users identify safety hazards, document observations, and maintain OSHA compliance through AI-powered image analysis.
 
-## Get started
+## 📱 Features
 
-1. Install dependencies
+- **Hazard Detection**: AI-powered image analysis for workplace safety
+- **Safety Observations**: Document and track safety incidents
+- **OSHA Compliance**: Generate compliance reports and recommendations
+- **Multi-language Support**: Internationalization with i18next
+- **Cross-platform**: iOS, Android
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or newer)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) installed globally
+- For iOS development: [Xcode](https://developer.apple.com/xcode/) (macOS only)
+- For Android development: [Android Studio](https://developer.android.com/studio)
+
+### Installation
+
+1. **Clone the repository**
 
    ```bash
-   npm install
+   git clone [repository-url]
+   cd safety-lens
    ```
 
-2. Start the app
+2. **Install dependencies**
 
    ```bash
-    npx expo start
+   yarn
    ```
 
-In the output, you'll find options to open the app in a
+3. **Start the development server**
+   ```bash
+   yarn start
+   # or
+   npx expo start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🔧 Environment Configuration
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Environment Variables
 
-## Get a fresh project
+The app uses environment variables to configure different environments. Set the following variable:
 
-When you're ready, run:
+| Variable              | Description             | Values                  |
+| --------------------- | ----------------------- | ----------------------- |
+| `EXPO_PUBLIC_APP_ENV` | Application environment | `staging`, `production` |
+
+### API Configuration
+
+The app automatically configures API endpoints based on the environment:
+
+- **Production**: `https://api.safetylens.ai/`
+- **Staging**: `https://api-staging.safetylens.ai/`
+
+Environment is determined by the `EXPO_PUBLIC_APP_ENV` variable and configured in `src/constants/api.ts`.
+
+## 🛠️ Development
+
+### Available Scripts
+
+| Script                          | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| `yarn start`                    | Start Expo development server               |
+| `yarn android`                  | Run on Android device/emulator              |
+| `yarn ios`                      | Run on iOS device/simulator                 |
+| `yarn test`                     | Run Jest tests in watch mode                |
+| `yarn lint`                     | Run ESLint                                  |
+| `yarn release`                  | Bump release version and generate changelog |
+| `yarn build:ios:staging`        | Build iOS app for staging                   |
+| `yarn build:android:staging`    | Build Android app for staging               |
+| `yarn build:ios:production`     | Build iOS app for production                |
+| `yarn build:android:production` | Build Android app for production            |
+
+### Development Workflow
+
+1. **Start the development server**
+
+   ```bash
+   yarn start
+   ```
+
+2. **File Structure**
+   - `app/` - Main application screens using Expo Router
+   - `src/` - Source code (components, utilities, services)
+   - `assets/` - Static assets (images, fonts, animations)
+
+## Versioning & Changelog
+
+### Conventional Commits
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) to maintain a clear commit history and generate automatic changelogs. Format: `<type>[scope]: <description>`
+
+**Common types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+
+**Examples:**
 
 ```bash
-npm run reset-project
+feat(auth): add biometric authentication
+fix(camera): resolve image capture on Android
+docs: update README with deployment instructions
+chore(deps): update expo to version 53
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**Recommended Tool:** Use [Commitizen](https://github.com/commitizen/cz-cli) for interactive commit creation:
 
-## Learn more
+```bash
+npm install -g commitizen cz-conventional-changelog
+git add . && cz
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+📖 **Learn More:**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Conventional Commits Specification](https://www.conventionalcommits.org/)
+- [Commitizen Documentation](https://github.com/commitizen/cz-cli)
+- [Standard Version Guide](https://github.com/conventional-changelog/standard-version)
 
-## Join the community
+### Creating Releases
 
-Join our community of developers creating universal apps.
+To create a new release with automatic changelog generation:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+yarn release
+git push --follow-tags
+```
 
-## Create EAS EXPO build
+This command will:
 
-- [EAS Build](https://docs.expo.dev/build/setup/): EAS Build.
-- [EAS Build local](https://docs.expo.dev/build-reference/local-builds/): EAS Build local.
-  eas build --platform android --local
-  eas build --platform ios --local
+1. Analyze conventional commits since the last release
+2. Determine the next version number (following semantic versioning)
+3. Generate/update CHANGELOG.md
+4. Create a git tag
+5. Commit the changes
 
-  "buildType": "app-bundle" -- for aab in eas.json
+The release process uses [standard-version](https://github.com/conventional-changelog/standard-version) which follows semantic versioning:
 
-  <!-- 3A:6E:84:49:FD:6E:2D:29:AD:95:8B:65:F6:10:04:73:31:95:D9:30:7A:02:55:E0:B4:EE:65:68:F6:1B:F8:DE -->
+- **MAJOR**: Breaking changes
+- **MINOR**: New features
+- **PATCH**: Bug fixes
+
+## Building for Production
+
+### EAS Build
+
+1. **Install EAS CLI**
+
+   ```bash
+   npm install -g @expo/eas-cli
+   ```
+
+2. **Login to Expo**
+
+   ```bash
+   eas login
+   ```
+
+3. **Build for Staging**
+
+   ```bash
+   # iOS Staging
+   yarn build:ios:staging
+   # or
+   eas build --platform ios --profile staging
+
+   # Android Staging
+   yarn build:android:staging
+   # or
+   eas build --platform android --profile staging
+   ```
+
+4. **Build for Production**
+
+   ```bash
+   # iOS Production
+   yarn build:ios:production
+   # or
+   eas build --platform ios --profile production
+
+   # Android Production
+   yarn build:android:production
+   # or
+   eas build --platform android --profile production
+   ```
+
+### Local Builds
+
+For local builds (useful for testing):
+
+```bash
+# Android Local Build
+eas build --platform android --local
+
+# iOS Local Build (macOS only)
+eas build --platform ios --local
+```
+
+### Build Profiles
+
+The app uses different build profiles configured in `eas.json`:
+
+- **development**: Development client with staging environment
+- **preview**: Internal distribution with APK format
+- **staging**: Store distribution for staging environment
+- **production**: Store distribution for production environment
+
+## 🔐 App Signing
+
+### Android
+
+- **Debug**: Managed by Expo
+- **Release**: Configure your production keystore in EAS
+
+### iOS
+
+- Managed by EAS Build and Apple Developer Account
+
+## 📚 Documentation
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [EAS Build](https://docs.expo.dev/build/setup/)

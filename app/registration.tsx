@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '@/components/CustomButton/button';
-import { useApiSignIn } from '@/axios/api/auth';
 import { useLocalSearchParams } from 'expo-router';
-import Toast from 'react-native-toast-message';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
+import { useApiSignIn } from '@/axios/api/auth';
+import Toast from 'react-native-toast-message';
+import { Typography } from '@/components/Typography';
 
 export default function CheckEmail() {
   const { email: emailParam } = useLocalSearchParams();
@@ -51,23 +52,20 @@ export default function CheckEmail() {
   return (
     <ScreenLayout>
       <View style={styles.container}>
-        <Text style={styles.title}>{t('authFlow.completeYourAccountSetup')}</Text>
-        <Text>
+        <Typography preset="header">{t('authFlow.completeYourAccountSetup')}</Typography>
+        <Typography size="sm" color="light">
           {t('authFlow.completeYourAccountSetupDescription', { email: emailParam })}
-        </Text>
-
+        </Typography>
         <CustomButton
           padding={4}
-          backgroundColor={'#0A2540'}
-          title={isShowTips ? t('authFlow.sendedLink') : t('authFlow.sendLink')}
+          backgroundColor="#313131"
+          title={isShowTips ? t('authFlow.linkSent') : t('authFlow.sendLink')}
           onPress={onSubmit}
         />
         {isShowTips && (
-          <View style={styles.tipsContainer}>
-            <Text style={styles.tipsText}>
-              {t('authFlow.emailWillBeSentTo', { email: emailParam })}
-            </Text>
-          </View>
+          <Typography size="xs" color="lighter">
+            {t('authFlow.emailWillBeSentTo', { email: emailParam })}
+          </Typography>
         )}
       </View>
       <KeyboardAnimationTest value={240} />
@@ -77,22 +75,10 @@ export default function CheckEmail() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
     borderRadius: 16,
     marginHorizontal: 24,
     gap: 16,
     flex: 1,
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    lineHeight: 25,
-  },
-  tipsContainer: {
-    alignItems: 'center',
-  },
-  tipsText: {
-    color: '#717680',
   },
 });

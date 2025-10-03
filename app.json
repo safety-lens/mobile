@@ -2,8 +2,8 @@
   "expo": {
     "newArchEnabled": true,
     "name": "Safety Lens",
-    "slug": "safetylens-mobile",
-    "version": "1.0.6",
+    "slug": "safetylens",
+    "owner": "safety-lens",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "safetylensmobile",
@@ -17,7 +17,6 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "safetylensmobile",
-      "version": "1.0.7",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to let you select and upload images.",
         "ITSAppUsesNonExemptEncryption": false
@@ -34,9 +33,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA"
-      ],
+      "permissions": ["android.permission.CAMERA", "android.permission.RECORD_AUDIO"],
       "package": "com.safetylensmobile",
       "intentFilters": [
         {
@@ -95,9 +92,7 @@
           "recordAudioAndroid": false
         }
       ],
-      [
-        "expo-router"
-      ],
+      ["expo-router"],
       [
         "expo-image-picker",
         {
@@ -115,7 +110,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7cfb5678-b978-4df9-ab0e-fd90c6ef10d2"
+        "projectId": "168d9346-95af-429b-a88d-671d687a31e2"
       }
     }
   }
