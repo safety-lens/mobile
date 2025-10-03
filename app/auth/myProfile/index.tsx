@@ -15,6 +15,7 @@ import Notification from '../../../assets/svgs/notification';
 import { NotificationContext } from '@/context/NotificationProvider';
 import { apiInstance } from '@/axios';
 import ReportIcon from '../../../assets/svgs/reportIcon';
+import { IS_PRODUCTION, IS_STAGING } from '@/constants/api';
 
 export default function MyProfile() {
   const { logout } = useApiSignIn();
@@ -23,17 +24,16 @@ export default function MyProfile() {
   const { unreadNotifications } = useContext(NotificationContext);
   const { isAdmin } = useGetUserInfo();
 
-  const isStaging = apiInstance.defaults.baseURL?.includes('staging');
-
   const isDevBuild = __DEV__;
   const isLocalBuild = apiInstance.defaults.baseURL?.includes('localhost');
-  const isProductionBuild = !isDevBuild && !isLocalBuild && !isStaging;
+  const isStagingBuild = IS_STAGING;
+  const isProductionBuild = IS_PRODUCTION;
 
   useEffect(() => {
     console.log('Build type:', {
       isDev: isDevBuild,
       isLocal: isLocalBuild,
-      isStaging: isStaging,
+      isStaging: isStagingBuild,
       isProduction: isProductionBuild,
     });
   }, []);
@@ -54,7 +54,7 @@ export default function MyProfile() {
     <SafeAreaView style={styles.container}>
       <View style={styles.bottomBlock}>
         <View style={{ marginTop: '50%' }}>
-          {isStaging && <Text style={styles.userBlockText}>{'Stage version: 102'}</Text>}
+          {isStagingBuild && <Text style={styles.userBlockText}>{'Stage version'}</Text>}
           <View style={styles.userBlock}>
             <View style={styles.logoBox}>
               <SLLogo />

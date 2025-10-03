@@ -8,7 +8,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "APP_ENV": "staging"
+        "EXPO_PUBLIC_APP_ENV": "staging"
       }
     },
     "preview": {
@@ -17,20 +17,20 @@
         "buildType": "apk"
       },
       "env": {
-        "APP_ENV": "staging"
+        "EXPO_PUBLIC_APP_ENV": "staging"
       }
     },
     "staging": {
       "autoIncrement": true,
       "env": {
-        "APP_ENV": "staging"
+        "EXPO_PUBLIC_APP_ENV": "staging"
       },
       "distribution": "store"
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "APP_ENV": "production"
+        "EXPO_PUBLIC_APP_ENV": "production"
       },
       "distribution": "store"
     }
