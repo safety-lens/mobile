@@ -35,15 +35,14 @@ export default function ChangeCategories({
 
   const [category, setCategory] = useState<IGetAllCategory[]>([]);
   const [text, setText] = useState<string>('');
-  const [textError, setTextError] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
+  console.log('🚀 ~ ChangeCategories ~ hasError:', hasError);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-
-  console.log(textError);
 
   const onSubmit = async () => {
     if (selectedCategory.length === 0) {
       if (!text) {
-        setTextError(true);
+        setHasError(true);
         return;
       }
     }
@@ -75,17 +74,12 @@ export default function ChangeCategories({
 
   useEffect(() => {
     setText('');
-    setTextError(false);
+    setHasError(false);
   }, [selectedCategory]);
 
   useEffect(() => {
     getAllCategory().then((res) => setCategory(res || []));
   }, []);
-
-  console.log(
-    'defaultValue',
-    defaultValue?.map((item) => item)
-  );
 
   return (
     <Modal visible={visible} hideModal={hideModal} keyboardUp>
