@@ -3,7 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import CustomButton from '@/components/CustomButton/button';
 import { IGetAllCategory, useApiObservations } from '@/axios/api/observations';
-import { Observation } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import IconClose from '../../../../../assets/svgs/iconClose';
@@ -13,7 +12,7 @@ interface IChangeCategories {
   visible: boolean;
   hideModal: () => void;
   observationId: string;
-  returnSameStatus?: Observation | boolean;
+  onUpdate?: () => void;
   defaultValue?: string[];
 }
 
@@ -21,15 +20,10 @@ export default function ChangeCategories({
   visible = false,
   hideModal,
   observationId,
-  returnSameStatus,
+  onUpdate,
   defaultValue,
 }: IChangeCategories) {
-  const {
-    updateObservations,
-    getAllCategory,
-    getFilterObservations,
-    getAllObservations,
-  } = useApiObservations();
+  const { updateObservations, getAllCategory } = useApiObservations();
 
   const { t } = useTranslation();
 
@@ -46,30 +40,25 @@ export default function ChangeCategories({
         return;
       }
     }
-    await updateObservations({
+    const result = await updateObservations({
       observationId,
       data: {
         categories: selectedCategory,
         implementedActions: text || undefined,
       },
-    }).then(async () => {
+    });
+    if (result) {
       Toast.show({
         type: 'success',
         text1: t('success'),
         text2: t('observationUpdate'),
       });
-      if (returnSameStatus as Observation) {
-        await getFilterObservations({
-          status: (returnSameStatus as Observation).status,
-          projectId: (returnSameStatus as Observation).projectId,
-        });
-      } else {
-        await getAllObservations({});
-      }
-      // setStatusFilter((returnSameStatus as Observation).status);
-      setSelectedCategory([]);
-      hideModal();
-    });
+    }
+    if (onUpdate) {
+      onUpdate();
+    }
+    setSelectedCategory([]);
+    hideModal();
   };
 
   useEffect(() => {

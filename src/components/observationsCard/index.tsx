@@ -23,6 +23,8 @@ const statusTitle = {
   Addressed: 'addressed',
 };
 
+const PADDING = 24;
+
 export default function ObservationsCard({ observation }: IObservationsCard) {
   const { t } = useTranslation();
   const [expander, setExpander] = useState<boolean>(false);
@@ -43,7 +45,6 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
   };
 
   Animated.timing(animatedHeight, {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     toValue: !expander ? '20%' : '100%',
     duration: 300,
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: 'white',
     borderRadius: 16,
-    padding: 24,
+    padding: PADDING,
   },
   statusBox: {
     flexDirection: 'row',
