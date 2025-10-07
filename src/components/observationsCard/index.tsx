@@ -23,6 +23,8 @@ const statusTitle = {
   Addressed: 'addressed',
 };
 
+const PADDING = 24;
+
 export default function ObservationsCard({ observation }: IObservationsCard) {
   const { t } = useTranslation();
   const [expander, setExpander] = useState<boolean>(false);
@@ -43,7 +45,6 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
   };
 
   Animated.timing(animatedHeight, {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     toValue: !expander ? '20%' : '100%',
     duration: 300,
@@ -103,7 +104,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
         <MessageImage imageUrl={imageUrl} />
 
         <View style={{ gap: 8 }}>
-          {observation.item?.categories?.length && (
+          {!!observation.item?.categories?.length && (
             <View
               style={{
                 flexDirection: 'row',
@@ -142,7 +143,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
             </View>
           )}
 
-          {observation.item.assignees?.length && (
+          {!!observation.item.assignees?.length && (
             <View style={styles.assigneesBox}>
               <Text style={styles.statusString}>Assignees: </Text>
               {observation.item.assignees?.map((assignee) => (
@@ -151,7 +152,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
             </View>
           )}
 
-          {observation.item.deadline && (
+          {!!observation.item.deadline && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.statusString}>Deadline:</Text>
               <Text>
@@ -162,21 +163,21 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
             </View>
           )}
 
-          {observation.item.closeDate && (
+          {!!observation.item.closeDate && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.statusString}>{t('closeDate')}:</Text>
               <Text>{dateFormat(observation.item.closeDate)}</Text>
             </View>
           )}
 
-          {observation.item.contractor && (
+          {!!observation.item.contractor && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.statusString}>{t('contractor')}:</Text>
               <Text>{observation.item.contractor}</Text>
             </View>
           )}
 
-          {observation.item.subContractor && (
+          {!!observation.item.subContractor && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.statusString}>{t('subContractor')}:</Text>
               <Text>{observation.item.subContractor}</Text>
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: 'white',
     borderRadius: 16,
-    padding: 24,
+    padding: PADDING,
   },
   statusBox: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { apiInstance } from '..';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';

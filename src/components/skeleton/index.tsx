@@ -13,7 +13,7 @@ export default function Skeleton({
     <View style={styles.skeleton}>
       {isLogoAnimation ? (
         <LottieView
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
+           
           source={require('../../../assets/animation/logo-loading.json')}
           style={{ width: '100%', height: 150 }}
           autoPlay

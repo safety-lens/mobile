@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Menu } from 'react-native-paper';
 import { Colors } from '@/constants/Colors';
 import RenameObservation from '../admin/modals/renameObservation';
@@ -12,6 +12,7 @@ import ChangeAssignee from '../admin/modals/changeAssignee';
 import ChangeDeadline from '../admin/modals/changeDeadline';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import ChangeCategories from '../admin/modals/changeCategories';
+import { useApiObservations } from '@/axios/api/observations';
 
 interface IObservationsCard {
   observation: Observation;
@@ -25,6 +26,7 @@ export default function ObservationAction({
   returnSameStatus = false,
 }: IObservationsCard) {
   const { t } = useTranslation();
+  const { getFilterObservations } = useApiObservations();
 
   const { isAdmin } = useGetUserInfo();
 
@@ -75,6 +77,13 @@ export default function ObservationAction({
     setVisibleChangeCategories(!visibleChangeCategories);
     setVisibleMenu(false);
   };
+
+  const onUpdateCategories = useCallback(() => {
+    getFilterObservations({
+      status: observation.status,
+      projectId: observation.projectId,
+    });
+  }, [getFilterObservations, observation.projectId, observation.status]);
 
   return (
     <View>
@@ -175,6 +184,7 @@ export default function ObservationAction({
         observationId={observation._id}
         visible={visibleChangeCategories}
         hideModal={showChangeCategories}
+        onUpdate={onUpdateCategories}
         defaultValue={observation.categories?.map((item) => item.name) || []}
       />
 

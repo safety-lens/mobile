@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { RefreshControl, StyleSheet } from 'react-native';
-import { View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { RefreshControl, StyleSheet , View } from 'react-native';
 import { Href, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
 import ScreenLayout from '@/components/screenLayout';
 import FiltrateObservations, { DareRange } from '@/components/filtrateObservations';
@@ -14,7 +13,7 @@ import { useProjects } from '@/context/projectsProvider';
 import { useObservations } from '@/context/observationProvider';
 import { statusTitle } from '@/utils/statusTitle';
 import { useTranslation } from 'react-i18next';
-import { IStatus } from '@/types/observation';
+import { IStatus, Observation } from '@/types/observation';
 
 export default function Observations() {
   const { getFilterObservations } = useApiObservations();
@@ -46,6 +45,13 @@ export default function Observations() {
     }, [id, status, range])
   );
 
+  const renderItem = useCallback<ListRenderItem<Observation>>(
+    (itemInfo) => <ObservationsCard observation={itemInfo} />,
+    []
+  );
+
+  const renderSeparator = useCallback(() => <View style={{ height: 16 }} />, []);
+
   return (
     <ScreenLayout>
       <View style={styles.navTop}>
@@ -60,10 +66,10 @@ export default function Observations() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={searchObservations} />
         }
-        estimatedItemSize={6}
+        estimatedItemSize={540}
         data={singleObservation?.observations}
-        ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-        renderItem={(observation) => <ObservationsCard observation={observation} />}
+        ItemSeparatorComponent={renderSeparator}
+        renderItem={renderItem}
       />
     </ScreenLayout>
   );

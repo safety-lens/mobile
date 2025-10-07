@@ -110,7 +110,7 @@ const PinOnMap = memo(function PinOnMap({
       )}
       <TouchableOpacity activeOpacity={1}>
         <Zoomable
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+           
           //@ts-ignore
           ref={zoomableRef}
           scale={scale}

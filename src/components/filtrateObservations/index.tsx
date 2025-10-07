@@ -27,7 +27,7 @@ export default function FiltrateObservations({ onRange }: FiltrateObservations) 
     setOpen(false);
   }, [setOpen]);
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const onConfirm = ({ startDate, endDate }: any) => {
     const dateE = new Date(endDate);
     dateE.setDate(dateE.getDate() + 1);

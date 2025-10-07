@@ -12,7 +12,7 @@ export const formDataFunc = (image: ImagePicker.ImagePickerAsset): FormData => {
       image.fileName || image.uri.slice(-40)
     );
   } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     //@ts-ignore
     formData.append('file', {
       uri: image.uri,
