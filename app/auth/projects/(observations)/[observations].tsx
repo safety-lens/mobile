@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { RefreshControl, StyleSheet } from 'react-native';
-import { View } from 'react-native';
+import { RefreshControl, StyleSheet , View } from 'react-native';
 import { Href, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 

@@ -15,7 +15,7 @@ export default function Router() {
   const { openLastVisitedProject } = useLastVisitedProject();
 
   const [loaded] = useFonts({
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+     
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 

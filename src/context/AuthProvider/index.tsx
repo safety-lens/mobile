@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 
 type AuthContextType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   user: { [key: string]: any } | null;
   setUser: Dispatch<SetStateAction<{ [key: string]: unknown } | null>>;
 };

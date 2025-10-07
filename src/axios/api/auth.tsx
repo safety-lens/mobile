@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { setValueStorage } from '@/utils/storage';
 import { apiInstance, apiPublicInstance } from '..';
 import { useAuth } from '@/context/AuthProvider';

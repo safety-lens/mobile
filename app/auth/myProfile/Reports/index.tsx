@@ -165,7 +165,7 @@ export default function Reports() {
     setDateRange(dataRangeCopy[value as keyof typeof dataRangeCopy]?.range);
   };
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const onConfirm = ({ startDate, endDate }: any) => {
     setDateRange({
       startDate: startDate,

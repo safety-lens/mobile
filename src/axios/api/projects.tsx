@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { ICreateProject } from '@/components/createNewProject';
 import { apiInstance } from '..';
 import { AxiosResponse } from 'axios';

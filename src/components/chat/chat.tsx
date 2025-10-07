@@ -2,13 +2,12 @@ import { View, Text, StyleSheet, FlatList, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Message from './message';
 import NewObservation from '../observationNew';
-import { ChatResponse, NewMessage, ResponseContentItem } from '@/types/chatTypes';
+import { ChatResponse, NewMessage, ResponseContentItem , Message as IMessage } from '@/types/chatTypes';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
 import { getValueStorage } from '@/utils/storage';
 import { useApiObservations } from '@/axios/api/observations';
-import { Message as IMessage } from '@/types/chatTypes';
 // import GradualAnimationTwo from '../GradualAnimation';
 import { KeyboardAnimationTest } from '../GradualAnimationText';
 
