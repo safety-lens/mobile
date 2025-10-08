@@ -13,7 +13,6 @@ export const apiInstance = axios.create({
 });
 
 apiInstance.interceptors.request.use(
-   
   async (config: any) => {
     const auth = await getValueStorage('auth');
     const { accessToken } = JSON.parse(auth || '');

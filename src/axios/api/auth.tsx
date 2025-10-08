@@ -1,4 +1,3 @@
- 
 import { setValueStorage } from '@/utils/storage';
 import { apiInstance, apiPublicInstance } from '..';
 import { useAuth } from '@/context/AuthProvider';
@@ -167,8 +166,7 @@ export const useApiSignIn = (): UseApiSignInReturn => {
 
       if (response.data) {
         const account = JSON.stringify(response.data);
-        setValueStorage('accounts', account);
-        console.log('getAccounts', response.data);
+        await setValueStorage('accounts', account);
         return response.data;
       }
     } catch (error: any) {
@@ -193,7 +191,7 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         return data;
       }
     } catch (error: any) {
-      handelError(error.response.data.message || 'error getAccounts');
+      handelError(error.response.data.message || 'error getForgotPassword');
       throw error.response.data.message;
     } finally {
       setIsLoading(false);
