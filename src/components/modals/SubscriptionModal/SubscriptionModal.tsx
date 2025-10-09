@@ -1,5 +1,4 @@
-import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import { useSubscription } from '@/context/SubscriptionProvider';
 import { Typography } from '@/components/Typography';
@@ -30,13 +29,6 @@ const SubscriptionModal = () => {
           onPress={() => Linking.openURL(SUBSCRIPTION_URL)}
           title={t('continue')}
         />
-        {/* <CustomButton
-          onPress={subscriptionModal.hide}
-          styleAppBtn={styles.buttonSecondary}
-          styleBtn={styles.buttonSecondaryText}
-          backgroundColor="white"
-          title={t('cancel')}
-        /> */}
       </View>
     </Modal>
   );
@@ -53,16 +45,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  headerText: {
-    color: '#0A2540',
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 24,
-  },
-  // buttonSecondary: {
-  //   backgroundColor: 'white',
-  // },
-  // buttonSecondaryText: {
-  //   color: '#313131',
-  // },
 });
