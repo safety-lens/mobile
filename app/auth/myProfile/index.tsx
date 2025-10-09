@@ -16,13 +16,15 @@ import { NotificationContext } from '@/context/NotificationProvider';
 import { apiInstance } from '@/axios';
 import ReportIcon from '../../../assets/svgs/reportIcon';
 import { IS_PRODUCTION, IS_STAGING } from '@/constants/api';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 export default function MyProfile() {
   const { logout } = useApiSignIn();
   const { user, refreshUserInfo } = useGetUserInfo();
   const { t } = useTranslation();
   const { unreadNotifications } = useContext(NotificationContext);
-  const { isAdmin } = useGetUserInfo();
+  const { isAdminAdmin } = useGetUserInfo();
+  const { subscriptionFeatures, subscriptionModal } = useSubscription();
 
   const isDevBuild = __DEV__;
   const isLocalBuild = apiInstance.defaults.baseURL?.includes('localhost');
@@ -42,7 +44,13 @@ export default function MyProfile() {
     router.navigate('/auth/myProfile/notification');
   };
 
+  const hasAccessToReports = isAdminAdmin || subscriptionFeatures?.report;
+
   const goToReports = () => {
+    if (!hasAccessToReports) {
+      subscriptionModal.show();
+      return;
+    }
     router.navigate('/auth/myProfile/Reports');
   };
 
@@ -82,12 +90,10 @@ export default function MyProfile() {
               <Text style={styles.drawerItem}>{t('notification')}</Text>
             </TouchableOpacity>
 
-            {isAdmin && (
-              <TouchableOpacity style={styles.reports} onPress={goToReports}>
-                <ReportIcon />
-                <Text style={styles.drawerItem}>{t('Reports')}</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity style={styles.reports} onPress={goToReports}>
+              <ReportIcon />
+              <Text style={styles.drawerItem}>{t('Reports')}</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <DrawerItem
