@@ -20,7 +20,7 @@ const sizeStyles = {
 
 type Sizes = keyof typeof sizeStyles;
 type Colors = keyof typeof colorStyles;
-type Presets = 'default' | 'header';
+type Presets = 'default' | 'header' | 'title';
 
 const presetStyles = {
   default: {},
@@ -28,6 +28,10 @@ const presetStyles = {
     ...sizeStyles.xl,
     fontWeight: '600',
   } as TextStyle,
+  title: {
+    ...sizeStyles.lg,
+    fontWeight: '700',
+  },
 };
 
 interface Props extends TextProps {
