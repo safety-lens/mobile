@@ -10,6 +10,7 @@ import CreateNotification from '@/components/CreateNotification';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { NotificationContext } from '@/context/NotificationProvider';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 export default function Notification() {
   const { getNotifications, markAllNotificationsViewed } = useApiNotifications();
@@ -17,7 +18,8 @@ export default function Notification() {
   const [refreshing, setRefreshing] = useState(false);
   const { onNotificationsAsRead } = useContext(NotificationContext);
 
-  const { isAdmin } = useGetUserInfo();
+  const { isAdminAdmin } = useGetUserInfo();
+  const { subscriptionFeatures } = useSubscription();
 
   const { t } = useTranslation();
 
@@ -50,12 +52,15 @@ export default function Notification() {
     getUserNotifications();
   }, []);
 
+  const canCreateNotifications =
+    isAdminAdmin || subscriptionFeatures?.createNotifications;
+
   return (
     <ScreenLayout>
       <View style={{ marginBottom: 10 }}>
         <ScreenTopNav title={t('notification')} backPath="/auth/myProfile" />
       </View>
-      {isAdmin && (
+      {canCreateNotifications && (
         <View>
           <CreateNotification onSended={getUserNotifications} />
         </View>

@@ -144,7 +144,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
         title={t('createNotification')}
         onPress={showModal}
         styleAppBtn={{
-          width: '50%',
+          width: '60%',
         }}
       />
       <Modal visible={visible} hideModal={showModal} keyboardUp>
