@@ -186,6 +186,11 @@
     "selectDateRange": "Select Date Range",
     "selectProject": "Select a project",
 
+    "upgradeYourPlan": "Upgrade Your Plan",
+    "pleaseUpgradeYourPlanToUseThisFeature": "Please, upgrade your plan to use this feature",
+    "continue": "Continue",
+    "cancel": "Cancel",
+
     "months": {
       "January": "January",
       "February": "February",

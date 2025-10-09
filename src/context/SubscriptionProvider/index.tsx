@@ -1,3 +1,4 @@
+import useModal, { UseModal } from '@/hooks/useModal';
 import { getValueStorage } from '@/utils/storage';
 import {
   createContext,
@@ -92,6 +93,8 @@ interface SubscriptionFeatures {
 }
 
 type SubscriptionContextValue = {
+  hasSubscription: boolean;
+  subscriptionModal: UseModal;
   subscription: Subscription | null;
   subscriptionFeatures: SubscriptionFeatures | null;
 };
@@ -136,6 +139,7 @@ type Props = {
 };
 
 const SubscriptionProvider = ({ children }: Props): ReactElement => {
+  const subscriptionModal = useModal();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [subscriptionFeatures, setSubscriptionFeatures] =
     useState<SubscriptionFeatures | null>(null);
@@ -164,7 +168,14 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
   }, []);
 
   return (
-    <SubscriptionContext.Provider value={{ subscription, subscriptionFeatures }}>
+    <SubscriptionContext.Provider
+      value={{
+        subscriptionModal,
+        hasSubscription: subscription?.status === 'active',
+        subscription,
+        subscriptionFeatures,
+      }}
+    >
       <SubscriptionActionContext.Provider
         value={{ setSubscription, setSubscriptionFeatures, syncSubscriptionData }}
       >

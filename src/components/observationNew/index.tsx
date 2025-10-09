@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CreateNewObservation from '../createNewObservation';
@@ -8,36 +8,51 @@ import { Colors } from '@/constants/Colors';
 import useTakeImage from '@/hooks/useTakeImage';
 import CustomButton from '../CustomButton/button';
 import EyeObservation from '../../../assets/svgs/eye';
+import useModal from '@/hooks/useModal';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 interface INewObservation {
   onChange?: (e: ImagePicker.ImagePickerAsset) => void;
   clearMessages?: () => void;
   loadedObservationImage?: string;
-  anchorChild?: (onClick: () => void) => ReactNode;
 }
 
 export default function NewObservation({
   onChange,
   clearMessages,
   loadedObservationImage,
-  anchorChild,
 }: INewObservation) {
   const { t } = useTranslation();
+  const { subscriptionFeatures, subscriptionModal } = useSubscription();
   const { pickImage, takePhoto } = useTakeImage();
 
-  const [visible, setVisible] = useState(false);
-  const [visibleMenu, setVisibleMenu] = useState(false);
+  const createObservationModal = useModal();
+  const menu = useModal();
 
-  const openVisibleMenu = () => (onChange ? setVisibleMenu(!visibleMenu) : showModal());
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const openVisibleMenu = useCallback(() => {
+    if (!subscriptionFeatures?.projectsAndObservations) {
+      subscriptionModal.show();
+      return;
+    }
+    if (onChange) {
+      menu.toggle();
+    } else {
+      createObservationModal.show();
+    }
+  }, [
+    subscriptionFeatures?.projectsAndObservations,
+    onChange,
+    subscriptionModal,
+    menu,
+    createObservationModal,
+  ]);
 
   const triggerFunc = () => {
     if (onChange) {
       pickImage(onChange);
       openVisibleMenu();
     } else {
-      showModal();
+      createObservationModal.show();
     }
   };
   const triggerFuncCamera = () => {
@@ -45,7 +60,7 @@ export default function NewObservation({
       takePhoto(onChange);
       openVisibleMenu();
     } else {
-      showModal();
+      createObservationModal.show();
     }
   };
 
@@ -55,21 +70,17 @@ export default function NewObservation({
         anchorPosition="bottom"
         contentStyle={styles.menuContentStyle}
         style={styles.menu}
-        visible={visibleMenu}
+        visible={menu.isVisible}
         onDismiss={openVisibleMenu}
         anchor={
-          anchorChild ? (
-            anchorChild(openVisibleMenu)
-          ) : (
-            <CustomButton
-              styleAppBtn={{
-                minWidth: 190,
-              }}
-              onPress={openVisibleMenu}
-              icon={<EyeObservation />}
-              title={!loadedObservationImage ? t('newObservation') : t('postObservation')}
-            />
-          )
+          <CustomButton
+            styleAppBtn={{
+              minWidth: 190,
+            }}
+            onPress={openVisibleMenu}
+            icon={<EyeObservation />}
+            title={!loadedObservationImage ? t('newObservation') : t('postObservation')}
+          />
         }
       >
         <Menu.Item
@@ -86,8 +97,8 @@ export default function NewObservation({
       <CreateNewObservation
         loadedObservationImage={loadedObservationImage}
         title={t('createNewObservation')}
-        visible={visible}
-        hideModal={hideModal}
+        visible={createObservationModal.isVisible}
+        hideModal={createObservationModal.hide}
         clearMessages={clearMessages}
       />
     </View>
@@ -105,12 +116,11 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
   },
   menuContentStyle: {
-    marginTop: 20,
     backgroundColor: 'white',
     borderRadius: 8,
   },
   menu: {
-    paddingTop: 25,
+    paddingTop: 10,
   },
   menuItem: {
     color: 'black',
