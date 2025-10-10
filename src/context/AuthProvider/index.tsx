@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 
 type AuthContextType = {
-   
+  isUserLoading?: boolean;
   user: { [key: string]: any } | null;
   setUser: Dispatch<SetStateAction<{ [key: string]: unknown } | null>>;
 };
@@ -27,10 +27,12 @@ function useAuth(): AuthContextType {
 }
 
 const AuthProvider = (props: { children: ReactNode }): ReactElement => {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<{ [key: string]: unknown } | null>(null);
 
   const checkAuth = async () => {
     const auth = await getValueStorage('auth');
+    setIsLoading(false);
     if (!auth) {
       setUser(null);
       // router.navigate('/');
@@ -43,7 +45,12 @@ const AuthProvider = (props: { children: ReactNode }): ReactElement => {
     checkAuth();
   }, []);
 
-  return <AuthContext.Provider {...props} value={{ user, setUser }} />;
+  return (
+    <AuthContext.Provider
+      {...props}
+      value={{ isUserLoading: isLoading, user, setUser }}
+    />
+  );
 };
 
 export { AuthProvider, useAuth };
