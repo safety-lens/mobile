@@ -99,7 +99,12 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const syncSubscriptionData = async () => {
     // TODO: use reactive storage or event emitter instead of async storage
     const accounts = await getValueStorage('accounts');
-    const data = JSON.parse(accounts || '');
+    let data;
+    try {
+      data = accounts ? JSON.parse(accounts) : null;
+    } catch (e) {
+      console.log('Error parsing accounts from async storage', e);
+    }
 
     if (!data) {
       setIsLoading(true);
