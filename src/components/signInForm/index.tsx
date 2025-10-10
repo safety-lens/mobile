@@ -28,12 +28,7 @@ export default function SignInForm({ email }: { email: string }) {
   });
 
   const onSubmit = async (data: IData) => {
-    const { password, email } = data;
-
-    await signIn({
-      password,
-      email,
-    });
+    await signIn(data);
   };
   return (
     <View style={styles.registerForm}>
