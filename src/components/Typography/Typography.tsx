@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextProps, TextStyle } from 'react-native';
 
+// TODO: use theme when it will be ready
 const colorStyles = {
   default: { color: '#181D27' },
   light: { color: '#535862' },
