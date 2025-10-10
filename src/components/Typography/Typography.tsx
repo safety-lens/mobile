@@ -40,6 +40,7 @@ interface Props extends TextProps {
   size?: Sizes;
   color?: Colors;
   preset?: Presets;
+  center?: boolean;
   weight?: TextStyle['fontWeight'];
 }
 
@@ -50,6 +51,7 @@ const Typography = ({
   size,
   weight,
   preset,
+  center,
   style,
   ...rest
 }: Props) => {
@@ -62,6 +64,7 @@ const Typography = ({
         preset && presetStyles[preset],
         color && colorStyles[color],
         size && sizeStyles[size],
+        center && styles.textCenter,
         style,
       ]}
       {...rest}
@@ -79,5 +82,8 @@ const styles = StyleSheet.create({
   },
   textFull: {
     width: '100%',
+  },
+  textCenter: {
+    textAlign: 'center',
   },
 });
