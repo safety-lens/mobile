@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { IProjectCart } from '@/types/project';
 import { useApiNotifications } from './notification';
 import * as Device from 'expo-device';
+import { useSubscription, useSubscriptionActions } from '@/context/SubscriptionProvider';
 
 interface UseApiSignInReturn {
   signIn: (data: IDataSignIn) => Promise<void>;
@@ -68,6 +69,7 @@ export interface UserAccountData {
 export const useApiSignIn = (): UseApiSignInReturn => {
   const { setUser } = useAuth();
   const { deleteUserPushToken } = useApiNotifications();
+  const { syncSubscriptionData } = useSubscriptionActions();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -167,6 +169,8 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         const account = JSON.stringify(response.data);
         await setValueStorage('accounts', account);
+        // TODO: replace async storage with some reactive alternative
+        await syncSubscriptionData();
         return response.data;
       }
     } catch (error: any) {
@@ -247,6 +251,8 @@ export const useApiSignIn = (): UseApiSignInReturn => {
     );
     await setValueStorage('auth', '');
     await setValueStorage('accounts', '');
+    // TODO: replace async storage with some reactive alternative
+    await syncSubscriptionData();
     setUser(null);
     router.replace('/');
   };

@@ -187,7 +187,10 @@
     "selectProject": "Select a project",
 
     "upgradeYourPlan": "Upgrade Your Plan",
+    "subscriptionExpired": "Subscription Expired",
+    "youCanManageYourSubscriptionOnOurWebsite": "You can manage your subscription on our website",
     "pleaseUpgradeYourPlanToUseThisFeature": "Please, upgrade your plan to use this feature",
+    "openWebsite": "Open Website",
     "continue": "Continue",
     "cancel": "Cancel",
 

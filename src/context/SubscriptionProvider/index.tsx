@@ -84,16 +84,29 @@ interface Subscription {
 //   }
 // TODO: check type!!
 interface SubscriptionFeatures {
+  /**
+   * guard на весь экран на случай если подписка не активна
+   */
+
+  /**
+   * убираем members из projects для enterprise
+   */
+  // projectMembers?: boolean; // custom
   projectsAndObservations: boolean;
   getNotifications: boolean;
   createNotifications: boolean;
+  /**
+   * открываем модалку при переходе на табу чатов
+   * инпут заблочен
+   * может смотреть историю чатов
+   */
   chatWithAi: boolean;
   report: boolean;
   teamInvitations: boolean;
 }
 
 type SubscriptionContextValue = {
-  hasSubscription: boolean;
+  hasSubscription: boolean | null;
   subscriptionModal: UseModal;
   subscription: Subscription | null;
   subscriptionFeatures: SubscriptionFeatures | null;
@@ -140,6 +153,7 @@ type Props = {
 
 const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const subscriptionModal = useModal();
+  const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [subscriptionFeatures, setSubscriptionFeatures] =
     useState<SubscriptionFeatures | null>(null);
@@ -150,15 +164,17 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     const data = JSON.parse(accounts || '');
 
     if (!data) {
+      setIsLoading(true);
       setSubscription(null);
       return;
     }
 
     const { subscription, subscriptionFeatures } = data as {
       subscription: Subscription | null;
-      subscriptionFeatures: SubscriptionFeatures;
+      subscriptionFeatures: Omit<SubscriptionFeatures, 'projectMembers'>;
     };
 
+    setIsLoading(false);
     setSubscription(subscription);
     setSubscriptionFeatures(subscriptionFeatures);
   };
@@ -171,7 +187,7 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     <SubscriptionContext.Provider
       value={{
         subscriptionModal,
-        hasSubscription: subscription?.status === 'active',
+        hasSubscription: isLoading ? null : subscription?.status === 'active',
         subscription,
         subscriptionFeatures,
       }}

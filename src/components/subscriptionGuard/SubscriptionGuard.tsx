@@ -27,8 +27,8 @@ const SubscriptionGuard = ({ enabled = true, children }: Props) => {
     return (
       <Placeholder
         text={t('subscriptionExpired')}
-        description={t('pleaseRenewYourSubscription')}
-        buttonTitle="Renew Subscription"
+        description={t('youCanManageYourSubscriptionOnOurWebsite')}
+        buttonTitle={t('openWebsite')}
         onPress={() => Linking.openURL(SUBSCRIPTION_URL)}
       />
     );
