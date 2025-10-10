@@ -85,6 +85,7 @@ export default function TextField<T extends FieldValues>({
               keyboardType={keyboardType}
               secureTextEntry={isPassword}
               placeholder={placeholder}
+              placeholderTextColor="#717680"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
