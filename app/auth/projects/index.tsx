@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import ScreenTopNav from '@/components/screenTopNav';
 import { useTranslation } from 'react-i18next';
 import useGetUserInfo from '@/hooks/getUserInfo';
+import { SubscriptionGuard } from '@/components/subscriptionGuard';
 
 export default function Projects() {
   const { t } = useTranslation();

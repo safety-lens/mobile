@@ -20,7 +20,7 @@ const sizeStyles = {
 
 type Sizes = keyof typeof sizeStyles;
 type Colors = keyof typeof colorStyles;
-type Presets = 'default' | 'header';
+type Presets = 'default' | 'header' | 'title';
 
 const presetStyles = {
   default: {},
@@ -28,6 +28,10 @@ const presetStyles = {
     ...sizeStyles.xl,
     fontWeight: '600',
   } as TextStyle,
+  title: {
+    ...sizeStyles.lg,
+    fontWeight: '700',
+  },
 };
 
 interface Props extends TextProps {
@@ -36,6 +40,7 @@ interface Props extends TextProps {
   size?: Sizes;
   color?: Colors;
   preset?: Presets;
+  center?: boolean;
   weight?: TextStyle['fontWeight'];
 }
 
@@ -46,6 +51,7 @@ const Typography = ({
   size,
   weight,
   preset,
+  center,
   style,
   ...rest
 }: Props) => {
@@ -58,6 +64,7 @@ const Typography = ({
         preset && presetStyles[preset],
         color && colorStyles[color],
         size && sizeStyles[size],
+        center && styles.textCenter,
         style,
       ]}
       {...rest}
@@ -75,5 +82,8 @@ const styles = StyleSheet.create({
   },
   textFull: {
     width: '100%',
+  },
+  textCenter: {
+    textAlign: 'center',
   },
 });

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { Tabs , router } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import PlusIcon from '../../assets/svgs/plus';
 import { UserIcon } from '../../assets/svgs/userIcon';
 import { ProjectsProvider } from '@/context/projectsProvider';
@@ -14,6 +14,7 @@ import Constants from 'expo-constants';
 import { useApiNotifications } from '@/axios/api/notification';
 import { NotificationContext } from '@/context/NotificationProvider';
 import ChatIcon from '../../assets/svgs/chat';
+import { SubscriptionModal } from '@/components/modals/SubscriptionModal';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -214,6 +215,7 @@ export default function RootLayout() {
             }}
           />
         </Tabs>
+        <SubscriptionModal />
       </ObservationsProvider>
     </ProjectsProvider>
   );

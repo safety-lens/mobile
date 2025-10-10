@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import {
   FlatList,
@@ -11,7 +11,7 @@ import {
   Keyboard,
   Platform,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '@/constants/Colors';
 import Message from '@/components/chat/message';
@@ -28,6 +28,7 @@ import { formDataFunc } from '@/utils/formData';
 import { useApiUploads } from '@/axios/api/uploads';
 // import GradualAnimationTwo from '@/components/GradualAnimation';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 export default function Chat() {
   const [searchText, setSearchText] = useState('');
@@ -40,9 +41,24 @@ export default function Chat() {
 
   const { t } = useTranslation();
   const { user } = useGetUserInfo();
+  const { subscriptionFeatures, subscriptionModal } = useSubscription();
 
   const { uploads, isLoading: isLoadingUploads } = useApiUploads();
   const { startChat, isLoading, getConversationId, getChat } = useApiObservations();
+
+  const isDisabled = !subscriptionFeatures?.chatWithAi;
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!subscriptionFeatures) {
+        return;
+      }
+      if (!subscriptionFeatures.chatWithAi) {
+        subscriptionModal.show();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [subscriptionFeatures])
+  );
 
   const resetChat = () => {
     setMessages([]);
@@ -175,14 +191,16 @@ export default function Chat() {
             multiline={searchText.length > 30}
             outlineStyle={styles.textInputOutline}
             value={searchText}
-            style={styles.textInput}
+            style={[styles.textInput, isDisabled && { backgroundColor: 'black' }]}
             contentStyle={{
               color: 'black',
             }}
             textColor="black"
             onChangeText={handleSearch}
+            disabled={isDisabled}
             right={
               <TextInput.Icon
+                disabled={isDisabled}
                 icon="send"
                 forceTextInputFocus
                 onPress={
@@ -191,12 +209,13 @@ export default function Chat() {
                     : sendMessage
                 }
                 loading={isLoading || isLoadingUploads}
-                color="white"
+                color={'white'}
                 style={[
                   styles.sendButton,
                   {
                     opacity: searchText.trim().length === 0 && !previewUri?.uri ? 0.5 : 1,
                   },
+                  isDisabled && styles.sendButtonDisabled,
                 ]}
               />
             }
@@ -255,6 +274,10 @@ const styles = StyleSheet.create({
   sendButton: {
     transform: [{ rotate: '-90deg' }],
     backgroundColor: '#022140',
+  },
+  sendButtonDisabled: {
+    backgroundColor: '#A4A9B4',
+    opacity: 0.4,
   },
   emptyChatContainer: {
     flex: 1,

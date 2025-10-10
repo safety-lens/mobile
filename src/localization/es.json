@@ -189,6 +189,14 @@
     "allMembers": "Todos los miembros",
     "all": "Todos",
 
+    "upgradeYourPlan": "Actualiza tu plan",
+    "subscriptionExpired": "Suscripción expirada",
+    "youCanManageYourSubscriptionOnOurWebsite": "Puedes gestionar tu suscripción en nuestro sitio web",
+    "openWebsite": "Abrir sitio web",
+    "pleaseUpgradeYourPlanToUseThisFeature": "Por favor, actualiza tu plan para usar esta función",
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+
     "months": {
       "January": "Enero",
       "February": "Febrero",
