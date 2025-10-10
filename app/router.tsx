@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Redirect, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
@@ -11,11 +11,10 @@ import { useLastVisitedProject } from '@/hooks/lastVisitedProject';
 SplashScreen.preventAutoHideAsync();
 
 export default function Router() {
-  const { user } = useAuth();
+  const { isUserLoading, user } = useAuth();
   const { openLastVisitedProject } = useLastVisitedProject();
 
   const [loaded] = useFonts({
-     
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
@@ -24,26 +23,28 @@ export default function Router() {
     i18n.changeLanguage(lang || 'en');
   };
 
-  const authRedirect = async () => {
+  const authRedirect = useCallback(async () => {
     if (user) {
       openLastVisitedProject();
     } else {
       return <Redirect href="/" />;
     }
-  };
+  }, [user, openLastVisitedProject]);
 
-  const initFuncs = async () => {
+  const initApp = useCallback(async () => {
     initLang();
     await authRedirect();
     await new Promise((resolve) => setTimeout(resolve, 700));
     await SplashScreen.hideAsync();
-  };
+  }, [authRedirect]);
 
   useEffect(() => {
-    initFuncs();
-  }, [loaded, user]);
+    if (loaded && !isUserLoading) {
+      initApp();
+    }
+  }, [loaded, isUserLoading, initApp]);
 
-  if (!loaded) {
+  if (!loaded || isUserLoading) {
     return null;
   }
 

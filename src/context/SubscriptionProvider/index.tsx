@@ -6,11 +6,11 @@ import {
   ReactElement,
   ReactNode,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from 'react';
-import { useAuth } from '../AuthProvider';
 import useGetUserInfo from '@/hooks/getUserInfo';
 
 interface Subscription {
@@ -96,7 +96,7 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const [subscriptionFeatures, setSubscriptionFeatures] =
     useState<SubscriptionFeatures | null>(null);
 
-  const syncSubscriptionData = async () => {
+  const syncSubscriptionData = useCallback(async () => {
     // TODO: use reactive storage or event emitter instead of async storage
     const accounts = await getValueStorage('accounts');
     let data;
@@ -112,19 +112,14 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
       return;
     }
 
-    const { subscription, subscriptionFeatures } = data as {
-      subscription: Subscription | null;
-      subscriptionFeatures: Omit<SubscriptionFeatures, 'projectMembers'>;
-    };
-
     setIsLoading(false);
-    setSubscription(subscription);
-    setSubscriptionFeatures(subscriptionFeatures);
-  };
+    setSubscription(data.subscription as Subscription | null);
+    setSubscriptionFeatures(data.subscriptionFeatures as SubscriptionFeatures | null);
+  }, []);
 
   useEffect(() => {
     syncSubscriptionData();
-  }, []);
+  }, [syncSubscriptionData]);
 
   return (
     <SubscriptionContext.Provider

@@ -14,6 +14,11 @@ module.exports = defineConfig([
     },
   },
   {
+    rules: {
+      'no-shadow': 'error',
+    },
+  },
+  {
     ignores: ['dist/*'],
   },
 ]);
