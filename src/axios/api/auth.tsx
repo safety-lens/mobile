@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { IProjectCart } from '@/types/project';
 import { useApiNotifications } from './notification';
 import * as Device from 'expo-device';
-import { useSubscription, useSubscriptionActions } from '@/context/SubscriptionProvider';
+import { useSubscriptionActions } from '@/context/SubscriptionProvider';
 
 interface UseApiSignInReturn {
   signIn: (data: IDataSignIn) => Promise<void>;

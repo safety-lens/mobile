@@ -1,4 +1,5 @@
 import { useApiProject } from '@/axios/api/projects';
+import { SubscriptionGuard } from '@/components/subscriptionGuard';
 import { useAuth } from '@/context/AuthProvider';
 import { useProjects } from '@/context/projectsProvider';
 import { Stack } from 'expo-router';
@@ -20,21 +21,23 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        presentation: 'card',
-        animation: 'fade',
-        animationDuration: 100,
-      }}
-    >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(id)/[id]" />
-      <Stack.Screen
-        name="(observations)/[observations]"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="observationMap" />
-    </Stack>
+    <SubscriptionGuard>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          presentation: 'card',
+          animation: 'fade',
+          animationDuration: 100,
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(id)/[id]" />
+        <Stack.Screen
+          name="(observations)/[observations]"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="observationMap" />
+      </Stack>
+    </SubscriptionGuard>
   );
 }

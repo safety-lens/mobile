@@ -24,15 +24,15 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView>
-          <SubscriptionProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <SubscriptionProvider>
               <NotificationProvider>
                 <PaperProvider>
                   <Router />
                 </PaperProvider>
               </NotificationProvider>
-            </AuthProvider>
-          </SubscriptionProvider>
+            </SubscriptionProvider>
+          </AuthProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>
     </ThemeProvider>

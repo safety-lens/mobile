@@ -10,49 +10,9 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useAuth } from '../AuthProvider';
+import useGetUserInfo from '@/hooks/getUserInfo';
 
-// subscription
-// {
-//     productName: String,
-//     accountId: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: 'Account',
-//       required: true,
-//     },
-//     productId: {
-//       type: String,
-//       required: true,
-//     },
-//     stripeSubscriptionId: {
-//       type: String,
-//       required: true,
-//     },
-//     startDate: {
-//       type: Date,
-//       required: true,
-//     },
-//     finishDate: {
-//       type: Date,
-//     },
-//     nextPaymentDate: {
-//       type: Date,
-//     },
-//     status: {
-//       type: String,
-//       enum: [
-//         'trialing',
-//         'active',
-//         'canceled',
-//         'incomplete',
-//         'incomplete_expired',
-//         'past_due',
-//         'unpaid',
-//       ],
-//       default: 'active',
-//     },
-//     level: Number, // 0 - canceled 1 2 3 - active
-//   },
-// TODO: check type!!
 interface Subscription {
   productName: string;
   accountId: string;
@@ -72,34 +32,10 @@ interface Subscription {
   level: number; // 0 - canceled, 1, 2, 3 - active
 }
 
-//subscription features
-
-// {
-//     projectsAndObservations: false,
-//     getNotifications: false,
-//     createNotifications: false,
-//     chatWithAi: false,
-//     report: false,
-//     teamInvitations: false,
-//   }
-// TODO: check type!!
 interface SubscriptionFeatures {
-  /**
-   * guard на весь экран на случай если подписка не активна
-   */
-
-  /**
-   * убираем members из projects для enterprise
-   */
-  // projectMembers?: boolean; // custom
   projectsAndObservations: boolean;
   getNotifications: boolean;
   createNotifications: boolean;
-  /**
-   * открываем модалку при переходе на табу чатов
-   * инпут заблочен
-   * может смотреть историю чатов
-   */
   chatWithAi: boolean;
   report: boolean;
   teamInvitations: boolean;
@@ -153,6 +89,8 @@ type Props = {
 
 const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const subscriptionModal = useModal();
+  const { isAdminAdmin } = useGetUserInfo();
+
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [subscriptionFeatures, setSubscriptionFeatures] =
@@ -187,7 +125,9 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     <SubscriptionContext.Provider
       value={{
         subscriptionModal,
-        hasSubscription: isLoading ? null : subscription?.status === 'active',
+        hasSubscription: isLoading
+          ? null
+          : subscription?.status === 'active' || isAdminAdmin,
         subscription,
         subscriptionFeatures,
       }}

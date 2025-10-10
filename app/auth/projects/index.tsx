@@ -16,17 +16,15 @@ export default function Projects() {
 
   return (
     <ScreenLayout>
-      <SubscriptionGuard>
-        <ScreenTopNav
-          icon={isAdmin ? <CreateNewProject /> : undefined}
-          title={t('myProjects')}
-        />
-        <View style={styles.searchContainer}>
-          <Search />
-          <ProjectsFilter />
-        </View>
-        <ListOfProjects />
-      </SubscriptionGuard>
+      <ScreenTopNav
+        icon={isAdmin ? <CreateNewProject /> : undefined}
+        title={t('myProjects')}
+      />
+      <View style={styles.searchContainer}>
+        <Search />
+        <ProjectsFilter />
+      </View>
+      <ListOfProjects />
     </ScreenLayout>
   );
 }
