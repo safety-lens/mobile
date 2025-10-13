@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { NotificationItem, useApiNotifications } from '@/axios/api/notification';
 import { dateFormat } from '@/utils/dateFormat';
 import CreateNotification from '@/components/CreateNotification';
-import useGetUserInfo from '@/hooks/getUserInfo';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { NotificationContext } from '@/context/NotificationProvider';
 import { useSubscription } from '@/context/SubscriptionProvider';
@@ -18,16 +17,15 @@ export default function Notification() {
   const [refreshing, setRefreshing] = useState(false);
   const { onNotificationsAsRead } = useContext(NotificationContext);
 
-  const { isAdminAdmin } = useGetUserInfo();
-  const { subscriptionFeatures } = useSubscription();
+  const { hasSubscription, hasSubscriptionFeature } = useSubscription();
 
   const { t } = useTranslation();
 
   const getUserNotifications = async () => {
     await markAllNotificationsViewed();
     onNotificationsAsRead();
-    const notifications = await getNotifications();
-    setNotifications(notifications.notifications);
+    const result = await getNotifications();
+    setNotifications(result.notifications);
   };
 
   const getPriorityStyle = (priority: string) => {
@@ -43,17 +41,19 @@ export default function Notification() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    const notifications = await getNotifications();
-    setNotifications(notifications.notifications);
+    const result = await getNotifications();
+    setNotifications(result.notifications);
     setRefreshing(false);
   };
 
   useEffect(() => {
-    getUserNotifications();
-  }, []);
+    if (hasSubscription) {
+      getUserNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasSubscription]);
 
-  const canCreateNotifications =
-    isAdminAdmin || subscriptionFeatures?.createNotifications;
+  const canCreateNotifications = hasSubscriptionFeature('createNotifications');
 
   return (
     <ScreenLayout>

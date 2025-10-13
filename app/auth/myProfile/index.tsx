@@ -21,10 +21,10 @@ import { useSubscription } from '@/context/SubscriptionProvider';
 export default function MyProfile() {
   const { logout } = useApiSignIn();
   const { user, refreshUserInfo } = useGetUserInfo();
+  const { hasSubscription } = useSubscription();
   const { t } = useTranslation();
   const { unreadNotifications } = useContext(NotificationContext);
-  const { isAdminAdmin } = useGetUserInfo();
-  const { subscriptionFeatures, subscriptionModal } = useSubscription();
+  const { hasSubscriptionFeature, subscriptionModal } = useSubscription();
 
   const isDevBuild = __DEV__;
   const isLocalBuild = apiInstance.defaults.baseURL?.includes('localhost');
@@ -44,7 +44,7 @@ export default function MyProfile() {
     router.navigate('/auth/myProfile/notification');
   };
 
-  const hasAccessToReports = isAdminAdmin || subscriptionFeatures?.report;
+  const hasAccessToReports = hasSubscriptionFeature('report');
 
   const goToReports = () => {
     if (!hasAccessToReports) {
@@ -77,24 +77,26 @@ export default function MyProfile() {
           <View style={styles.languageBlock}>
             <LanguageSelect />
           </View>
-          <View style={styles.languageBlock}>
-            <TouchableOpacity style={styles.notification} onPress={goToObservations}>
-              {unreadNotifications > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>
-                    {unreadNotifications > 9 ? '9+' : unreadNotifications}
-                  </Text>
-                </View>
-              )}
-              <Notification fill="white" />
-              <Text style={styles.drawerItem}>{t('notification')}</Text>
-            </TouchableOpacity>
+          {hasSubscription && (
+            <View style={styles.languageBlock}>
+              <TouchableOpacity style={styles.notification} onPress={goToObservations}>
+                {unreadNotifications > 0 && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>
+                      {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                    </Text>
+                  </View>
+                )}
+                <Notification fill="white" />
+                <Text style={styles.drawerItem}>{t('notification')}</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.reports} onPress={goToReports}>
-              <ReportIcon />
-              <Text style={styles.drawerItem}>{t('Reports')}</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity style={styles.reports} onPress={goToReports}>
+                <ReportIcon />
+                <Text style={styles.drawerItem}>{t('Reports')}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         <DrawerItem
           labelStyle={styles.drawerItem}

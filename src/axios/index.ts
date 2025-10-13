@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { getValueStorage } from '@/utils/storage';
 import { useRefreshTokenFn } from './refresh';
 import { API_URL } from '@/constants/api';
+import { router } from 'expo-router';
 
 export const apiPublicInstance = axios.create({
   baseURL: API_URL,
@@ -34,7 +35,8 @@ apiInstance.interceptors.response.use(
   },
   async (error) => {
     const config = error?.config;
-    if (error.response?.status === 401 && !config._retry) {
+    const statusCode = error?.response?.status;
+    if (statusCode === 401 && !config._retry) {
       config._retry = true;
 
       const accessToken = await useRefreshTokenFn();
@@ -45,6 +47,10 @@ apiInstance.interceptors.response.use(
         apiInstance.defaults.headers.common.Authorization = header;
         config.headers.Authorization = header;
       }
+    }
+
+    if (statusCode === 403) {
+      router.replace('/auth/projects');
     }
 
     return Promise.reject(error);

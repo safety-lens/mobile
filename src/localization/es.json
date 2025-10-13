@@ -221,7 +221,8 @@
       "completeYourAccountSetupDescription": "Enviaremos un enlace de registro a {{email}} que te permitirá usar SafetyLens",
       "emailWillBeSentTo": "Se enviará un correo electrónico a {{email}}, por favor revisa tu bandeja de entrada",
       "sendLink": "Enviar enlace",
-      "linkSent": "Enlace enviado"
+      "linkSent": "Enlace enviado",
+      "goBack": "Regresar"
     }
   }
 }

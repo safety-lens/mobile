@@ -1,5 +1,6 @@
 import { useApiNotifications, NotificationItem } from '@/axios/api/notification';
 import React, { createContext, useState } from 'react';
+import { useSubscription } from '../SubscriptionProvider';
 
 export const NotificationContext = createContext<{
   unreadNotifications: number;
@@ -16,14 +17,19 @@ export default function NotificationProvider({
 }) {
   const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
   const { getNotifications } = useApiNotifications();
+  const { hasSubscription } = useSubscription();
 
   const onNotificationsAsRead = async () => {
+    if (!hasSubscription) {
+      setUnreadNotifications(0);
+      return;
+    }
     const notifications = await getNotifications();
-    const unreadNotifications = notifications.notifications.filter(
+    const allUnreadNotifications = notifications.notifications.filter(
       (notification: NotificationItem) => !notification.isViewed
     );
     setUnreadNotifications(
-      unreadNotifications.length > 0 ? unreadNotifications.length : undefined
+      allUnreadNotifications.length > 0 ? allUnreadNotifications.length : undefined
     );
   };
 

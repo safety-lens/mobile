@@ -219,7 +219,8 @@
       "completeYourAccountSetupDescription": "We will send a registration link to {{email}} that will allow you to use SafetyLens",
       "emailWillBeSentTo": "Email will be sent to {{email}}, please check your inbox",
       "sendLink": "Send Link",
-      "linkSent": "Link Sent"
+      "linkSent": "Link Sent",
+      "goBack": "Go Back"
     }
   }
 }

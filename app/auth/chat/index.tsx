@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import 'react-native-reanimated';
 import {
   FlatList,
@@ -29,6 +29,7 @@ import { useApiUploads } from '@/axios/api/uploads';
 // import GradualAnimationTwo from '@/components/GradualAnimation';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import { useApiSignIn } from '@/axios/api/auth';
 
 export default function Chat() {
   const [searchText, setSearchText] = useState('');
@@ -41,23 +42,38 @@ export default function Chat() {
 
   const { t } = useTranslation();
   const { user } = useGetUserInfo();
-  const { subscriptionFeatures, subscriptionModal } = useSubscription();
+  const { getAccounts } = useApiSignIn();
+  const {
+    subscriptionFeatures,
+    hasSubscription,
+    hasSubscriptionFeature,
+    subscriptionModal,
+  } = useSubscription();
+
+  const hasChatSubscription = useMemo(
+    () => hasSubscriptionFeature('chatWithAi'),
+    [hasSubscriptionFeature]
+  );
 
   const { uploads, isLoading: isLoadingUploads } = useApiUploads();
   const { startChat, isLoading, getConversationId, getChat } = useApiObservations();
 
-  const isDisabled = !subscriptionFeatures?.chatWithAi;
+  const isDisabled = !hasChatSubscription;
 
   useFocusEffect(
     useCallback(() => {
+      if (!hasSubscription) {
+        getAccounts();
+        return;
+      }
       if (!subscriptionFeatures) {
         return;
       }
-      if (!subscriptionFeatures.chatWithAi) {
+      if (!hasChatSubscription) {
         subscriptionModal.show();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [subscriptionFeatures])
+    }, [subscriptionFeatures, hasChatSubscription])
   );
 
   const resetChat = () => {
