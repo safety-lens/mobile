@@ -5,6 +5,7 @@ import React, {
   ReactElement,
   ReactNode,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -30,20 +31,19 @@ const AuthProvider = (props: { children: ReactNode }): ReactElement => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<{ [key: string]: unknown } | null>(null);
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     const auth = await getValueStorage('auth');
     setIsLoading(false);
-    if (!auth) {
-      setUser(null);
-      // router.navigate('/');
-    } else {
+    if (auth) {
       setUser({ auth: JSON.parse(auth) });
+      return;
     }
-  };
+    setUser(null);
+  }, []);
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   return (
     <AuthContext.Provider

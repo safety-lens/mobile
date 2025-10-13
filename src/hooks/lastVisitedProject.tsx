@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useCallback } from 'react';
 
 interface LastVisitedProject {
-  openLastVisitedProject: () => void;
+  openLastVisitedProject: () => Promise<void>;
 }
 
 export const useLastVisitedProject = (): LastVisitedProject => {
@@ -11,22 +11,22 @@ export const useLastVisitedProject = (): LastVisitedProject => {
 
   const openLastVisitedProject = useCallback(async () => {
     const accounts = await getAccounts();
-    await getLastVisitedProject(accounts?.user.id || '')
-      .then(async (e) => {
-        if (e) {
-          const { id, status } = e;
-          if (status === 'Active') {
-            router.replace(`/auth/projects/(id)/${id}`);
-          } else {
-            router.replace('/auth/projects');
-          }
+    try {
+      const result = await getLastVisitedProject(accounts?.user.id || '');
+      if (result) {
+        const { id, status } = result;
+        if (status === 'Active') {
+          router.replace(`/auth/projects/(id)/${id}`);
         } else {
           router.replace('/auth/projects');
         }
-      })
-      .catch(() => {
+      } else {
         router.replace('/auth/projects');
-      });
+      }
+    } catch {
+      router.replace('/auth/projects');
+    }
+    return;
   }, []);
 
   return { openLastVisitedProject };
