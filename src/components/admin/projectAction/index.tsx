@@ -10,8 +10,10 @@ import ArchiveProject from '../modals/archiveProject';
 import { useTranslation } from 'react-i18next';
 import { UserIcon } from '../../../../assets/svgs/userIcon';
 import AddMembers from '../modals/addMembers';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 export default function ProjectAction() {
+  const { hasSubscriptionFeature } = useSubscription();
   const { singleProjects } = useProjects();
   const [editModal, setEditModal] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
@@ -53,13 +55,15 @@ export default function ProjectAction() {
             <Text style={styles.actionItemText}>{t('delete')}</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={showAddMembersModal}
-          style={[styles.actionItem, { maxWidth: '100%' }]}
-        >
-          <UserIcon fill={'black'} width={20} />
-          <Text style={styles.actionItemText}>Members</Text>
-        </TouchableOpacity>
+        {hasSubscriptionFeature('teamInvitations') && (
+          <TouchableOpacity
+            onPress={showAddMembersModal}
+            style={[styles.actionItem, { maxWidth: '100%' }]}
+          >
+            <UserIcon fill={'black'} width={20} />
+            <Text style={styles.actionItemText}>{t('members')}</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <AddMembers

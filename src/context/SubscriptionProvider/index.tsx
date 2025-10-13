@@ -43,6 +43,7 @@ interface SubscriptionFeatures {
 
 type SubscriptionContextValue = {
   hasSubscription: boolean | null;
+  hasSubscriptionFeature: (feature: keyof SubscriptionFeatures) => boolean;
   subscriptionModal: UseModal;
   subscription: Subscription | null;
   subscriptionFeatures: SubscriptionFeatures | null;
@@ -119,6 +120,15 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     setSubscriptionFeatures(data.subscriptionFeatures as SubscriptionFeatures | null);
   }, []);
 
+  const hasSubscriptionFeature = useCallback(
+    (feature: keyof SubscriptionFeatures) => {
+      if (isAdminAdmin) return true;
+      if (!subscriptionFeatures) return false;
+      return subscriptionFeatures[feature];
+    },
+    [isAdminAdmin, subscriptionFeatures]
+  );
+
   useEffect(() => {
     syncSubscriptionData();
   }, [syncSubscriptionData]);
@@ -130,6 +140,7 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
         hasSubscription: isLoading
           ? null
           : ACTIVE_STATUSES.includes(subscription?.status || '') || isAdminAdmin,
+        hasSubscriptionFeature,
         subscription,
         subscriptionFeatures,
       }}

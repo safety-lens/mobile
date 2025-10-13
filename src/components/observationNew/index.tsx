@@ -23,14 +23,14 @@ export default function NewObservation({
   loadedObservationImage,
 }: INewObservation) {
   const { t } = useTranslation();
-  const { subscriptionFeatures, subscriptionModal } = useSubscription();
+  const { hasSubscriptionFeature, subscriptionModal } = useSubscription();
   const { pickImage, takePhoto } = useTakeImage();
 
   const createObservationModal = useModal();
   const menu = useModal();
 
   const openVisibleMenu = useCallback(() => {
-    if (!subscriptionFeatures?.projectsAndObservations) {
+    if (!hasSubscriptionFeature('projectsAndObservations')) {
       subscriptionModal.show();
       return;
     }
@@ -39,13 +39,7 @@ export default function NewObservation({
     } else {
       createObservationModal.show();
     }
-  }, [
-    subscriptionFeatures?.projectsAndObservations,
-    onChange,
-    subscriptionModal,
-    menu,
-    createObservationModal,
-  ]);
+  }, [hasSubscriptionFeature, onChange, subscriptionModal, menu, createObservationModal]);
 
   const triggerFunc = () => {
     if (onChange) {
