@@ -29,6 +29,7 @@ import { useApiUploads } from '@/axios/api/uploads';
 // import GradualAnimationTwo from '@/components/GradualAnimation';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import { useApiSignIn } from '@/axios/api/auth';
 
 export default function Chat() {
   const [searchText, setSearchText] = useState('');
@@ -41,8 +42,13 @@ export default function Chat() {
 
   const { t } = useTranslation();
   const { user } = useGetUserInfo();
-  const { subscriptionFeatures, hasSubscriptionFeature, subscriptionModal } =
-    useSubscription();
+  const { getAccounts } = useApiSignIn();
+  const {
+    subscriptionFeatures,
+    hasSubscription,
+    hasSubscriptionFeature,
+    subscriptionModal,
+  } = useSubscription();
 
   const hasChatSubscription = useMemo(
     () => hasSubscriptionFeature('chatWithAi'),
@@ -56,6 +62,10 @@ export default function Chat() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!hasSubscription) {
+        getAccounts();
+        return;
+      }
       if (!subscriptionFeatures) {
         return;
       }
