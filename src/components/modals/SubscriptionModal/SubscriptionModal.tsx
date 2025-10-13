@@ -1,11 +1,10 @@
-import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import { useSubscription } from '@/context/SubscriptionProvider';
 import { Typography } from '@/components/Typography';
 import CustomButton from '@/components/CustomButton/button';
 import { useTranslation } from 'react-i18next';
 import IconClose from '../../../../assets/svgs/iconClose';
-import { SUBSCRIPTION_URL } from '@/constants/api';
 
 const SubscriptionModal = () => {
   const { subscriptionModal } = useSubscription();
@@ -26,7 +25,7 @@ const SubscriptionModal = () => {
         </Typography>
         <CustomButton
           padding={4}
-          onPress={() => Linking.openURL(SUBSCRIPTION_URL)}
+          onPress={subscriptionModal.hide}
           title={t('continue')}
         />
       </View>

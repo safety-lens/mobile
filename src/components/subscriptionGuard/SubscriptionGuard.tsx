@@ -1,10 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, Linking, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import { useSubscription } from '@/context/SubscriptionProvider';
 import { Placeholder } from '../placeholder';
-import { SUBSCRIPTION_URL } from '@/constants/api';
 
 type Props = {
   enabled?: boolean;
@@ -28,8 +27,6 @@ const SubscriptionGuard = ({ enabled = true, children }: Props) => {
       <Placeholder
         text={t('subscriptionExpired')}
         description={t('youCanManageYourSubscriptionOnOurWebsite')}
-        buttonTitle={t('openWebsite')}
-        onPress={() => Linking.openURL(SUBSCRIPTION_URL)}
       />
     );
   }
