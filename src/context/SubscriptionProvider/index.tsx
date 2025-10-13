@@ -87,6 +87,8 @@ type Props = {
   children: ReactNode;
 };
 
+const ACTIVE_STATUSES = ['active', 'trialing'];
+
 const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const subscriptionModal = useModal();
   const { isAdminAdmin } = useGetUserInfo();
@@ -127,7 +129,7 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
         subscriptionModal,
         hasSubscription: isLoading
           ? null
-          : subscription?.status === 'active' || isAdminAdmin,
+          : ACTIVE_STATUSES.includes(subscription?.status || '') || isAdminAdmin,
         subscription,
         subscriptionFeatures,
       }}
