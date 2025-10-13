@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/safety-lens/mobile/compare/v1.1.1...v1.2.0) (2025-10-13)
+
+
+### Features
+
+* add provider for subscription and subscription features ([5bafab3](https://github.com/safety-lens/mobile/commit/5bafab3db4e4070abee2c4c715c942335a668b3e))
+* add subscription modal to restrict access to the app areas ([d51028f](https://github.com/safety-lens/mobile/commit/d51028f09c3e0e9e223e7f19fe66a0d09b31c2ce))
+* **chat:** disable input and show modal if not enough permissions ([37f5fad](https://github.com/safety-lens/mobile/commit/37f5fadf1d89c6c1274773950fdcc4bb87181724))
+* **components:** add reusable placeholder for screens ([5181a04](https://github.com/safety-lens/mobile/commit/5181a044ed083309e9b85e43c262b3c1e85c66b3))
+* **components:** add subscription guard to wrap screen or components ([6e02682](https://github.com/safety-lens/mobile/commit/6e02682617ed8758ae026952e3d4218797b4124b))
+* **hooks:** add useModal hook to reduce boilerplates ([cab6208](https://github.com/safety-lens/mobile/commit/cab6208d6769b84bafa49853c1f610b7ce89e739))
+* **notifications:** hide button if user cannot create notifications or they not global admin ([4ba7fa6](https://github.com/safety-lens/mobile/commit/4ba7fa6ce60acd426a21ae8845900117a2116f75))
+* **profile:** add call ot action if has no access to reports ([a29831f](https://github.com/safety-lens/mobile/commit/a29831faa89a6b8d65f365e4eb485319120866a2))
+* **screens:** add guards to all tabs except Profile ([a44460e](https://github.com/safety-lens/mobile/commit/a44460e2c5321193a0e7f2f3692416718b9bf3f3))
+* **screens:** set up subscription guard on My project screen ([393fa53](https://github.com/safety-lens/mobile/commit/393fa535a38e5352e62df82ffe20a129d17e2748))
+* **screens:** wrap projects with subscription wrapper ([02cf407](https://github.com/safety-lens/mobile/commit/02cf407c4dd3a4adde8ed68d4e1161a536a5059a))
+
+
+### Bug Fixes
+
+* add loading for user to not redirect to start screen befora data is loaded ([ed2514e](https://github.com/safety-lens/mobile/commit/ed2514ed7abf6890e2021317b6e17c75705247dd))
+* add method to check current subscription features. hide members if has no permissions ([d4cb85d](https://github.com/safety-lens/mobile/commit/d4cb85db3e419325803a0ddf4022994bac1b747c))
+* add trialing to the list of active statuses ([25c5fc3](https://github.com/safety-lens/mobile/commit/25c5fc37d29195bfda49461400ef6515b3c6fa10))
+* **auth:** redirect to projects if has no subscription. do not send requests without subscription ([c876146](https://github.com/safety-lens/mobile/commit/c876146734345c17256e62536fd3eced442f4547))
+* **components:** add centered mode to typeography ([7365a9e](https://github.com/safety-lens/mobile/commit/7365a9e6077b5c172b8100db1008bef2a68c5553))
+* fix shadow declaration. add rule to show error on shadow declarations ([862df91](https://github.com/safety-lens/mobile/commit/862df9169ed3f93417541cf6ad0777967d92d0fa))
+* **observation-card:** replace non-boolean jsx conditions with booleans. tiny refactor ([15c1bec](https://github.com/safety-lens/mobile/commit/15c1bec04a3bdbba5c9369eb4e004e087c7fc433))
+* **observations:** fix images recycling ([a58762c](https://github.com/safety-lens/mobile/commit/a58762c2c3736730e0bf50394c833d9d31e70b16))
+* **observations:** update list if categories were changed. separate concerns by adding callback ([a59a619](https://github.com/safety-lens/mobile/commit/a59a6196b1d6dde37ebd06c1a4774e1f3585c5ea))
+* remove subscription buttons ([95cf922](https://github.com/safety-lens/mobile/commit/95cf9220fbaf6211f293edcb3625a481e24e71d1))
+* request accounts data on fices if has no subscription ([7fb2b84](https://github.com/safety-lens/mobile/commit/7fb2b84e72c566dfc6deb4af7b4f53e30837dde5))
+* **router:** await user loading befor hiding the splash screen ([44b9387](https://github.com/safety-lens/mobile/commit/44b938700ed9b8b19dae1442d1daddc64f105ab8))
+* secure parsing JSON in SubscriptionProvider ([30f5259](https://github.com/safety-lens/mobile/commit/30f52596b3e3bf1a5c0eb4492f0ca5b318430f96))
+* **sign-up:** add back button ([3551b4c](https://github.com/safety-lens/mobile/commit/3551b4cdfed197e5807ddd333d0255f9a1b5f8e7))
+* specify placeholder color explicitly to fix bug with dark theme ([91667e6](https://github.com/safety-lens/mobile/commit/91667e6b84ff741da81adab09b7e2b97d9208749))
+* **typography:** add title style ([97f97c8](https://github.com/safety-lens/mobile/commit/97f97c89dfcfee2bfc944388152ac2ba00a58fe4))
+
 ### [1.1.1](https://github.com/safety-lens/mobile/compare/v1.1.0...v1.1.1) (2025-10-03)
 
 
