@@ -28,7 +28,7 @@ export default function Router() {
 
     if (user) {
       await openLastVisitedProject();
-    } else {
+    } else if (!user) {
       router.replace('/');
     }
     await new Promise((resolve) => setTimeout(resolve, 700));

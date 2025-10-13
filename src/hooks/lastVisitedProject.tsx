@@ -1,4 +1,5 @@
 import { useApiSignIn } from '@/axios/api/auth';
+import { useSubscription } from '@/context/SubscriptionProvider';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
 
@@ -8,9 +9,14 @@ interface LastVisitedProject {
 
 export const useLastVisitedProject = (): LastVisitedProject => {
   const { getLastVisitedProject, getAccounts } = useApiSignIn();
+  const { hasSubscription } = useSubscription();
 
   const openLastVisitedProject = useCallback(async () => {
     const accounts = await getAccounts();
+    if (!hasSubscription) {
+      router.replace('/auth/projects');
+      return;
+    }
     try {
       const result = await getLastVisitedProject(accounts?.user.id || '');
       if (result) {

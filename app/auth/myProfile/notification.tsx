@@ -17,7 +17,7 @@ export default function Notification() {
   const [refreshing, setRefreshing] = useState(false);
   const { onNotificationsAsRead } = useContext(NotificationContext);
 
-  const { hasSubscriptionFeature } = useSubscription();
+  const { hasSubscription, hasSubscriptionFeature } = useSubscription();
 
   const { t } = useTranslation();
 
@@ -47,8 +47,11 @@ export default function Notification() {
   };
 
   useEffect(() => {
-    getUserNotifications();
-  }, []);
+    if (hasSubscription) {
+      getUserNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasSubscription]);
 
   const canCreateNotifications = hasSubscriptionFeature('createNotifications');
 
