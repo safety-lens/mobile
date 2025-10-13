@@ -1,9 +1,9 @@
 import React, { StyleSheet, View } from 'react-native';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ScreenLayout from '@/components/screenLayout';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '@/components/CustomButton/button';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { useApiSignIn } from '@/axios/api/auth';
 import Toast from 'react-native-toast-message';
@@ -17,22 +17,6 @@ export default function CheckEmail() {
   const { t } = useTranslation();
 
   const { sendRegistrationLink } = useApiSignIn();
-
-  // const openMailApp = async () => {
-  //   //message:// -- apple email
-  //   //https://gmail.app.goo.gl -- google email
-  //   //ms-outlook -- outlook
-  //   //https://mail.google.com/mail/mu/mp/688/#tl/Inbox -- google email browser
-  //   const url = 'https://gmail.app.goo.gl';
-  //   const supported = await Linking.canOpenURL(url);
-
-  //   if (supported) {
-  //     await Linking.openURL(url);
-  //     setIsShowTips(true);
-  //   } else {
-  //     Alert.alert('Mail service not installed');
-  //   }
-  // };
 
   const onSubmit = async () => {
     sendRegistrationLink(emailParam as string).then((res) => {
@@ -49,6 +33,13 @@ export default function CheckEmail() {
     });
   };
 
+  const goToSignIn = useCallback(() => {
+    router.push({
+      pathname: '/enter-screen',
+      params: { email: emailParam },
+    });
+  }, [emailParam]);
+
   return (
     <ScreenLayout>
       <View style={styles.container}>
@@ -57,15 +48,25 @@ export default function CheckEmail() {
           {t('authFlow.completeYourAccountSetupDescription', { email: emailParam })}
         </Typography>
         <CustomButton
+          disabled={isShowTips}
           padding={4}
           backgroundColor="#313131"
           title={isShowTips ? t('authFlow.linkSent') : t('authFlow.sendLink')}
           onPress={onSubmit}
         />
         {isShowTips && (
-          <Typography size="xs" color="lighter">
-            {t('authFlow.emailWillBeSentTo', { email: emailParam })}
-          </Typography>
+          <>
+            <Typography size="xs" color="lighter">
+              {t('authFlow.emailWillBeSentTo', { email: emailParam })}
+            </Typography>
+            <CustomButton
+              padding={4}
+              title={t('authFlow.goBack')}
+              onPress={goToSignIn}
+              backgroundColor="transparent"
+              styleBtn={{ color: '#535862' }}
+            />
+          </>
         )}
       </View>
       <KeyboardAnimationTest value={240} />
