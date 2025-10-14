@@ -13,6 +13,7 @@ import ChangeDeadline from '../admin/modals/changeDeadline';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import ChangeCategories from '../admin/modals/changeCategories';
 import { useApiObservations } from '@/axios/api/observations';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 interface IObservationsCard {
   observation: Observation;
@@ -27,6 +28,7 @@ export default function ObservationAction({
 }: IObservationsCard) {
   const { t } = useTranslation();
   const { getFilterObservations } = useApiObservations();
+  const { hasSubscriptionFeature } = useSubscription();
 
   const { isAdmin } = useGetUserInfo();
 
@@ -125,11 +127,13 @@ export default function ObservationAction({
           titleStyle={styles.menuItem}
           onPress={showChangeCategories}
         />
-        <Menu.Item
-          title={t('changeAssignee')}
-          titleStyle={styles.menuItem}
-          onPress={showChangeAssignee}
-        />
+        {hasSubscriptionFeature('teamInvitations') && (
+          <Menu.Item
+            title={t('changeAssignee')}
+            titleStyle={styles.menuItem}
+            onPress={showChangeAssignee}
+          />
+        )}
         <Menu.Item
           titleStyle={styles.menuItem}
           onPress={showRemoveModal}
@@ -153,16 +157,18 @@ export default function ObservationAction({
         visible={visibleRename}
         hideModal={showRenameModal}
       />
-      <ChangeAssignee
-        id={observationId}
-        observationId={observation._id}
-        title={t('changeAssignee')}
-        visible={visibleChangeAssignee}
-        hideModal={showChangeAssignee}
-        selectedStatus={observation.status}
-        projectId={observationId}
-        defaultValue={observation.assignees || []}
-      />
+      {hasSubscriptionFeature('teamInvitations') && (
+        <ChangeAssignee
+          id={observationId}
+          observationId={observation._id}
+          title={t('changeAssignee')}
+          visible={visibleChangeAssignee}
+          hideModal={showChangeAssignee}
+          selectedStatus={observation.status}
+          projectId={observationId}
+          defaultValue={observation.assignees || []}
+        />
+      )}
       <ChangeDeadline
         projectId={observationId}
         observationId={observation._id}
