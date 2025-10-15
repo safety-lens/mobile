@@ -24,6 +24,7 @@ import { UserList } from '@/axios/api/auth';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import MultiSelectDropdown from '../MultiSelectDropdown';
 import SelectTime from '../SelectTime/SelectTime';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -55,6 +56,7 @@ export default function CreateNewObservation({
   loadedObservationImage,
 }: ICreateNewObservation) {
   const { t } = useTranslation();
+  const { hasSubscriptionFeature } = useSubscription();
 
   const [category, setCategory] = useState<IGetAllCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
@@ -242,7 +244,7 @@ export default function CreateNewObservation({
                 }}
               />
 
-              {isAdmin && (
+              {isAdmin && hasSubscriptionFeature('teamInvitations') && (
                 <>
                   <DropdownItem
                     data={users.map((user) => ({
