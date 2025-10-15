@@ -8,6 +8,8 @@ import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { useApiSignIn } from '@/axios/api/auth';
 import Toast from 'react-native-toast-message';
 import { Typography } from '@/components/Typography';
+import BackButton from '@/components/backButton';
+import ScreenTopNav from '@/components/screenTopNav';
 
 export default function CheckEmail() {
   const { email: emailParam } = useLocalSearchParams();
@@ -33,15 +35,9 @@ export default function CheckEmail() {
     });
   };
 
-  const goToSignIn = useCallback(() => {
-    router.push({
-      pathname: '/enter-screen',
-      params: { email: emailParam },
-    });
-  }, [emailParam]);
-
   return (
     <ScreenLayout>
+      <BackButton padding={20} />
       <View style={styles.container}>
         <Typography preset="header">{t('authFlow.completeYourAccountSetup')}</Typography>
         <Typography size="sm" color="light">
@@ -55,18 +51,9 @@ export default function CheckEmail() {
           onPress={onSubmit}
         />
         {isShowTips && (
-          <>
-            <Typography center size="xs" color="lighter">
-              {t('authFlow.registrationLinkWillBeSentTo', { email: emailParam })}
-            </Typography>
-            <CustomButton
-              padding={4}
-              title={t('authFlow.goBack')}
-              onPress={goToSignIn}
-              backgroundColor="transparent"
-              styleBtn={{ color: '#535862' }}
-            />
-          </>
+          <Typography center size="xs" color="lighter">
+            {t('authFlow.registrationLinkWillBeSentTo', { email: emailParam })}
+          </Typography>
         )}
       </View>
       <KeyboardAnimationTest value={240} />
