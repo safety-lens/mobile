@@ -8,6 +8,7 @@ import SignInForm from '@/components/signInForm';
 import { useLocalSearchParams } from 'expo-router';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { Typography } from '@/components/Typography';
+import BackButton from '@/components/backButton';
 
 export default function CheckEmail() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function CheckEmail() {
 
   return (
     <ScreenLayout>
+      <BackButton padding={20} />
       <View style={styles.container}>
         <Typography preset="header">{t('authFlow.enterPasswordToContinue')}</Typography>
         <Typography size="sm" color="light">

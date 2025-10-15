@@ -221,7 +221,7 @@
       "getStarted": "Comenzar",
       "completeYourAccountSetup": "Completa la configuración de tu cuenta",
       "completeYourAccountSetupDescription": "Enviaremos un enlace de registro a {{email}} que te permitirá usar SafetyLens",
-      "emailWillBeSentTo": "Se enviará un correo electrónico a {{email}}, por favor revisa tu bandeja de entrada",
+      "registrationLinkWillBeSentTo": "El enlace de registro fue enviado al siguiente correo electrónico: \n{{email}}\nPor favor, revisa tu bandeja de entrada.",
       "sendLink": "Enviar enlace",
       "linkSent": "Enlace enviado",
       "goBack": "Regresar"

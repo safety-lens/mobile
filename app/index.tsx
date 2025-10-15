@@ -14,7 +14,7 @@ export default function HomeScreen() {
     <ScreenLayout>
       <View style={styles.container}>
         <View style={styles.iconBox}>
-          <SLLogoFull width={200} height={200} />
+          <SLLogoFull width={170} />
         </View>
         <CustomButton
           padding={4}
@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 36,
   },
   iconBox: {
-    width: 'auto',
-    marginLeft: 50,
+    paddingBottom: 60,
   },
   button: {
     width: '100%',

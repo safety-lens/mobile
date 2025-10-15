@@ -1,22 +1,28 @@
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Href, router } from 'expo-router';
 import ArrowIcon from '../../../assets/svgs/arrowIcon';
+
+type BackButtonProps = {
+  backPath?: Href;
+  backPathOnClick?: () => void;
+  isRoutable?: boolean;
+  padding?: number;
+};
+
+const DEFAULT_PADDING = 10;
 
 export default function BackButton({
   backPath,
   backPathOnClick,
   isRoutable = true,
-}: {
-  backPath?: Href | undefined;
-  backPathOnClick?: () => void;
-  isRoutable?: boolean;
-}) {
-  const back = (backPath: Href | undefined) => {
+  padding = DEFAULT_PADDING,
+}: BackButtonProps) {
+  const back = (path: Href | undefined) => {
     backPathOnClick?.();
     if (!isRoutable) return;
-    if (backPath) {
-      router.navigate(backPath as Href);
+    if (path) {
+      router.navigate(path);
     } else {
       if (router.canGoBack()) {
         router.back();
@@ -26,15 +32,13 @@ export default function BackButton({
     }
   };
   return (
-    <TouchableOpacity style={styles.buttonBox} onPress={() => back(backPath)}>
+    <TouchableOpacity
+      style={{
+        padding,
+      }}
+      onPress={() => back(backPath)}
+    >
       <ArrowIcon />
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonBox: {
-    paddingRight: 20,
-    paddingVertical: 10,
-  },
-});
