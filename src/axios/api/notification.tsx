@@ -1,4 +1,3 @@
- 
 import { useState } from 'react';
 import { AxiosResponse } from 'axios';
 import { apiInstance } from '..';
@@ -80,10 +79,10 @@ export const useApiNotifications = (): UseApiSignInReturn => {
       } else {
         throw new Error('No data in response');
       }
-    } catch (error: any) {
-      console.log(error);
-      handelError(error.response.data.message || 'error uploads');
-      throw error; // Throwing the error to handle it in the calling code
+    } catch (e: any) {
+      console.log(e);
+      handelError(e.response.data.message || 'error uploads');
+      throw e; // Throwing the error to handle it in the calling code
     } finally {
       setIsLoading(false);
     }
@@ -106,10 +105,10 @@ export const useApiNotifications = (): UseApiSignInReturn => {
       } else {
         throw new Error('No data in response');
       }
-    } catch (error: any) {
-      console.log(error);
-      handelError(error.response.data.message || 'error uploads');
-      throw error; // Throwing the error to handle it in the calling code
+    } catch (e: any) {
+      console.log(e);
+      handelError(e.response.data.message || 'error uploads');
+      throw e; // Throwing the error to handle it in the calling code
     } finally {
       setIsLoading(false);
     }
@@ -130,10 +129,10 @@ export const useApiNotifications = (): UseApiSignInReturn => {
       } else {
         throw new Error('No data in response');
       }
-    } catch (error: any) {
-      console.log(error);
-      handelError(error.response.data.message || 'error uploads');
-      throw error; // Throwing the error to handle it in the calling code
+    } catch (e: any) {
+      console.log(e);
+      handelError(e.response.data.message || 'error uploads');
+      throw e; // Throwing the error to handle it in the calling code
     } finally {
       setIsLoading(false);
     }
@@ -153,10 +152,10 @@ export const useApiNotifications = (): UseApiSignInReturn => {
       } else {
         throw new Error('No data in response');
       }
-    } catch (error: any) {
-      console.log(error);
-      handelError(error.response.data.message || 'error uploads');
-      throw error; // Throwing the error to handle it in the calling code
+    } catch (e: any) {
+      console.log(e);
+      handelError(e.response.data.message || 'error uploads');
+      throw e; // Throwing the error to handle it in the calling code
     } finally {
       setIsLoading(false);
       // TODO: Uncomment this when we have a way to handle notifications
@@ -183,10 +182,10 @@ export const useApiNotifications = (): UseApiSignInReturn => {
       } else {
         throw new Error('No data in response');
       }
-    } catch (error: any) {
-      console.log(error);
-      handelError(error.response.data.message || 'error uploads');
-      throw error; // Throwing the error to handle it in the calling code
+    } catch (e: any) {
+      console.log(e);
+      handelError(e.response.data.message || 'error uploads');
+      throw e; // Throwing the error to handle it in the calling code
     } finally {
       setIsLoading(false);
     }
