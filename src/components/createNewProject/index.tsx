@@ -114,8 +114,8 @@ export default function CreateNewProject() {
   const isState = containsUSVariants();
 
   const getCompanies = async () => {
-    const companies = await getAllCompanies();
-    const renamedData = companies?.map(({ id, name }) => ({
+    const allCompanies = await getAllCompanies();
+    const renamedData = allCompanies?.map(({ id, name }) => ({
       value: id,
       label: name,
     }));
@@ -123,8 +123,8 @@ export default function CreateNewProject() {
   };
 
   const getUsers = async () => {
-    const users = await getUsersNameEmailList();
-    setUsers(users);
+    const allUsers = await getUsersNameEmailList();
+    setUsers(allUsers);
   };
 
   useEffect(() => {
