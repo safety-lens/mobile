@@ -2,7 +2,12 @@ import { View, Text, StyleSheet, FlatList, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Message from './message';
 import NewObservation from '../observationNew';
-import { ChatResponse, NewMessage, ResponseContentItem , Message as IMessage } from '@/types/chatTypes';
+import {
+  ChatResponse,
+  NewMessage,
+  ResponseContentItem,
+  Message as IMessage,
+} from '@/types/chatTypes';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
@@ -59,10 +64,14 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
 
   useEffect(() => {
     setMessagesNew(startChatResponse?.messages || []);
-    setLoadedObservationImage(
-      (startChatResponse?.messages[0]?.content?.[0] as ResponseContentItem)?.image_url
-        ?.url as string
-    );
+
+    const image = (
+      startChatResponse?.messages[0]?.content as ResponseContentItem[]
+    )?.find((item) => item.type === 'image_url')?.image_url?.url;
+
+    if (image) {
+      setLoadedObservationImage(image as string);
+    }
   }, [startChatResponse]);
 
   return (

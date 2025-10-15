@@ -37,7 +37,10 @@ export default function useAnalyzerImage() {
                 {
                   text: t('analyzeImageForOshaViolations'),
                   type: 'text',
+                },
+                {
                   image_url: e,
+                  type: 'image_url',
                 },
               ],
             };
