@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "900439706507",
-    "project_id": "sl-project-e9d4a",
-    "storage_bucket": "sl-project-e9d4a.firebasestorage.app"
+    "project_number": "869899873227",
+    "project_id": "safetylens-23239",
+    "storage_bucket": "safetylens-23239.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:900439706507:android:ed7cfef403773e981ebd8e",
+        "mobilesdk_app_id": "1:869899873227:android:e15e0e3cc3b51a55a0e44e",
         "android_client_info": {
           "package_name": "com.safetylensmobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDp-FuegDFdJnQYAoHNiM-kHkJZxhywolc"
+          "current_key": "AIzaSyBVz6gpZl0qtPpR1GnqhFeJHvm6bTsgRH4"
         }
       ],
       "services": {
