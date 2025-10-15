@@ -12,6 +12,7 @@ import MessageImage from '../messageImage';
 import MapLocation from '../../../assets/svgs/mapLocation';
 import { Href, Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 interface IObservationsCard {
   observation: ListRenderItemInfo<Observation>;
@@ -27,6 +28,7 @@ const PADDING = 24;
 
 export default function ObservationsCard({ observation }: IObservationsCard) {
   const { t } = useTranslation();
+  const { hasSubscriptionFeature } = useSubscription();
   const [expander, setExpander] = useState<boolean>(false);
   const animatedHeight = useRef(new Animated.Value(100)).current;
 
@@ -143,18 +145,19 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
             </View>
           )}
 
-          {!!observation.item.assignees?.length && (
-            <View style={styles.assigneesBox}>
-              <Text style={styles.statusString}>Assignees: </Text>
-              {observation.item.assignees?.map((assignee) => (
-                <Text key={assignee.email}>{assignee.email}</Text>
-              ))}
-            </View>
-          )}
+          {hasSubscriptionFeature('teamInvitations') &&
+            !!observation.item.assignees?.length && (
+              <View style={styles.assigneesBox}>
+                <Text style={styles.statusString}>{t('assignees')}: </Text>
+                {observation.item.assignees?.map((assignee) => (
+                  <Text key={assignee.email}>{assignee.email}</Text>
+                ))}
+              </View>
+            )}
 
           {!!observation.item.deadline && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.statusString}>Deadline:</Text>
+              <Text style={styles.statusString}>{t('deadline')}:</Text>
               <Text>
                 {observation.item.deadline && dateFormat(observation.item.deadline)}
                 {', '}
