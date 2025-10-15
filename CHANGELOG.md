@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/safety-lens/mobile/compare/v1.2.0...v1.2.1) (2025-10-15)
+
+
+### Bug Fixes
+
+* **create-observation:** fix message type for image based observation ([0ec112f](https://github.com/safety-lens/mobile/commit/0ec112f45cf1a7943a62520e29203a6fd4545748))
+* **create-observation:** hide choose assignee if has no such feature in subscription ([d4d32e4](https://github.com/safety-lens/mobile/commit/d4d32e4b148ca9bc71b2d0c1c49b3686c006808e))
+* **create-project:** hide Project members button if has no access to teamInvitations feature ([4ea8412](https://github.com/safety-lens/mobile/commit/4ea84123a6f8a4e48c5fbe4fe026a62b9435c3e3))
+* **observation-action:** hide Change Assignee button if has no in subscription ([83e126a](https://github.com/safety-lens/mobile/commit/83e126acfc477dcf5861ff0a8c028ab6ada6e596))
+* **observation-card:** hide assignees if has no access to team invitations ([4c8db91](https://github.com/safety-lens/mobile/commit/4c8db919dacfa01edf210e9359bc8d6b32a68ce2))
+* separate image from text. fix image loading condition ([b07f295](https://github.com/safety-lens/mobile/commit/b07f2958344f75cf7c4abae1baca306202b5c647))
+
 ## [1.2.0](https://github.com/safety-lens/mobile/compare/v1.1.1...v1.2.0) (2025-10-13)
 
 
