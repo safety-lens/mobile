@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { RefreshControl, StyleSheet , View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Href, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
@@ -14,6 +14,7 @@ import { useObservations } from '@/context/observationProvider';
 import { statusTitle } from '@/utils/statusTitle';
 import { useTranslation } from 'react-i18next';
 import { IStatus, Observation } from '@/types/observation';
+import { useDebugPropChanges } from '@/hooks/useDebugPropChanges';
 
 export default function Observations() {
   const { getFilterObservations } = useApiObservations();

@@ -30,6 +30,7 @@ import useGetUserInfo from '@/hooks/getUserInfo';
 import { useApiUser } from '@/axios/api/users';
 import MultiSelectDropdown from '../MultiSelectDropdown';
 import { UserList } from '@/axios/api/auth';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 export interface ICreateProject {
   name: string;
@@ -48,6 +49,7 @@ export interface ICreateProject {
 export default function CreateNewProject() {
   const { user } = useAuth();
   const { isAdmin, isAdminAdmin } = useGetUserInfo();
+  const { hasSubscriptionFeature } = useSubscription();
   const { createProject, getAllProject, getAllCompanies, isLoading } = useApiProject();
   const { getUsersNameEmailList } = useApiUser();
   const { uploads, isLoading: isLoadingUpload } = useApiUploads();
@@ -112,8 +114,8 @@ export default function CreateNewProject() {
   const isState = containsUSVariants();
 
   const getCompanies = async () => {
-    const companies = await getAllCompanies();
-    const renamedData = companies?.map(({ id, name }) => ({
+    const allCompanies = await getAllCompanies();
+    const renamedData = allCompanies?.map(({ id, name }) => ({
       value: id,
       label: name,
     }));
@@ -121,8 +123,8 @@ export default function CreateNewProject() {
   };
 
   const getUsers = async () => {
-    const users = await getUsersNameEmailList();
-    setUsers(users);
+    const allUsers = await getUsersNameEmailList();
+    setUsers(allUsers);
   };
 
   useEffect(() => {
@@ -211,13 +213,15 @@ export default function CreateNewProject() {
                   />
                 )}
 
-                <MultiSelectDropdown
-                  label={t('Project members')}
-                  data={users}
-                  onChange={(selectedItems) => {
-                    setValue('usersIds', selectedItems as string[]);
-                  }}
-                />
+                {hasSubscriptionFeature('teamInvitations') && (
+                  <MultiSelectDropdown
+                    label={t('Project members')}
+                    data={users}
+                    onChange={(selectedItems) => {
+                      setValue('usersIds', selectedItems as string[]);
+                    }}
+                  />
+                )}
 
                 <TextField<ICreateProject>
                   control={control}

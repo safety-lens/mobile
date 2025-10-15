@@ -7,10 +7,12 @@ import { UserAccountData } from '@/axios/api/auth';
 import { useObservations } from '@/context/observationProvider';
 import { useApiObservations } from '@/axios/api/observations';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const dataLang = { en: 'English', es: 'Spanish' };
 
 export default function useAnalyzerImage() {
+  const { t } = useTranslation();
   const [startChatResponse, setStartChatResponse] = useState<ChatResponse | null>(null);
 
   const { uploads, isLoading: isLoadingUploads } = useApiUploads();
@@ -30,12 +32,15 @@ export default function useAnalyzerImage() {
         .then(async (e) => {
           if (e && e.url) {
             const message: NewMessage = {
-              // role: account.user.accountRole,
               role: 'user',
               content: [
                 {
-                  type: 'image_url',
+                  text: t('analyzeImageForOshaViolations'),
+                  type: 'text',
+                },
+                {
                   image_url: e,
+                  type: 'image_url',
                 },
               ],
             };
@@ -47,22 +52,28 @@ export default function useAnalyzerImage() {
                   conversation: data.id,
                   message,
                   language: dataLang[lang || 'en'],
-                }).then((resMessage) => {
-                  if (resMessage) {
-                    setStartChatResponse(resMessage);
-                    setObservationResult(resMessage);
-                    // setMessages(
-                    //   account.user.accountRole === 'admin'
-                    //     ? [message, resMessage.messages[0]]
-                    //     : resMessage.messages
-                    // );
-                  }
-                });
+                })
+                  .then((resMessage) => {
+                    if (resMessage) {
+                      setStartChatResponse(resMessage);
+                      setObservationResult(resMessage);
+                      // setMessages(
+                      //   account.user.accountRole === 'admin'
+                      //     ? [message, resMessage.messages[0]]
+                      //     : resMessage.messages
+                      // );
+                    }
+                  })
+                  .catch((error) =>
+                    console.log('startChat error', error?.response || error)
+                  );
               }
             );
           }
         })
-        .catch((error) => console.log('startAnalyzerImage error', error));
+        .catch((error) =>
+          console.log('startAnalyzerImage error', error?.response || error)
+        );
     }
   };
 

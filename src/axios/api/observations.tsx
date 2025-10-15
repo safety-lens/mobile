@@ -1,4 +1,3 @@
- 
 import { apiInstance } from '..';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
@@ -123,9 +122,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('createObservation', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error createObservation');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error createObservation');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -162,9 +161,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       if (response.data) {
         setObservation(response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error observations');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error observations');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -201,9 +200,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       if (response.data) {
         setSingleObservation(response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getFilterObservations');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getFilterObservations');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -224,9 +223,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('deleteObservation', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error deleteObservation');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error deleteObservation');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -249,9 +248,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('updateObservations', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error updateObservations');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error updateObservations');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -274,9 +273,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
         console.log('API getConversationId', response.data);
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getConversationId');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getConversationId');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -298,9 +297,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
         console.log('API startConversation', response.data);
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error startConversation');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error startConversation');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -318,9 +317,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
         console.log('API startConversation', response.data);
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error startConversation');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error startConversation');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -349,9 +348,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
         console.log('API startConversation', response.data);
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error startConversation');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error startConversation');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -368,9 +367,9 @@ export const useApiObservations = (): UseApiSignInReturn => {
       });
 
       return response.data;
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error projects');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error projects');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
