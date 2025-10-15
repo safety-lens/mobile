@@ -56,8 +56,8 @@ export default function CheckEmail() {
         />
         {isShowTips && (
           <>
-            <Typography size="xs" color="lighter">
-              {t('authFlow.emailWillBeSentTo', { email: emailParam })}
+            <Typography center size="xs" color="lighter">
+              {t('authFlow.registrationLinkWillBeSentTo', { email: emailParam })}
             </Typography>
             <CustomButton
               padding={4}
