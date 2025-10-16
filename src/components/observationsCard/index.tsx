@@ -1,5 +1,5 @@
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import ChangeStatusButton from '../changeStatusButton';
 
 import { Colors } from '@/constants/Colors';
@@ -25,30 +25,35 @@ const statusTitle = {
 };
 
 const PADDING = 24;
+const DESCRIPTION_MAX_CHARACTERS = 200;
 
 export default function ObservationsCard({ observation }: IObservationsCard) {
   const { t } = useTranslation();
   const { hasSubscriptionFeature } = useSubscription();
-  const [expander, setExpander] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const animatedHeight = useRef(new Animated.Value(100)).current;
 
   const imageUrl =
     typeof observation?.item?.conversationId?.messages?.[1]?.content !== 'string' &&
     observation?.item.photoList[0];
 
+  const shouldShowExpand =
+    !!observation.item.text && observation.item.text.length > DESCRIPTION_MAX_CHARACTERS;
+
   const toggleExpand = () => {
-    setExpander(!expander);
+    setIsExpanded(!isExpanded);
   };
 
-  const customExpand = () => {
-    if (observation.item.text?.length > 200) {
-      return !expander ? ` ...${t('showMore')}` : ` ${t('showLess')}`;
+  const expandText = useMemo(() => {
+    if (shouldShowExpand) {
+      return !isExpanded ? `${t('showMore')}` : `${t('showLess')}`;
     }
-  };
+    return '';
+  }, [isExpanded, shouldShowExpand, t]);
 
   Animated.timing(animatedHeight, {
     //@ts-ignore
-    toValue: !expander ? '20%' : '100%',
+    toValue: !isExpanded ? '20%' : '100%',
     duration: 300,
     useNativeDriver: false,
   }).start();
@@ -95,10 +100,14 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
       </View>
       <View style={styles.observationMain}>
         <Text style={styles.observationTitle}>{t('hazardsIdentified')}</Text>
-        <Animated.ScrollView style={{ height: customExpand() ? animatedHeight : 'auto' }}>
+        <Animated.ScrollView style={{ height: expandText ? animatedHeight : 'auto' }}>
           <MessageMarkdown
-            text={observation.item.text?.slice(0, !expander ? 200 : 999999)}
-            customExpand={customExpand()}
+            text={observation.item.text?.slice(
+              0,
+              !isExpanded ? DESCRIPTION_MAX_CHARACTERS : Infinity
+            )}
+            customExpand={expandText}
+            appendEllipsis={shouldShowExpand && !isExpanded}
             onChange={toggleExpand}
           />
         </Animated.ScrollView>
