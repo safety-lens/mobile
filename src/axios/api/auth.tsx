@@ -104,13 +104,13 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         const token = JSON.stringify(response.data);
         await setValueStorage('auth', token);
       }
-    } catch (error: any) {
+    } catch (e: any) {
       const message =
-        error.response.data.message === `User doesn't exist or password is invalid`
+        e.response.data.message === `User doesn't exist or password is invalid`
           ? t('signInError')
-          : error.response.data.message;
+          : e.response.data.message;
       handelError(message || 'error signIn');
-      throw error.response.data.message;
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -128,10 +128,10 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         return response.data;
       }
-    } catch (error: any) {
-      console.log(error);
+    } catch (e: any) {
+      console.log(e);
       handelError('Error Get Last Visited Project');
-      throw error.response.data.message;
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -149,9 +149,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('lastVisitedProject', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error lastVisitedProject');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error lastVisitedProject');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -173,9 +173,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         await syncSubscriptionData();
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getAccounts');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getAccounts');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -191,12 +191,11 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         data,
       });
       if (response.data) {
-        const data = JSON.stringify(response.data);
-        return data;
+        return JSON.stringify(response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getForgotPassword');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getForgotPassword');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -215,9 +214,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error checkEmail');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error checkEmail');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -236,10 +235,10 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response) {
         return response.status;
       }
-    } catch (error: any) {
-      console.log('error', error.response);
-      handelError(error.response.data.message || 'error sendRegistrationLink');
-      throw error.response.data.message;
+    } catch (e: any) {
+      console.log('error', e.response);
+      handelError(e.response.data.message || 'error sendRegistrationLink');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
