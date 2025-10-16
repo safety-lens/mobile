@@ -15,6 +15,7 @@ import { getValueStorage } from '@/utils/storage';
 import { useApiObservations } from '@/axios/api/observations';
 // import GradualAnimationTwo from '../GradualAnimation';
 import { KeyboardAnimationTest } from '../GradualAnimationText';
+import { useSubscription } from '@/context/SubscriptionProvider';
 
 const dataLang = { en: 'English', es: 'Spanish' };
 interface IChat {
@@ -25,6 +26,7 @@ interface IChat {
 
 export default function Chat({ startChatResponse, loading, clearMessages }: IChat) {
   const { t } = useTranslation();
+  const { hasSubscriptionFeature } = useSubscription();
 
   const [searchText, setSearchText] = useState('');
   const [messages, setMessagesNew] = useState<IMessage[]>([]);
@@ -99,32 +101,34 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
             clearMessages={clearMessages}
           />
         )}
-        <View style={styles.searchInputField}>
-          <TextInput
-            mode="outlined"
-            multiline={searchText.length > 30}
-            outlineStyle={styles.textInputOutline}
-            value={searchText}
-            contentStyle={{
-              color: 'black',
-            }}
-            textColor="black"
-            onChangeText={handleSearch}
-            right={
-              <TextInput.Icon
-                icon="send"
-                forceTextInputFocus
-                onPress={searchText.trim().length === 0 ? undefined : sendMessage}
-                loading={isLoading}
-                color="white"
-                style={[
-                  styles.sendButton,
-                  { opacity: searchText.trim().length === 0 ? 0.5 : 1 },
-                ]}
-              />
-            }
-          />
-        </View>
+        {hasSubscriptionFeature('chatWithAi') && (
+          <View style={styles.searchInputField}>
+            <TextInput
+              mode="outlined"
+              multiline={searchText.length > 30}
+              outlineStyle={styles.textInputOutline}
+              value={searchText}
+              contentStyle={{
+                color: 'black',
+              }}
+              textColor="black"
+              onChangeText={handleSearch}
+              right={
+                <TextInput.Icon
+                  icon="send"
+                  forceTextInputFocus
+                  onPress={searchText.trim().length === 0 ? undefined : sendMessage}
+                  loading={isLoading}
+                  color="white"
+                  style={[
+                    styles.sendButton,
+                    { opacity: searchText.trim().length === 0 ? 0.5 : 1 },
+                  ]}
+                />
+              }
+            />
+          </View>
+        )}
         <View>
           <Text style={styles.disclaimerText}>{t('resultDisclaimer')}</Text>
         </View>
