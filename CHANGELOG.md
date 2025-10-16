@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/safety-lens/mobile/compare/v1.2.1...v1.2.2) (2025-10-16)
+
+
+### Bug Fixes
+
+* **auth:** add back button to the top ([d14d006](https://github.com/safety-lens/mobile/commit/d14d006682983ae8ebbd98232be1f54f20622558))
+* **chat:** fix vertical paddings to not cut messages on the top ([3e7717e](https://github.com/safety-lens/mobile/commit/3e7717e62b5e695769d0b3bfc3e14be2400eee3f))
+* **components:** make back button padding customizable ([4948517](https://github.com/safety-lens/mobile/commit/494851766a06919f74377729e79a5da9938dbe88))
+* **create-observation:** hide chat input if has no access ([57e4fab](https://github.com/safety-lens/mobile/commit/57e4fab37fe3f871883c921963f8163d13e47f62))
+* **notifications:** remove error of getting push token ([62fa88a](https://github.com/safety-lens/mobile/commit/62fa88a39f629c9115d050d8aa5b26a83728a3b9))
+* **obserrvation-card:** fix styles of show nore button. refactor implementation ([60bc723](https://github.com/safety-lens/mobile/commit/60bc7234ca5990b84843e46939d4d67ad22e7eeb))
+* **push-notification:** replace push notifications google service config ([5c88515](https://github.com/safety-lens/mobile/commit/5c88515335f1fe896d879176b4435e17720297da))
+* **sign-up:** change text of registration tip ([c600087](https://github.com/safety-lens/mobile/commit/c600087dab8a25994b1fab1bc2183806a42fefd9))
+* **start-screen:** centered logo. fix broken svg dimensions ([dbc48a8](https://github.com/safety-lens/mobile/commit/dbc48a87ab3da5089302fcaf807eb81174d06225))
+
 ### [1.2.1](https://github.com/safety-lens/mobile/compare/v1.2.0...v1.2.1) (2025-10-15)
 
 
