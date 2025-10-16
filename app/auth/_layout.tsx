@@ -68,7 +68,7 @@ const registerForPushNotificationsAsync = async () => {
       ).data;
       return pushTokenString;
     } catch (e: unknown) {
-      handleRegistrationError(`${e}`);
+      console.log('Error getting push token', e);
     }
   } else {
     handleRegistrationError('Must use physical device for push notifications');
