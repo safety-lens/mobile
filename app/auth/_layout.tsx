@@ -15,6 +15,7 @@ import { useApiNotifications } from '@/axios/api/notification';
 import { NotificationContext } from '@/context/NotificationProvider';
 import ChatIcon from '../../assets/svgs/chat';
 import { SubscriptionModal } from '@/components/modals/SubscriptionModal';
+import { useApiSignIn } from '@/axios/api/auth';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

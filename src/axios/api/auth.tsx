@@ -11,6 +11,7 @@ import { IProjectCart } from '@/types/project';
 import { useApiNotifications } from './notification';
 import * as Device from 'expo-device';
 import { useSubscriptionActions } from '@/context/SubscriptionProvider';
+import useGetUserInfo from '@/hooks/getUserInfo';
 
 interface UseApiSignInReturn {
   signIn: (data: IDataSignIn) => Promise<void>;
@@ -37,6 +38,7 @@ interface User {
   email: string;
   status: string;
   accountRole: 'user' | 'admin';
+  role: 'user' | 'admin';
 }
 
 export interface UserList {
@@ -61,9 +63,39 @@ interface IForgotPassword {
   isInvitation?: boolean;
 }
 
+export interface Subscription {
+  productName: string;
+  accountId: string;
+  productId: string;
+  stripeSubscriptionId: string;
+  startDate: string;
+  finishDate?: string;
+  nextPaymentDate?: string;
+  status:
+    | 'trialing'
+    | 'active'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'past_due'
+    | 'unpaid';
+  level: number; // 0 - canceled, 1, 2, 3 - active
+}
+
+export interface SubscriptionFeatures {
+  projectsAndObservations: boolean;
+  getNotifications: boolean;
+  createNotifications: boolean;
+  chatWithAi: boolean;
+  report: boolean;
+  teamInvitations: boolean;
+}
+
 export interface UserAccountData {
   user: User;
   account: Account;
+  subscription: Subscription | null;
+  subscriptionFeatures: SubscriptionFeatures | null;
 }
 
 export const useApiSignIn = (): UseApiSignInReturn => {
