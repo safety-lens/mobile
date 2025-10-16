@@ -183,7 +183,7 @@ export default function Chat() {
             data={messages}
             contentContainerStyle={{
               marginHorizontal: 6,
-              marginTop: 12,
+              paddingVertical: 12,
               gap: 32,
               flexGrow: 1,
               flexDirection: 'column-reverse',
