@@ -20,7 +20,6 @@ export default function useGetUserInfo(): useGetUserInfo {
 
   const getUser = async () => {
     const accounts = await getValueStorage('accounts');
-    console.log('🚀 ~ getUser ~ accounts:', accounts);
     const account: UserAccountData = JSON.parse(accounts || '');
     setUser(account);
   };
