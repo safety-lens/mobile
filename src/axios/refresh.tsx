@@ -1,11 +1,8 @@
 import { getValueStorage, setValueStorage } from '@/utils/storage';
-import { apiPublicInstance } from '.';
-import { router } from 'expo-router';
+import { apiPublicInstance } from './instances';
 
-export const useRefreshTokenFn = async () => {
+export const refreshAccessToken = async () => {
   try {
-    console.log('apiInstance.interceptors.response');
-
     const auth = await getValueStorage('auth');
     const { refreshToken } = JSON.parse(auth || '');
 
@@ -13,18 +10,13 @@ export const useRefreshTokenFn = async () => {
       refreshToken,
     });
 
-    console.log('interceptors refreshToken', response);
-
     const token = JSON.stringify(response?.data);
     const { accessToken } = JSON.parse(token);
 
-    setValueStorage('auth', token);
-    console.log('interceptors accessToken', accessToken);
+    await setValueStorage('auth', token);
 
-    return Promise.resolve(accessToken);
+    return accessToken;
   } catch (error) {
-    await setValueStorage('auth', '');
-    router.replace('/');
-    return Promise.reject({ error });
+    return Promise.reject(error);
   }
 };

@@ -12,7 +12,7 @@ interface useGetUserInfo {
   onChangeLang: (lang: string) => void;
   isAdminAdmin: boolean;
 }
-
+// TODO: check this hook after adding reactive storage
 export default function useGetUserInfo(): useGetUserInfo {
   const { user: user2 } = useAuth();
   const [user, setUser] = useState<UserAccountData | null>(null);

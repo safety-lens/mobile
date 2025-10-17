@@ -11,6 +11,7 @@ import { IProjectCart } from '@/types/project';
 import { useApiNotifications } from './notification';
 import * as Device from 'expo-device';
 import { useSubscriptionActions } from '@/context/SubscriptionProvider';
+import useGetUserInfo from '@/hooks/getUserInfo';
 
 interface UseApiSignInReturn {
   signIn: (data: IDataSignIn) => Promise<void>;
@@ -37,6 +38,7 @@ interface User {
   email: string;
   status: string;
   accountRole: 'user' | 'admin';
+  role: 'user' | 'admin';
 }
 
 export interface UserList {
@@ -61,9 +63,39 @@ interface IForgotPassword {
   isInvitation?: boolean;
 }
 
+export interface Subscription {
+  productName: string;
+  accountId: string;
+  productId: string;
+  stripeSubscriptionId: string;
+  startDate: string;
+  finishDate?: string;
+  nextPaymentDate?: string;
+  status:
+    | 'trialing'
+    | 'active'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'past_due'
+    | 'unpaid';
+  level: number; // 0 - canceled, 1, 2, 3 - active
+}
+
+export interface SubscriptionFeatures {
+  projectsAndObservations: boolean;
+  getNotifications: boolean;
+  createNotifications: boolean;
+  chatWithAi: boolean;
+  report: boolean;
+  teamInvitations: boolean;
+}
+
 export interface UserAccountData {
   user: User;
   account: Account;
+  subscription: Subscription | null;
+  subscriptionFeatures: SubscriptionFeatures | null;
 }
 
 export const useApiSignIn = (): UseApiSignInReturn => {
@@ -104,13 +136,13 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         const token = JSON.stringify(response.data);
         await setValueStorage('auth', token);
       }
-    } catch (error: any) {
+    } catch (e: any) {
       const message =
-        error.response.data.message === `User doesn't exist or password is invalid`
+        e.response.data.message === `User doesn't exist or password is invalid`
           ? t('signInError')
-          : error.response.data.message;
+          : e.response.data.message;
       handelError(message || 'error signIn');
-      throw error.response.data.message;
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -128,10 +160,10 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         return response.data;
       }
-    } catch (error: any) {
-      console.log(error);
+    } catch (e: any) {
+      console.log(e);
       handelError('Error Get Last Visited Project');
-      throw error.response.data.message;
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -149,9 +181,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('lastVisitedProject', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error lastVisitedProject');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error lastVisitedProject');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -173,9 +205,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         await syncSubscriptionData();
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getAccounts');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getAccounts');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -191,12 +223,11 @@ export const useApiSignIn = (): UseApiSignInReturn => {
         data,
       });
       if (response.data) {
-        const data = JSON.stringify(response.data);
-        return data;
+        return JSON.stringify(response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error getForgotPassword');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error getForgotPassword');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -215,9 +246,9 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response.data) {
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error checkEmail');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error checkEmail');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -236,10 +267,10 @@ export const useApiSignIn = (): UseApiSignInReturn => {
       if (response) {
         return response.status;
       }
-    } catch (error: any) {
-      console.log('error', error.response);
-      handelError(error.response.data.message || 'error sendRegistrationLink');
-      throw error.response.data.message;
+    } catch (e: any) {
+      console.log('error', e.response);
+      handelError(e.response.data.message || 'error sendRegistrationLink');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }

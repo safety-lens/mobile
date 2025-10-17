@@ -9,37 +9,10 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
-import useGetUserInfo from '@/hooks/getUserInfo';
-
-interface Subscription {
-  productName: string;
-  accountId: string;
-  productId: string;
-  stripeSubscriptionId: string;
-  startDate: string;
-  finishDate?: string;
-  nextPaymentDate?: string;
-  status:
-    | 'trialing'
-    | 'active'
-    | 'canceled'
-    | 'incomplete'
-    | 'incomplete_expired'
-    | 'past_due'
-    | 'unpaid';
-  level: number; // 0 - canceled, 1, 2, 3 - active
-}
-
-interface SubscriptionFeatures {
-  projectsAndObservations: boolean;
-  getNotifications: boolean;
-  createNotifications: boolean;
-  chatWithAi: boolean;
-  report: boolean;
-  teamInvitations: boolean;
-}
+import { Subscription, SubscriptionFeatures, UserAccountData } from '@/axios/api/auth';
 
 type SubscriptionContextValue = {
   hasSubscription: boolean | null;
@@ -92,17 +65,17 @@ const ACTIVE_STATUSES = ['active', 'trialing'];
 
 const SubscriptionProvider = ({ children }: Props): ReactElement => {
   const subscriptionModal = useModal();
-  const { isAdminAdmin } = useGetUserInfo();
 
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [subscriptionFeatures, setSubscriptionFeatures] =
     useState<SubscriptionFeatures | null>(null);
+  const [isAdminAdmin, setIsAdminAdmin] = useState(false);
 
   const syncSubscriptionData = useCallback(async () => {
     // TODO: use reactive storage or event emitter instead of async storage
     const accounts = await getValueStorage('accounts');
-    let data;
+    let data: UserAccountData | null = null;
     try {
       data = accounts ? JSON.parse(accounts) : null;
     } catch (e) {
@@ -116,6 +89,7 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     }
 
     setIsLoading(false);
+    setIsAdminAdmin(data.user.accountRole === 'admin' && data.user.role === 'admin');
     setSubscription(data.subscription as Subscription | null);
     setSubscriptionFeatures(data.subscriptionFeatures as SubscriptionFeatures | null);
   }, []);
@@ -133,21 +107,39 @@ const SubscriptionProvider = ({ children }: Props): ReactElement => {
     syncSubscriptionData();
   }, [syncSubscriptionData]);
 
+  const hasSubscription =
+    (isLoading ? null : ACTIVE_STATUSES.includes(subscription?.status || '')) ||
+    isAdminAdmin;
+
+  const subscriptionContextValue = useMemo(
+    () => ({
+      hasSubscription,
+      hasSubscriptionFeature,
+      subscriptionModal,
+      subscription,
+      subscriptionFeatures,
+    }),
+    [
+      hasSubscription,
+      hasSubscriptionFeature,
+      subscriptionModal,
+      subscription,
+      subscriptionFeatures,
+    ]
+  );
+
+  const subscriptionActionContextValue = useMemo(
+    () => ({
+      setSubscription,
+      setSubscriptionFeatures,
+      syncSubscriptionData,
+    }),
+    [setSubscription, setSubscriptionFeatures, syncSubscriptionData]
+  );
+
   return (
-    <SubscriptionContext.Provider
-      value={{
-        subscriptionModal,
-        hasSubscription: isLoading
-          ? null
-          : ACTIVE_STATUSES.includes(subscription?.status || '') || isAdminAdmin,
-        hasSubscriptionFeature,
-        subscription,
-        subscriptionFeatures,
-      }}
-    >
-      <SubscriptionActionContext.Provider
-        value={{ setSubscription, setSubscriptionFeatures, syncSubscriptionData }}
-      >
+    <SubscriptionContext.Provider value={subscriptionContextValue}>
+      <SubscriptionActionContext.Provider value={subscriptionActionContextValue}>
         {children}
       </SubscriptionActionContext.Provider>
     </SubscriptionContext.Provider>
