@@ -5,3 +5,6 @@ export const router = {
 };
 
 export const useRouter = () => router;
+export const SplashScreen = {
+  hideAsync: jest.fn(),
+};

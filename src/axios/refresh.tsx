@@ -13,7 +13,7 @@ export const refreshAccessToken = async () => {
     const token = JSON.stringify(response?.data);
     const { accessToken } = JSON.parse(token);
 
-    setValueStorage('auth', token);
+    await setValueStorage('auth', token);
 
     return accessToken;
   } catch (error) {

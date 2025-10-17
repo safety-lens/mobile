@@ -1,5 +1,5 @@
 import { setValueStorage } from '@/utils/storage';
-import { router } from 'expo-router';
+import { router, SplashScreen } from 'expo-router';
 import { apiInstance } from '@/axios/instances';
 import { processQueue, setIsRefreshing } from '@/axios/queue';
 
@@ -17,4 +17,5 @@ export const logout = async () => {
   setIsRefreshing(false);
   processQueue(new Error('logout'), null);
   router.replace('/');
+  await SplashScreen.hideAsync();
 };
