@@ -115,7 +115,7 @@ export default function ObservationAction({
           onPress={openChangeStatus}
           title={t('changeStatus')}
         />
-        {isAdmin && (
+        {hasSubscriptionFeature('teamInvitations') && isAdmin && (
           <Menu.Item
             titleStyle={styles.menuItem}
             onPress={showChangeDeadline}
@@ -169,14 +169,16 @@ export default function ObservationAction({
           defaultValue={observation.assignees || []}
         />
       )}
-      <ChangeDeadline
-        projectId={observationId}
-        observationId={observation._id}
-        title={t('changeDeadline')}
-        visible={visibleChangeDeadline}
-        hideModal={showChangeDeadline}
-        defaultValue={observation.deadline || new Date()}
-      />
+      {hasSubscriptionFeature('teamInvitations') && (
+        <ChangeDeadline
+          projectId={observationId}
+          observationId={observation._id}
+          title={t('changeDeadline')}
+          visible={visibleChangeDeadline}
+          hideModal={showChangeDeadline}
+          defaultValue={observation.deadline || new Date()}
+        />
+      )}
       <EditComment
         selectedStatus={observation.status}
         projectId={observationId}

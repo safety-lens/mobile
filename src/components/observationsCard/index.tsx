@@ -164,7 +164,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
               </View>
             )}
 
-          {!!observation.item.deadline && (
+          {hasSubscriptionFeature('teamInvitations') && !!observation.item.deadline && (
             <View style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.statusString}>{t('deadline')}:</Text>
               <Text>
