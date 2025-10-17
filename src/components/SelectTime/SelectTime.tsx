@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TouchableOpacity, View, Text, Platform, StyleSheet } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import { useTranslation } from 'react-i18next';
 import { DatePickerModal } from 'react-native-paper-dates';
 import useGetUserInfo from '@/hooks/getUserInfo';
@@ -25,6 +27,40 @@ export default function SelectTime({
     setVisibleDatePicker(false);
     setVisibleTimePicker(false);
   };
+
+  const onChangeTime = useCallback(
+    (_event: DateTimePickerEvent, value?: Date) => {
+      if (!value) {
+        return;
+      }
+      const newDate = new Date(value);
+      newDate.setFullYear(date.getFullYear());
+      newDate.setMonth(date.getMonth());
+      newDate.setDate(date.getDate());
+
+      setDate(value);
+      handleDateChange(value);
+      onDismiss();
+    },
+    [date, handleDateChange]
+  );
+
+  const onChangeDate = useCallback(
+    (params: { date: Date | undefined }) => {
+      if (!params.date) {
+        return;
+      }
+      const newDate = new Date(date);
+      newDate.setFullYear(params.date.getFullYear());
+      newDate.setMonth(params.date.getMonth());
+      newDate.setDate(params.date.getDate());
+
+      setDate(newDate);
+      handleDateChange(newDate);
+      onDismiss();
+    },
+    [date, handleDateChange]
+  );
 
   return (
     <>
@@ -74,11 +110,7 @@ export default function SelectTime({
                 display={'default'}
                 title="Time"
                 design="material"
-                onChange={(_, date) => {
-                  setDate(date as Date);
-                  handleDateChange(date as Date);
-                  onDismiss();
-                }}
+                onChange={onChangeTime}
               />
             )}
           </View>
@@ -93,11 +125,7 @@ export default function SelectTime({
             initialInputMode="default"
             fullscreen={true}
             display="spinner"
-            onChange={(_, date) => {
-              setDate(date as Date);
-              handleDateChange(date as Date);
-              onDismiss();
-            }}
+            onChange={onChangeTime}
           />
         )}
       </View>
@@ -107,10 +135,7 @@ export default function SelectTime({
         date={date}
         visible={visibleDatePicker}
         onDismiss={onDismiss}
-        onConfirm={({ date }) => {
-          setDate(date as Date);
-          onDismiss();
-        }}
+        onConfirm={onChangeDate}
       />
     </>
   );
