@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/safety-lens/mobile/compare/v1.2.2...v1.2.3) (2025-10-17)
+
+
+### Bug Fixes
+
+* **api:** refactor logic. add request queues. cover logic by tests ([2126127](https://github.com/safety-lens/mobile/commit/2126127157d2ab2c70c7e8f98cf9f304062bb8a9))
+* **components:** fix datetime picker component to set date and time separately ([2e5da1f](https://github.com/safety-lens/mobile/commit/2e5da1f696d43e0f61994d83bf7479068c60dbac))
+* **logout:** hide splashscreen after logout ([2c81df5](https://github.com/safety-lens/mobile/commit/2c81df5d825d6779ef4f8a7d7784f88f388bc876))
+* **new-observation:** set default date only if user selected ([02904e6](https://github.com/safety-lens/mobile/commit/02904e66028cb9f9cabb0a1afa2abf537858c91a))
+* **projects:** hide deadline if has no in the subscription ([cdcd220](https://github.com/safety-lens/mobile/commit/cdcd2206b467618c22df1a6afaf925c274c089f6))
+* **subscription:** move isAdminAdmin to subscription directly due to the isses in user info hook ([c7734a9](https://github.com/safety-lens/mobile/commit/c7734a9da698efa1d838b2a36a98ea1a0a0c4c4d))
+
 ### [1.2.2](https://github.com/safety-lens/mobile/compare/v1.2.1...v1.2.2) (2025-10-16)
 
 
