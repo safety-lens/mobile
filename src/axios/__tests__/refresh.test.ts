@@ -2,7 +2,6 @@ import { refreshAccessToken } from '../refresh';
 import { apiPublicInstance } from '../instances';
 import * as storage from '@/utils/storage';
 
-// Mock dependencies
 jest.mock('../instances', () => ({
   apiPublicInstance: {
     post: jest.fn(),
@@ -20,9 +19,8 @@ const mockedGetValueStorage = storage.getValueStorage as jest.MockedFunction<
 const mockedSetValueStorage = storage.setValueStorage as jest.MockedFunction<
   typeof storage.setValueStorage
 >;
-// no router import anymore; refresh no longer navigates
 
-describe('useRefreshTokenFn', () => {
+describe('refresh token', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

@@ -6,12 +6,14 @@ import * as storage from '@/utils/storage';
 import { router } from 'expo-router';
 import { logout } from '@/axios/utils';
 
-// Mock dependencies
 jest.mock('../refresh');
 jest.mock('@/utils/storage');
 jest.mock('@/axios/utils');
 
-const mockedUseRefreshTokenFn = refreshAccessToken as jest.MockedFunction<
+// TODO: check tests and make them more isolated
+// TODO: remove any duplicates with integration.test.ts
+
+const mockedRefreshAccessToken = refreshAccessToken as jest.MockedFunction<
   typeof refreshAccessToken
 >;
 const mockedGetValueStorage = storage.getValueStorage as jest.MockedFunction<
@@ -81,7 +83,7 @@ describe('Axios Interceptors', () => {
 
     it('should refresh token and retry request on 401 error', async () => {
       const newToken = 'new-access-token';
-      mockedUseRefreshTokenFn.mockResolvedValue(newToken);
+      mockedRefreshAccessToken.mockResolvedValue(newToken);
 
       // First request fails with 401, retry succeeds
       mock
@@ -92,7 +94,7 @@ describe('Axios Interceptors', () => {
 
       const response = await apiInstance.get('/test');
 
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(1);
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(1);
       expect(response.data).toEqual({ data: 'success' });
       expect(mock.history.get).toHaveLength(2);
       expect(mock.history.get[1].headers?.Authorization).toBe(`Bearer ${newToken}`);
@@ -107,7 +109,7 @@ describe('Axios Interceptors', () => {
       const refreshPromise = new Promise<string>((resolve) => {
         refreshResolve = resolve;
       });
-      mockedUseRefreshTokenFn.mockReturnValue(refreshPromise);
+      mockedRefreshAccessToken.mockReturnValue(refreshPromise);
 
       // Setup mock to fail first requests with 401, then succeed
       mock
@@ -147,7 +149,7 @@ describe('Axios Interceptors', () => {
       ]);
 
       // Verify refresh was called only once
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(1);
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(1);
 
       // Verify all requests eventually succeeded
       expect(response1.data).toEqual({ data: 'test1-success' });
@@ -164,7 +166,7 @@ describe('Axios Interceptors', () => {
 
     it('should reject all queued requests when refresh fails', async () => {
       const refreshError = new Error('Refresh failed');
-      mockedUseRefreshTokenFn.mockRejectedValue(refreshError);
+      mockedRefreshAccessToken.mockRejectedValue(refreshError);
 
       // Setup mock to fail with 401
       mock.onGet('/test1').reply(401, { message: 'Unauthorized' });
@@ -178,7 +180,7 @@ describe('Axios Interceptors', () => {
       await expect(request1Promise).rejects.toThrow('Refresh failed');
       await expect(request2Promise).rejects.toThrow('Refresh failed');
 
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(1);
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(1);
       expect(mockedLogout).toHaveBeenCalledTimes(1);
     });
 
@@ -192,12 +194,12 @@ describe('Axios Interceptors', () => {
         response: { status: 401 },
       });
 
-      expect(mockedUseRefreshTokenFn).not.toHaveBeenCalled();
+      expect(mockedRefreshAccessToken).not.toHaveBeenCalled();
       expect(mockedLogout).not.toHaveBeenCalled();
     });
 
     it('should handle case when refresh returns null/undefined token', async () => {
-      mockedUseRefreshTokenFn.mockResolvedValue(null as any);
+      mockedRefreshAccessToken.mockResolvedValue(null as any);
 
       mock.onGet('/test').reply(401, { message: 'Unauthorized' });
 
@@ -205,7 +207,7 @@ describe('Axios Interceptors', () => {
         response: { status: 401 },
       });
 
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(1);
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(1);
       expect(mockedLogout).toHaveBeenCalledTimes(1);
     });
 
@@ -227,7 +229,7 @@ describe('Axios Interceptors', () => {
         response: { status: 500 },
       });
 
-      expect(mockedUseRefreshTokenFn).not.toHaveBeenCalled();
+      expect(mockedRefreshAccessToken).not.toHaveBeenCalled();
       expect(mockedLogout).not.toHaveBeenCalled();
     });
 
@@ -236,7 +238,7 @@ describe('Axios Interceptors', () => {
 
       await expect(apiInstance.get('/test')).rejects.toThrow();
 
-      expect(mockedUseRefreshTokenFn).not.toHaveBeenCalled();
+      expect(mockedRefreshAccessToken).not.toHaveBeenCalled();
       expect(mockedLogout).not.toHaveBeenCalled();
     });
   });
@@ -249,7 +251,7 @@ describe('Axios Interceptors', () => {
 
     it('should properly reset queue state after successful refresh', async () => {
       const newToken = 'new-access-token';
-      mockedUseRefreshTokenFn.mockResolvedValue(newToken);
+      mockedRefreshAccessToken.mockResolvedValue(newToken);
 
       // First batch of requests
       mock
@@ -266,19 +268,19 @@ describe('Axios Interceptors', () => {
       const response2 = await apiInstance.get('/test2');
 
       expect(response2.data).toEqual({ data: 'success2' });
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(1); // Only called for first batch
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(1); // Only called for first batch
     });
 
     it('should properly reset queue state after failed refresh', async () => {
       const refreshError = new Error('Refresh failed');
-      mockedUseRefreshTokenFn.mockRejectedValueOnce(refreshError);
+      mockedRefreshAccessToken.mockRejectedValueOnce(refreshError);
 
       // First request fails
       mock.onGet('/test1').reply(401);
       await expect(apiInstance.get('/test1')).rejects.toThrow('Refresh failed');
 
       // Second request should trigger refresh again (state should be reset)
-      mockedUseRefreshTokenFn.mockResolvedValueOnce('new-token');
+      mockedRefreshAccessToken.mockResolvedValueOnce('new-token');
       mock
         .onGet('/test2')
         .replyOnce(401)
@@ -288,7 +290,7 @@ describe('Axios Interceptors', () => {
       const response2 = await apiInstance.get('/test2');
 
       expect(response2.data).toEqual({ data: 'success' });
-      expect(mockedUseRefreshTokenFn).toHaveBeenCalledTimes(2); // Called twice
+      expect(mockedRefreshAccessToken).toHaveBeenCalledTimes(2); // Called twice
     });
   });
 });
