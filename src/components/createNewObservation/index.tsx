@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from '@/modal';
 import TextField from '@/components/form/textField';
@@ -64,7 +64,7 @@ export default function CreateNewObservation({
   const [users, setUsers] = useState<UserList[]>([]);
   const [selectedUser, setSelectedUser] = useState<string[]>([]);
 
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | undefined>();
 
   const { isAdmin } = useGetUserInfo();
 
@@ -168,8 +168,9 @@ export default function CreateNewObservation({
     return () => {
       setSelectedUser([]);
       setSelectedCategory([]);
-      setDate(new Date());
+      setDate(undefined);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   return (
@@ -252,7 +253,12 @@ export default function CreateNewObservation({
                       value: user.id,
                     }))}
                     placeholder={t('chooseAssignee')}
-                    onChange={(e) => setSelectedUser([e.value])}
+                    onChange={(e) => {
+                      setSelectedUser([e.value]);
+                      if (!date) {
+                        setDate(new Date());
+                      }
+                    }}
                     label={t('assignees')}
                   />
                   {selectedUser.length > 0 && <SelectTime handleDateChange={setDate} />}
