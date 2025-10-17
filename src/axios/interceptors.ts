@@ -48,7 +48,6 @@ export const responseErrorInterceptor = async (error: any) => {
         config.headers.Authorization = header;
         processQueue(null, accessToken);
         return apiInstance.request(config);
-        return apiInstance.request(config);
       } else {
         processQueue(error, null);
         await logout();
