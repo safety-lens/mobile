@@ -16,6 +16,8 @@ import { NotificationContext } from '@/context/NotificationProvider';
 import ChatIcon from '../../assets/svgs/chat';
 import { SubscriptionModal } from '@/components/modals/SubscriptionModal';
 import { useApiSignIn } from '@/axios/api/auth';
+import CustomButton from '@/components/CustomButton/button';
+import { getValueStorage, setValueStorage } from '@/utils/storage';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -216,6 +218,19 @@ export default function RootLayout() {
             }}
           />
         </Tabs>
+        <CustomButton
+          styleAppBtn={{ position: 'absolute', bottom: 150, right: 20 }}
+          title="Destroy access token"
+          onPress={async () => {
+            const prev = await getValueStorage('auth');
+            if (prev) {
+              setValueStorage(
+                'auth',
+                JSON.stringify({ ...JSON.parse(prev), accessToken: '' })
+              );
+            }
+          }}
+        />
         <SubscriptionModal />
       </ObservationsProvider>
     </ProjectsProvider>

@@ -9,6 +9,9 @@ import { AuthProvider } from '@/context/AuthProvider';
 import NotificationProvider from '@/context/NotificationProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SubscriptionProvider } from '@/context/SubscriptionProvider';
+import { attachInterceptors } from '@/axios';
+
+attachInterceptors();
 
 registerTranslation('en', en);
 const queryClient = new QueryClient({
