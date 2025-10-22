@@ -42,13 +42,50 @@
           "data": [
             {
               "scheme": "https",
-              "host": "staging.safetylens.ai",
-              "pathPrefix": "/"
+              "host": "staging.safetylens.ai"
             },
             {
               "scheme": "https",
-              "host": "safetylens.ai"
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/forgot-password"
             },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/enter-screen"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/projects"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/c"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/notifications"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/conversations"
+            },
+            {
+              "scheme": "https",
+              "host": "staging.safetylens.ai",
+              "pathPrefix": "/stats"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
             {
               "scheme": "https",
               "host": "app.safetylens.ai"
@@ -60,18 +97,28 @@
             },
             {
               "scheme": "https",
-              "host": "safetylens.ai",
-              "pathPrefix": "/forgot-password"
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/projects"
             },
             {
               "scheme": "https",
-              "host": "staging.safetylens.ai",
-              "pathPrefix": "/enter-screen"
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/c"
             },
             {
               "scheme": "https",
-              "host": "safetylens.ai",
-              "pathPrefix": "/enter-screen"
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/notifications"
+            },
+            {
+              "scheme": "https",
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/conversations"
+            },
+            {
+              "scheme": "https",
+              "host": "app.safetylens.ai",
+              "pathPrefix": "/stats"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
