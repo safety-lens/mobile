@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/safety-lens/mobile/compare/v1.2.3...v1.2.4) (2025-10-22)
+
+
+### Bug Fixes
+
+* **android:** add basic routes to intent-filters ([a38dabc](https://github.com/safety-lens/mobile/commit/a38dabc1927d080f193a2812657761b423df9451))
+
 ### [1.2.3](https://github.com/safety-lens/mobile/compare/v1.2.2...v1.2.3) (2025-10-17)
 
 
