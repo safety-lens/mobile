@@ -30,6 +30,7 @@ import { useApiUploads } from '@/axios/api/uploads';
 import { KeyboardAnimationTest } from '@/components/GradualAnimationText';
 import { useSubscription } from '@/context/SubscriptionProvider';
 import { useApiSignIn } from '@/axios/api/auth';
+import { Typography } from '@/components/Typography';
 
 export default function Chat() {
   const [searchText, setSearchText] = useState('');
@@ -237,8 +238,10 @@ export default function Chat() {
             }
           />
         </View>
-        <Text style={styles.disclaimerText}>{t('resultDisclaimer')}</Text>
-        {/* <GradualAnimationTwo /> */}
+
+        <Typography center color="lighter" size="xxs" fullWidth={false}>
+          {t('resultDisclaimer')}
+        </Typography>
         <KeyboardAnimationTest value={240} />
       </View>
     </SafeAreaView>
@@ -251,15 +254,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   mainBox: {
+    paddingBottom: 5,
     paddingHorizontal: 15,
     flex: 1,
     overflow: 'hidden',
-  },
-  disclaimerText: {
-    marginBottom: 12,
-    color: Colors.light.gray,
-    textAlign: 'center',
-    fontSize: 12,
   },
   searchInputField: {
     position: 'relative',

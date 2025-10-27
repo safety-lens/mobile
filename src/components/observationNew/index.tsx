@@ -1,10 +1,9 @@
-import React, { ReactNode, useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import CreateNewObservation from '../createNewObservation';
 import { useTranslation } from 'react-i18next';
 import { Menu } from 'react-native-paper';
-import { Colors } from '@/constants/Colors';
 import useTakeImage from '@/hooks/useTakeImage';
 import CustomButton from '../CustomButton/button';
 import EyeObservation from '../../../assets/svgs/eye';
@@ -59,7 +58,7 @@ export default function NewObservation({
   };
 
   return (
-    <View>
+    <>
       <Menu
         anchorPosition="bottom"
         contentStyle={styles.menuContentStyle}
@@ -95,20 +94,11 @@ export default function NewObservation({
         hideModal={createObservationModal.hide}
         clearMessages={clearMessages}
       />
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  dotsBox: {
-    paddingHorizontal: 10,
-  },
-  dots: {
-    fontWeight: '900',
-    fontSize: 30,
-    marginTop: -18,
-    color: Colors.light.text,
-  },
   menuContentStyle: {
     backgroundColor: 'white',
     borderRadius: 8,

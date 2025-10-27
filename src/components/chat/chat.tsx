@@ -16,6 +16,7 @@ import { useApiObservations } from '@/axios/api/observations';
 // import GradualAnimationTwo from '../GradualAnimation';
 import { KeyboardAnimationTest } from '../GradualAnimationText';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import { Typography } from '../Typography';
 
 const dataLang = { en: 'English', es: 'Spanish' };
 interface IChat {
@@ -129,12 +130,13 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
             />
           </View>
         )}
-        <View>
-          <Text style={styles.disclaimerText}>{t('resultDisclaimer')}</Text>
-        </View>
+
         {/* <GradualAnimationTwo /> */}
         <KeyboardAnimationTest value={230} />
       </View>
+      <Typography center color="lighter" size="xxs" fullWidth={false}>
+        {t('resultDisclaimer')}
+      </Typography>
     </View>
   );
 }
@@ -142,14 +144,7 @@ export default function Chat({ startChatResponse, loading, clearMessages }: ICha
 const styles = StyleSheet.create({
   inner: {
     flex: 1,
-    paddingBottom: 6,
     overflow: 'hidden',
-  },
-
-  disclaimerText: {
-    marginVertical: 6,
-    color: Colors.light.gray,
-    textAlign: 'center',
   },
   searchInputField: {
     position: 'relative',
