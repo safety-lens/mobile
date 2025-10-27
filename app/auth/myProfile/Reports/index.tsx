@@ -330,7 +330,7 @@ export default function Reports() {
             icon={<DownloadIcon />}
           />
           <CustomButton
-            title={t('shareTitle')}
+            title={t('share')}
             styleAppBtn={{ height: 50, width: 140 }}
             backgroundColor="#010101"
             onPress={() => {
