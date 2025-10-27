@@ -9,6 +9,7 @@ import Chat from '@/components/chat/chat';
 import Skeleton from '@/components/skeleton';
 import { useTranslation } from 'react-i18next';
 import useAnalyzerImage from '@/hooks/analyzerImage';
+import { Typography } from '@/components/Typography';
 
 export default function SafetyObservation() {
   const { t } = useTranslation();
@@ -50,9 +51,14 @@ export default function SafetyObservation() {
             clearMessages={() => clearMessages()}
           />
         ) : (
-          <View style={styles.noObservationsBox}>
-            <Text style={styles.textNoObservation}>{t('noObservationsYet')}</Text>
-            <NewObservation onChange={startAnalyzerImage} />
+          <View style={styles.placeholderContainer}>
+            <View style={styles.placeholder}>
+              <Text style={styles.placeholderText}>{t('noObservationsYet')}</Text>
+              <NewObservation onChange={startAnalyzerImage} />
+            </View>
+            <Typography center color="lighter" size="xxs" fullWidth={false}>
+              {t('resultDisclaimer')}
+            </Typography>
           </View>
         )}
       </View>
@@ -65,13 +71,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flex: 1,
   },
-  noObservationsBox: {
-    marginTop: '70%',
+  placeholderContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  placeholder: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 30,
     gap: 20,
   },
-  textNoObservation: {
+  placeholderText: {
     fontSize: 16,
     lineHeight: 25,
     color: '#6D7176',
