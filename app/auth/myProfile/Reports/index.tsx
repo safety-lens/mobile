@@ -86,8 +86,8 @@ export default function Reports() {
   const { reportShare } = useApiObservations();
   const { projects } = useProjects();
 
-  const getProjectData = (projectId: string) => {
-    const project = projects.projects.find((project) => project.id === projectId);
+  const getProjectData = (id: string) => {
+    const project = projects.projects.find((item) => item.id === id);
     if (!project) return '-';
     return `${project.address}, ${project.city}, ${project.country}`;
   };
@@ -165,7 +165,6 @@ export default function Reports() {
     setDateRange(dataRangeCopy[value as keyof typeof dataRangeCopy]?.range);
   };
 
-   
   const onConfirm = ({ startDate, endDate }: any) => {
     setDateRange({
       startDate: startDate,
@@ -330,7 +329,7 @@ export default function Reports() {
             icon={<DownloadIcon />}
           />
           <CustomButton
-            title={t('shareTitle')}
+            title={t('share')}
             styleAppBtn={{ height: 50, width: 140 }}
             backgroundColor="#010101"
             onPress={() => {
