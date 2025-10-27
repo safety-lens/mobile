@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.5](https://github.com/safety-lens/mobile/compare/v1.2.4...v1.2.5) (2025-10-27)
+
+
+### Bug Fixes
+
+* **create-observation:** add disclaimer to the bottom of the screen ([c2a59ed](https://github.com/safety-lens/mobile/commit/c2a59ed930169e285f7cae87821c177de75c9b36))
+* **reports:** change Share button label ([f6d56df](https://github.com/safety-lens/mobile/commit/f6d56df1dd89f79ea546de3517835fe63fe148e0))
+
 ### [1.2.4](https://github.com/safety-lens/mobile/compare/v1.2.3...v1.2.4) (2025-10-22)
 
 
