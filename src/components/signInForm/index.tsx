@@ -41,6 +41,7 @@ export default function SignInForm({ email }: { email: string }) {
         pattern={/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i}
         name="email"
         required
+        autoCapitalize="none"
         keyboardType="email-address"
       />
       <TextField<IData>
@@ -51,6 +52,7 @@ export default function SignInForm({ email }: { email: string }) {
         label={t('password')}
         placeholder={t('enterYourPassword')}
         name="password"
+        autoCapitalize="none"
         required
       />
 
