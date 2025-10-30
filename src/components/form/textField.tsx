@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
   },
   textField: {
     borderColor: '#D0D5DD',
+    color: Colors.light.text,
     borderWidth: 1,
     borderRadius: 8,
     paddingVertical: 10,
