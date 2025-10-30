@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.6](https://github.com/safety-lens/mobile/compare/v1.2.5...v1.2.6) (2025-10-30)
+
+
+### Bug Fixes
+
+* **sign-in:** set color to the password field explicitly. fix correction ([20f3b4c](https://github.com/safety-lens/mobile/commit/20f3b4c6e3fc87829650e7301bea8de8b512709f))
+
 ### [1.2.5](https://github.com/safety-lens/mobile/compare/v1.2.4...v1.2.5) (2025-10-27)
 
 
