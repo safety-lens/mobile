@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 
 import * as Notifications from 'expo-notifications';
 import useGetUserInfo from '@/hooks/getUserInfo';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface CreateNotificationProps {
   onSended?: () => Promise<void>;
@@ -42,7 +43,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const {
     handleSubmit,
     setValue,
-    formState: { isValid },
+    formState: { isValid, isSubmitting },
     watch,
   } = useForm<ICreateNotification>({
     mode: 'onChange',
@@ -82,6 +83,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const onSubmit = async (data: ICreateNotification) => {
     const type = data.projectId ? 'project wide' : 'system wide';
     const result = await sendNotifications({ ...data, type });
+
     await onSended?.();
 
     if (result.message === 'Success') {
@@ -114,11 +116,8 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   }, []);
 
   useEffect(() => {
-    notificationListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        setNotification(notification);
-      }
-    );
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener(setNotification);
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
@@ -172,6 +171,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
           <View style={{ marginTop: 10 }}>
             <DropdownItem
               required
+              defaultValue={formValues.importance || 'standard'}
               data={notificationPriority || []}
               onChange={(e) => setValue('importance', e.value as 'critical' | 'standard')}
               label={t('notificationPriority')}
@@ -199,7 +199,14 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
           <CustomButton
             title={t('sendNotification')}
             onPress={handleSubmit(onSubmit)}
-            disabled={!isFormValid}
+            icon={
+              isSubmitting ? (
+                <ActivityIndicator size={14} animating color="#FFFFFF" />
+              ) : (
+                <></>
+              )
+            }
+            disabled={!isFormValid || isSubmitting}
             styleAppBtn={{
               flex: 1,
               marginTop: 20,
@@ -222,28 +229,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 24,
-  },
-  textAreaBox: {
-    marginVertical: 40,
-  },
-  textArea: {
-    color: '#0A2540',
-    fontSize: 16,
-    lineHeight: 21,
-  },
-  textProject: {
-    fontWeight: '700',
-  },
-  buttonBox: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  container: {
-    marginTop: 10,
-    borderColor: '#CDD0DE',
-    borderWidth: 1,
-    borderRadius: 8,
-    minHeight: 100,
   },
   textInputContainer: {
     marginTop: 10,
