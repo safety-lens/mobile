@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 
 import * as Notifications from 'expo-notifications';
 import useGetUserInfo from '@/hooks/getUserInfo';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface CreateNotificationProps {
   onSended?: () => Promise<void>;
@@ -42,7 +43,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const {
     handleSubmit,
     setValue,
-    formState: { isValid },
+    formState: { isValid, isSubmitting },
     watch,
   } = useForm<ICreateNotification>({
     mode: 'onChange',
@@ -56,7 +57,6 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
 
   const formValues = watch();
   const isFormValid = isValid && formValues.text.trim() !== '';
-  console.log('🚀 ~ CreateNotification ~ formValues:', formValues);
 
   const { projects } = useProjects();
 
@@ -83,6 +83,7 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const onSubmit = async (data: ICreateNotification) => {
     const type = data.projectId ? 'project wide' : 'system wide';
     const result = await sendNotifications({ ...data, type });
+
     await onSended?.();
 
     if (result.message === 'Success') {
@@ -198,7 +199,14 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
           <CustomButton
             title={t('sendNotification')}
             onPress={handleSubmit(onSubmit)}
-            disabled={!isFormValid}
+            icon={
+              isSubmitting ? (
+                <ActivityIndicator size={14} animating color="#FFFFFF" />
+              ) : (
+                <></>
+              )
+            }
+            disabled={!isFormValid || isSubmitting}
             styleAppBtn={{
               flex: 1,
               marginTop: 20,
