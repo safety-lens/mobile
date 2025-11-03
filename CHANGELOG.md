@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.7](https://github.com/safety-lens/mobile/compare/v1.2.6...v1.2.7) (2025-11-03)
+
+
+### Bug Fixes
+
+* **notifications:** add standard as a default state for importance ([5a14bb7](https://github.com/safety-lens/mobile/commit/5a14bb7615176758653b45112cd3308906735b36))
+* **notifications:** disable Send Notification button on submitting ([589b3dc](https://github.com/safety-lens/mobile/commit/589b3dc9b052ea16b7e3209ba61f89b7756bf51d))
+
 ### [1.2.6](https://github.com/safety-lens/mobile/compare/v1.2.5...v1.2.6) (2025-10-30)
 
 
