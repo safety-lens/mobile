@@ -2,7 +2,7 @@ import { Observation } from '@/types/observation';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { fileNameGenerator } from './generateFiles/nameConvent';
+import { fileNameGenerator } from './nameConvent';
 
 interface IGenerateObservationXLS {
   projectName: string;
