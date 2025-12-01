@@ -161,7 +161,7 @@ export default function EditProjectModal({
           <UploadPhoto<IEditProjectModalForm>
             control={control}
             errors={errors}
-            label={t('mainPhoto')}
+            label={t('projectMap')}
             name="mainPhoto"
             required
           />

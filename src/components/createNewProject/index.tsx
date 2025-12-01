@@ -247,7 +247,7 @@ export default function CreateNewProject() {
                 <UploadPhoto<ICreateProject>
                   control={control}
                   errors={errors}
-                  label={t('mainPhoto')}
+                  label={t('projectMap')}
                   name="mainPhoto"
                   required
                 />
