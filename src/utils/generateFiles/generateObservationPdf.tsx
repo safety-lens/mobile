@@ -45,7 +45,16 @@ const LINE_HEIGHT = 26 * 1.2;
 const HEADER_MARGIN_BOTTOM = 50;
 const HEADER_HEIGHT = logoAsset.height / 2;
 const FOOTER_HEIGHT = 100;
-const PROJECT_HEADER_HEIGHT = 136.2; // h1 + h2 + hr
+
+const PROJECT_HEADER_LINE_HEIGHT = 65;
+const PROJECT_SUBHEADER_MARGIN_TOP = 18;
+const PROJECT_SUBHEADER_MARGIN_BOTTOM = 8;
+const PROJECT_HEADER_HEIGHT =
+  PROJECT_HEADER_LINE_HEIGHT * 2 +
+  PROJECT_SUBHEADER_MARGIN_TOP +
+  1 +
+  PROJECT_SUBHEADER_MARGIN_BOTTOM;
+
 const OBSERVATION_HEADER_MARGIN_TOP = 62;
 const OBSERVATION_HEADER_HEIGHT = 65;
 const OBSERVATION_ITEMS_GAP = 10;
@@ -100,16 +109,26 @@ export const generateObservationPdf = async ({
       h1 {
         color: ${DARK_TEXT_COLOR};
         font-weight: 500;
-        font-size: 1.423rem;
-        line-height: 2.7rem;
+        font-size: 37px;
+        line-height: ${PROJECT_HEADER_LINE_HEIGHT}px;
         vertical-align: middle;
+        margin: 0;
+        padding: 0;
       }
       h2 {
-        padding-bottom: 4px;
-        margin-bottom: 8px;
-        font-size: 1rem;
+        padding: 0 0 4px 0;
+        margin: ${PROJECT_SUBHEADER_MARGIN_TOP}px 0 ${PROJECT_SUBHEADER_MARGIN_BOTTOM}px 0;
+        font-size: ${FONT_SIZE}px;
         font-weight: 400;
-        line-height: 2.5rem;
+        line-height: ${PROJECT_HEADER_LINE_HEIGHT}px;
+      }
+      hr {
+        display:block; 
+        height: 1px; 
+        border: 0; 
+        border-top: 1px solid #D9D9D9; 
+        margin: 0; 
+        padding: 0;
       }
       footer {
         flex: 1;
@@ -127,14 +146,6 @@ export const generateObservationPdf = async ({
         align-items: center;
         gap: 20px;
       }
-      hr {
-        display:block; 
-        height: 1px; 
-        border: 0; 
-        border-top: 1px solid #D9D9D9; 
-        margin: 0; 
-        padding: 0;
-      }
       .text-value {
         color: ${DARK_TEXT_COLOR};
         font-weight: 400;
@@ -144,12 +155,12 @@ export const generateObservationPdf = async ({
         align-items: center;
         height: ${OBSERVATION_HEADER_HEIGHT}px;
         font-weight: 500;
-        font-size: 1.2rem;
+        font-size: 1.2em;
         width: 100%;
         background: #F0F0F0;
         color: ${DARK_TEXT_COLOR};
         padding: 0px 20px;
-        margin-top: ${OBSERVATION_HEADER_MARGIN_TOP}px;
+        margin: ${OBSERVATION_HEADER_MARGIN_TOP}px 0 0 0;
       }
       .row {
         width: 100%;
