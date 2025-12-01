@@ -21,12 +21,12 @@ import ShareProjectModal from './ShareProjectModal';
 import DownloadModal, { TChecked } from './DownloadModal';
 import ShareIcon from '../../../../assets/svgs/shareIcon';
 import DownloadIcon from '../../../../assets/svgs/downloadIcon';
-import { generateObservationPdf } from '@/utils/generateObservationPdf';
-import { generateObservationXLS } from '@/utils/generateObservationXLS';
+import { generateObservationPdf } from '@/utils/generateFiles/generateObservationPdf';
+import { generateObservationXLS } from '@/utils/generateFiles/generateObservationXLS';
 import { useApiUploads } from '@/axios/api/uploads';
 import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
-import { generateObservationCSV } from '@/utils/generateObservationCSV';
+import { generateObservationCSV } from '@/utils/generateFiles/generateObservationCSV';
 import { useProjects } from '@/context/projectsProvider';
 
 interface IRange {
