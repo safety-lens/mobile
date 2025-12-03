@@ -1,10 +1,14 @@
-import { IGetAllProject, useApiProject } from '@/axios/api/projects';
+import { IGetAllProject, projectsApi, useApiProject } from '@/axios/api/projects';
 import { IGetProjects } from '@/types/project';
 import { createGetNextPageParam } from '@/utils/query';
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  QueryFunctionContext,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 
 const QUERY_KEY = 'projects';
-const PROJECTS_DEFAULT_LIMIT = 10; // 6???
+const PROJECTS_DEFAULT_LIMIT = 10;
 
 interface ProjectsQueryProps<T> extends Omit<IGetAllProject, 'page' | 'rowsPerPage'> {
   limit?: number;
@@ -15,6 +19,8 @@ interface ProjectsQueryProps<T> extends Omit<IGetAllProject, 'page' | 'rowsPerPa
 interface ProjectsKeysParams extends Omit<IGetAllProject, 'page' | 'rowsPerPage'> {
   limit: number;
 }
+
+type ProjectsDefaultKey = ReturnType<typeof projectsKeys.default>;
 
 const projectsKeys = {
   default: ({
@@ -45,21 +51,34 @@ const defaultProps = {
   enabled: true,
 };
 
+const queryFn = ({
+  queryKey,
+  pageParam = 1,
+}: QueryFunctionContext<ProjectsDefaultKey, number>) => {
+  const [, params] = queryKey;
+  const { limit, userId, searchQuery, sortBy, sortDirection, status, projectNumber } =
+    params;
+  return projectsApi.getAllProjects({
+    userId,
+    searchQuery,
+    sortBy,
+    sortDirection,
+    status,
+    projectNumber,
+    page: pageParam,
+    rowsPerPage: limit,
+  });
+};
+
 function useProjectsQuery<T = InfiniteData<IGetProjects>>({
   limit = PROJECTS_DEFAULT_LIMIT,
   select,
   enabled = true,
   ...rest
 }: ProjectsQueryProps<T> = defaultProps) {
-  const { getAllProject } = useApiProject();
-
   return useInfiniteQuery({
     queryKey: projectsKeys.default({ limit }),
-    queryFn: () =>
-      getAllProject({
-        rowsPerPage: limit,
-        ...rest,
-      }),
+    queryFn,
     getNextPageParam: createGetNextPageParam(limit),
     initialPageParam: 1,
     select,
