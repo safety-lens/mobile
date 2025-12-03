@@ -1,7 +1,5 @@
-import { useApiProject } from '@/axios/api/projects';
-import { useProjects } from '@/context/projectsProvider';
 import Modal from '@/modal';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DropdownItem from '../dropdown';
@@ -14,6 +12,7 @@ import Toast from 'react-native-toast-message';
 import * as Notifications from 'expo-notifications';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import { ActivityIndicator } from 'react-native-paper';
+import useProjectsQuery from '@/hooks/queries/useProjectsQuery';
 
 interface CreateNotificationProps {
   onSended?: () => Promise<void>;
@@ -58,13 +57,22 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
   const formValues = watch();
   const isFormValid = isValid && formValues.text.trim() !== '';
 
-  const { projects } = useProjects();
+  const {
+    data: projectsData,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useProjectsQuery();
 
-  const { getAllProject } = useApiProject();
+  const projects = useMemo(() => {
+    return projectsData?.pages.flatMap((page) => page.projects) || [];
+  }, [projectsData]);
 
-  const getProject = async () => {
-    await getAllProject({ page: 1, rowsPerPage: 1000 });
-  };
+  const loadNextProjects = useCallback(() => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage]);
 
   const showModal = () => {
     setVisible(!visible);
@@ -72,13 +80,13 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
 
   const renamedData = useMemo(() => {
     const allProjects = isAdminAdmin
-      ? [{ id: '', name: 'All Members' }, ...projects.projects]
-      : projects.projects;
+      ? [{ id: '', name: 'All Members' }, ...projects]
+      : projects;
     return allProjects.map(({ id, name }) => ({
       value: id,
       label: name,
     }));
-  }, [projects.projects]);
+  }, [isAdminAdmin, projects]);
 
   const onSubmit = async (data: ICreateNotification) => {
     const type = data.projectId ? 'project wide' : 'system wide';
@@ -110,10 +118,6 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
       label: t('critical'),
     },
   ];
-
-  useEffect(() => {
-    getProject();
-  }, []);
 
   useEffect(() => {
     notificationListener.current =
@@ -165,6 +169,8 @@ export default function CreateNotification({ onSended }: CreateNotificationProps
               data={renamedData || []}
               onChange={(e) => setValue('projectId', e.value)}
               label={t('projectNotifications')}
+              onEndReached={loadNextProjects}
+              isFetchingNextPage={isFetchingNextPage}
             />
           </View>
 
