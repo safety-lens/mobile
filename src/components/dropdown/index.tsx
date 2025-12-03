@@ -1,4 +1,11 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Colors } from '@/constants/Colors';
@@ -11,6 +18,8 @@ interface IDropdown {
   searchPlaceholder?: string;
   search?: boolean;
   onChange: (e: { label: string; value: string }) => void;
+  isFetchingNextPage?: boolean;
+  onEndReached?: () => void;
   styleContainer?: StyleProp<ViewStyle>;
   label?: string;
   required?: boolean;
@@ -27,6 +36,8 @@ export default function DropdownItem({
   label,
   required,
   defaultValue = '',
+  isFetchingNextPage = false,
+  onEndReached,
   onChange,
   error,
 }: IDropdown) {
@@ -78,6 +89,13 @@ export default function DropdownItem({
           setIsFocus(true);
           handleClear();
         }}
+        flatListProps={{
+          onEndReached,
+          onEndReachedThreshold: 0.7,
+          ListFooterComponent: isFetchingNextPage ? (
+            <ActivityIndicator size="small" />
+          ) : null,
+        }}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item.value);
@@ -121,9 +139,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     backgroundColor: 'white',
   },
-  icon: {
-    marginRight: 5,
-  },
   placeholderStyle: {
     fontSize: 16,
   },
@@ -131,10 +146,6 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     fontSize: 16,
     borderRadius: 8,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
   },
   inputSearchStyle: {
     height: 40,
@@ -166,13 +177,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 0,
     color: 'black',
-  },
-  clearButton: {
-    position: 'absolute',
-    right: 10,
-    padding: 8,
-    backgroundColor: 'yellow',
-    width: 10,
-    height: 10,
   },
 });
