@@ -131,25 +131,21 @@ export const useApiProject = (): UseApiSignInReturn => {
       setError(null);
       setStatusFilter(status || 'Active');
 
-      const response: AxiosResponse<IGetProjects> = await apiInstance({
-        method: 'get',
-        url: '/projects',
-        params: {
-          userId,
-          page,
-          rowsPerPage,
-          searchQuery,
-          sortBy,
-          sortDirection,
-          status,
-        },
+      const data = await projectsApi.getAllProjects({
+        userId,
+        searchQuery,
+        sortBy,
+        sortDirection,
+        page,
+        rowsPerPage,
+        status,
       });
 
-      if (response.data) {
+      if (data) {
         // TODO: remove setProjects in favor of react-query
-        setProjects(response.data);
+        setProjects(data);
       }
-      return response.data;
+      return data;
     } catch (e: any) {
       handelError(e.response.data.message || 'Fetch error projects');
       throw new Error(e.response.data.message);
@@ -340,4 +336,39 @@ export const useApiProject = (): UseApiSignInReturn => {
     isLoading,
     error,
   };
+};
+
+/**
+ * direct requests here available for react-query usage
+ */
+export const projectsApi = {
+  getAllProjects: async ({
+    userId,
+    searchQuery,
+    sortBy = 'createdAt',
+    sortDirection = 'desc',
+    page = 1,
+    rowsPerPage = 6,
+    status,
+  }: IGetAllProject): Promise<IGetProjects> => {
+    try {
+      const response: AxiosResponse<IGetProjects> = await apiInstance({
+        method: 'get',
+        url: '/projects',
+        params: {
+          userId,
+          page,
+          rowsPerPage,
+          searchQuery,
+          sortBy,
+          sortDirection,
+          status,
+        },
+      });
+
+      return response.data;
+    } catch (e: any) {
+      throw new Error(e.response.data.message);
+    }
+  },
 };
