@@ -10,6 +10,7 @@ import React, {
 
 // import data from '../../components/listOfProjects/listProject.json';
 import { IGetProjects, IProjectCart, ProjectStatus } from '@/types/project';
+import useProjectsQuery from '@/hooks/queries/useProjectsQuery';
 
 type ProjectsContextType = {
   projects: IGetProjects;
@@ -35,6 +36,9 @@ function useProjects(): ProjectsContextType {
 }
 
 const ProjectsProvider = (props: { children: ReactNode }): ReactElement => {
+  /**
+   * @deprecated Use react-query useProjectsQuery instead
+   */
   const [projects, setProjects] = useState<IGetProjects>({ projects: [], count: 0 });
   const [singleProjects, setSingleProject] = useState<IProjectCart | null>(null);
   const [observationImage, setObservationImage] = useState<string>('');

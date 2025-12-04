@@ -1,4 +1,3 @@
- 
 import { ICreateProject } from '@/components/createNewProject';
 import { apiInstance } from '..';
 import { AxiosResponse } from 'axios';
@@ -65,7 +64,11 @@ export interface UserNotificationData {
 
 interface UseApiSignInReturn {
   createProject: (data: ICreateProject) => Promise<void>;
-  getAllProject: (data: IGetAllProject) => Promise<IGetProjects | void>;
+  /**
+   * @deprecated use react-query and projectsApi.getAllProjects
+   * TODO: migrate projects from useProjects to react-query
+   */
+  getAllProject: (data: IGetAllProject) => Promise<IGetProjects>;
   deleteProject: (data: IRemoveProject) => Promise<void>;
   getSingleProject: (data: IGetSingleProject) => Promise<IProjectCart | undefined>;
   updateProject: (data: IUpdateProject) => Promise<UpdateRes | void>;
@@ -110,9 +113,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('createProject', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error createProject');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error createProject');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -126,32 +129,30 @@ export const useApiProject = (): UseApiSignInReturn => {
     page = 1,
     rowsPerPage = 6,
     status,
-  }: IGetAllProject): Promise<IGetProjects | void> => {
+  }: IGetAllProject): Promise<IGetProjects> => {
     try {
       setIsLoading(true);
       setError(null);
       setStatusFilter(status || 'Active');
 
-      const response: AxiosResponse<IGetProjects> = await apiInstance({
-        method: 'get',
-        url: '/projects',
-        params: {
-          userId,
-          page,
-          rowsPerPage,
-          searchQuery,
-          sortBy,
-          sortDirection,
-          status,
-        },
+      const data = await projectsApi.getAllProjects({
+        userId,
+        searchQuery,
+        sortBy,
+        sortDirection,
+        page,
+        rowsPerPage,
+        status,
       });
 
-      if (response.data) {
-        setProjects(response.data);
+      if (data) {
+        // TODO: remove setProjects in favor of react-query
+        setProjects(data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error projects');
-      throw error.response.data.message;
+      return data;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error projects');
+      throw new Error(e.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -170,9 +171,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       if (response.data) {
         return response.data;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error projects');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error projects');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -197,10 +198,10 @@ export const useApiProject = (): UseApiSignInReturn => {
         setSingleProject(response.data.projects[0]);
         return response.data.projects[0];
       }
-    } catch (error: any) {
+    } catch (e: any) {
       setSingleProject(null);
-      handelError(error.response.data.message || 'Error single project');
-      throw error.response.data.message;
+      handelError(e.response.data.message || 'Error single project');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -219,9 +220,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       if (response.data) {
         console.log('deleteProject', response.data);
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error deleteProject');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error deleteProject');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -247,9 +248,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       } else {
         throw new Error('No updateProject in response');
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error updateProject');
-      throw error;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error updateProject');
+      throw e;
     } finally {
       setIsLoading(false);
     }
@@ -271,9 +272,9 @@ export const useApiProject = (): UseApiSignInReturn => {
         console.log('archiveProject', response.data);
         return undefined;
       }
-    } catch (error: any) {
-      handelError(error.response.data.message || 'error archiveProject');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'error archiveProject');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -292,9 +293,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       });
 
       return response.data;
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error projects');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error projects');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -317,9 +318,9 @@ export const useApiProject = (): UseApiSignInReturn => {
       });
 
       return response.data;
-    } catch (error: any) {
-      handelError(error.response.data.message || 'Fetch error projects');
-      throw error.response.data.message;
+    } catch (e: any) {
+      handelError(e.response.data.message || 'Fetch error projects');
+      throw e.response.data.message;
     } finally {
       setIsLoading(false);
     }
@@ -339,4 +340,39 @@ export const useApiProject = (): UseApiSignInReturn => {
     isLoading,
     error,
   };
+};
+
+/**
+ * direct requests here available for react-query usage
+ */
+export const projectsApi = {
+  getAllProjects: async ({
+    userId,
+    searchQuery,
+    sortBy = 'createdAt',
+    sortDirection = 'desc',
+    page = 1,
+    rowsPerPage = 6,
+    status,
+  }: IGetAllProject): Promise<IGetProjects> => {
+    try {
+      const response: AxiosResponse<IGetProjects> = await apiInstance({
+        method: 'get',
+        url: '/projects',
+        params: {
+          userId,
+          page,
+          rowsPerPage,
+          searchQuery,
+          sortBy,
+          sortDirection,
+          status,
+        },
+      });
+
+      return response.data;
+    } catch (e: any) {
+      throw new Error(e.response.data.message);
+    }
+  },
 };
