@@ -70,11 +70,11 @@ const queryFn = ({
   });
 };
 
+// TODO: add useProjectsPaginatedQuery based on useQuery for non infinite scroll use cases, e.g. projects screen
 function useProjectsQuery<T = InfiniteData<IGetProjects>>({
   limit = PROJECTS_DEFAULT_LIMIT,
   select,
   enabled = true,
-  ...rest
 }: ProjectsQueryProps<T> = defaultProps) {
   return useInfiniteQuery({
     queryKey: projectsKeys.default({ limit }),

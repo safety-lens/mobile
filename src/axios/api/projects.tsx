@@ -64,6 +64,10 @@ export interface UserNotificationData {
 
 interface UseApiSignInReturn {
   createProject: (data: ICreateProject) => Promise<void>;
+  /**
+   * @deprecated use react-query and projectsApi.getAllProjects
+   * TODO: migrate projects from useProjects to react-query
+   */
   getAllProject: (data: IGetAllProject) => Promise<IGetProjects>;
   deleteProject: (data: IRemoveProject) => Promise<void>;
   getSingleProject: (data: IGetSingleProject) => Promise<IProjectCart | undefined>;
