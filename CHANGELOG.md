@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/safety-lens/mobile/compare/v1.2.7...v1.3.0) (2025-12-08)
+
+
+### Features
+
+* **api:** add react-query query for projects to have separated cache per screen ([4be6ea1](https://github.com/safety-lens/mobile/commit/4be6ea13d43ad4f63aef279c83368aa16cfc5c25))
+* **components:** add to the dropdown component load more functionality ([8b7bd87](https://github.com/safety-lens/mobile/commit/8b7bd87385272d1ce7f5838bd98d1a4f336e714a))
+* **reports:** add logos and slogan to pdf. correct style. refactor pdf generator ([ab2859a](https://github.com/safety-lens/mobile/commit/ab2859ae191e9b8f4606aec7db0515ce18dcbdc1))
+
+
+### Bug Fixes
+
+* **api:** separate pure requests from side-effects in useProjects hook ([da861b4](https://github.com/safety-lens/mobile/commit/da861b4dfa0c03ff1c861f30832c32356a227ba9))
+* **notifications:** replace infinite limit from notifications page with query with load more ([1f6cc8c](https://github.com/safety-lens/mobile/commit/1f6cc8cd9909879096afb41e223d1aaa785c3b35))
+* **projects:** add pagination to projects dropdown. use react-query cache ([3a84c77](https://github.com/safety-lens/mobile/commit/3a84c77676dda60f57da7f47d6666fa909b47d56))
+* **projects:** replace Main photo with Project map ([8f74913](https://github.com/safety-lens/mobile/commit/8f74913cf7a9dc8d049df42d2f048ffb1155d4c4))
+* **queries:** add all props to keys to separate different kinds of projects requests ([b2ae4e5](https://github.com/safety-lens/mobile/commit/b2ae4e5e56fd71da92f8f3baaa47926611ee443a))
+* **reports:** add more precise calculations for pdf elements ([a6d1154](https://github.com/safety-lens/mobile/commit/a6d11540ccfddfb31284c809abb4d246a2c73694))
+* **reports:** distribute reports content across the pages predicting height ([f735e15](https://github.com/safety-lens/mobile/commit/f735e156b2afd3ae01c295fb164f28fe4c4f034d))
+
 ### [1.2.7](https://github.com/safety-lens/mobile/compare/v1.2.6...v1.2.7) (2025-11-03)
 
 
