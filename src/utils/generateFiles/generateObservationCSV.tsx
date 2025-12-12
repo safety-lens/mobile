@@ -1,14 +1,8 @@
 import { Observation } from '@/types/observation';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import { fileNameGenerator } from './nameConvent';
 
 interface IGenerateObservationCSV {
-  projectName: string;
   data: Observation[];
-  showShare?: boolean;
   projectLocation: string;
-  range?: string;
 }
 
 const escapeCSVValue = (value: string): string => {
@@ -36,12 +30,9 @@ const convertToCSV = (data: Record<string, string | number>[]): string => {
 };
 
 export const generateObservationCSV = async ({
-  projectName,
   data,
-  showShare = false,
   projectLocation,
-  range,
-}: IGenerateObservationCSV): Promise<{ uri: string }> => {
+}: IGenerateObservationCSV): Promise<string> => {
   const observations = Array.isArray(data) ? data : [data];
 
   const csvData = observations
@@ -82,21 +73,5 @@ export const generateObservationCSV = async ({
 
   const csvString = convertToCSV(csvData);
 
-  const fileName = fileNameGenerator(projectName, 'csv', range);
-
-  const uri = FileSystem.documentDirectory + fileName;
-
-  await FileSystem.writeAsStringAsync(uri, csvString, {
-    encoding: FileSystem.EncodingType.UTF8,
-  });
-
-  if (!showShare && (await Sharing.isAvailableAsync())) {
-    await Sharing.shareAsync(uri, {
-      mimeType: 'text/csv',
-      dialogTitle: 'Share Observations Report',
-      UTI: 'public.comma-separated-values-text',
-    });
-  }
-
-  return { uri };
+  return csvString;
 };

@@ -21,13 +21,11 @@ import ShareProjectModal from './ShareProjectModal';
 import DownloadModal, { TChecked } from './DownloadModal';
 import ShareIcon from '../../../../assets/svgs/shareIcon';
 import DownloadIcon from '../../../../assets/svgs/downloadIcon';
-import { generateObservationPdf } from '@/utils/generateFiles/generateObservationPdf';
-import { generateObservationXLS } from '@/utils/generateFiles/generateObservationXLS';
 import { useApiUploads } from '@/axios/api/uploads';
 import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
-import { generateObservationCSV } from '@/utils/generateFiles/generateObservationCSV';
 import { useProjects } from '@/context/projectsProvider';
+import useGenerateReport from '@/hooks/useGenerateReport';
 
 interface IRange {
   startDate: Date | undefined;
@@ -202,64 +200,33 @@ export default function Reports() {
     },
   });
 
-  const createPdf = async () => {
-    await generateObservationPdf({
-      projectName,
-      data: reports?.observations || [],
-      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-      projectLocation: getProjectData(projectId),
-    });
-  };
-
-  const createXLS = async () => {
-    await generateObservationXLS({
-      projectName,
-      data: reports?.observations || [],
-      projectLocation: getProjectData(projectId),
-      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-    });
-  };
-
-  const createCSV = async () => {
-    await generateObservationCSV({
-      projectName,
-      data: reports?.observations || [],
-      projectLocation: getProjectData(projectId),
-      range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-    });
-  };
+  const {
+    generateReportCsv,
+    generateReportPdf,
+    generateReportXls,
+    shareReportCsv,
+    shareReportPdf,
+    shareReportXls,
+  } = useGenerateReport({
+    projectName,
+    data: reports?.observations || [],
+    range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
+    projectLocation: getProjectData(projectId),
+  });
 
   const shareFile = async (email: string, message: string, format: TChecked) => {
     setIsLoadingShare(true);
 
     let uriString: string = '';
+
     if (format === 'PDF') {
-      const { uri: pdfUri } = await generateObservationPdf({
-        projectName,
-        data: reports?.observations || [],
-        showShare: true,
-        range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-        projectLocation: getProjectData(projectId),
-      });
-      if (!pdfUri) return;
+      const { uri: pdfUri } = await shareReportPdf();
       uriString = pdfUri;
     } else if (format === 'XLS') {
-      const { uri: xlsUri } = await generateObservationXLS({
-        projectName,
-        data: reports?.observations || [],
-        showShare: true,
-        projectLocation: getProjectData(projectId),
-        range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-      });
+      const { uri: xlsUri } = await shareReportXls();
       uriString = xlsUri;
     } else if (format === 'CSV') {
-      const { uri: csvUri } = await generateObservationCSV({
-        projectName,
-        data: reports?.observations || [],
-        showShare: true,
-        projectLocation: getProjectData(projectId),
-        range: dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label,
-      });
+      const { uri: csvUri } = await shareReportCsv();
       uriString = csvUri;
     }
 
@@ -463,9 +430,9 @@ export default function Reports() {
         projectName={projectName}
         visible={downloadModalVisible}
         hideModal={() => setDownloadModalVisible(false)}
-        createPdf={createPdf}
-        createXLS={createXLS}
-        createCSV={createCSV}
+        createPdf={generateReportPdf}
+        createXLS={generateReportXls}
+        createCSV={generateReportCsv}
       />
     </ScreenLayout>
   );
