@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/safety-lens/mobile/compare/v1.3.0...v1.3.1) (2025-12-15)
+
+
+### Bug Fixes
+
+* **components:** add loading state to the reusable button ([19d1ddd](https://github.com/safety-lens/mobile/commit/19d1dddb45a1fc6ea28a45ebe62aa16a4fa43abd))
+* **download-report:** add loader to the button ([bc85434](https://github.com/safety-lens/mobile/commit/bc8543466c5b430a302666c87d829943aa9709d9))
+* **reports:** copy images from assets to files to fix missing images in headers ([daa8c38](https://github.com/safety-lens/mobile/commit/daa8c38163736ea807edfffe24da1b2fa397ac21))
+
 ## [1.3.0](https://github.com/safety-lens/mobile/compare/v1.2.7...v1.3.0) (2025-12-08)
 
 
