@@ -1,36 +1,7 @@
 import { Observation } from '@/types/observation';
-import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
-import { fileNameGenerator } from './nameConvent';
-import * as Sharing from 'expo-sharing';
-import { Image } from 'react-native';
 import { calculateArialTextHeight } from './helpers';
-
-const logoAsset = Image.resolveAssetSource(
-  require('../../../assets/images/pdf/logo.png')
-);
-const sloganAsset = Image.resolveAssetSource(
-  require('../../../assets/images/pdf/slogan.png')
-);
-const logoIconAsset = Image.resolveAssetSource(
-  require('../../../assets/images/pdf/logo-icon.png')
-);
-const contactsAsset = Image.resolveAssetSource(
-  require('../../../assets/images/pdf/contacts.png')
-);
-
-interface IGenerateObservationPdf {
-  projectName: string;
-  data: Observation[];
-  showShare?: boolean;
-  range: string;
-  projectLocation: string;
-}
-
-type LineRenderer = {
-  renderer: () => string;
-  height: number;
-};
+import { Asset } from 'expo-asset';
+import { getBase64FromAsset } from '../files';
 
 const PAPER_RATIO = 612 / 792;
 const FILE_WIDTH = 1023;
@@ -43,7 +14,6 @@ const FONT_SIZE = 26;
 const LINE_HEIGHT = 26 * 1.2;
 
 const HEADER_MARGIN_BOTTOM = 50;
-const HEADER_HEIGHT = logoAsset.height / 2;
 const FOOTER_HEIGHT = 100;
 
 const PROJECT_HEADER_LINE_HEIGHT = 65;
@@ -66,15 +36,49 @@ const IMAGE_HEIGHT = 500;
 const DARK_TEXT_COLOR = '#000000';
 const LIGHT_TEXT_COLOR = '#8f8f8f';
 
-export const generateObservationPdf = async ({
+interface GenerateObservationHtml {
+  projectName: string;
+  data: Observation[];
+  projectLocation: string;
+}
+
+type ObservationHtmlResult = {
+  html: string;
+  fileWidth: number;
+  fileHeight: number;
+};
+
+type LineRenderer = {
+  renderer: () => string;
+  height: number;
+};
+
+export const generateObservationHtml = async ({
   projectName,
   data,
-  range,
-  showShare = false,
   projectLocation,
-}: IGenerateObservationPdf): Promise<{
-  uri: string | undefined;
-}> => {
+}: GenerateObservationHtml): Promise<ObservationHtmlResult> => {
+  const assets = await Asset.loadAsync([
+    require('../../../assets/images/pdf/logo.png'),
+    require('../../../assets/images/pdf/slogan.png'),
+    require('../../../assets/images/pdf/logo-icon.png'),
+    require('../../../assets/images/pdf/contacts.png'),
+  ]);
+
+  const [logoAsset, sloganAsset, logoIconAsset, contactsAsset] = assets;
+
+  const [logoBase64, sloganBase64, logoIconBase64, contactsBase64] = await Promise.all(
+    assets.map(async (asset) => {
+      if (asset.localUri) {
+        const base64 = await getBase64FromAsset(asset);
+        return `data:image/png;base64, ${base64}`;
+      }
+      return '';
+    })
+  );
+
+  const headerHeight = (logoAsset.height ?? 0) / 2;
+
   const renderStyles = () => `
     <style type="text/css">
       * { 
@@ -101,7 +105,7 @@ export const generateObservationPdf = async ({
         display: flex;
         flex-direction: row;
         width: 100%;
-        height: ${HEADER_HEIGHT}px;
+        height: ${headerHeight}px;
         align-items: center;
         justify-content: space-between;
         margin-bottom: ${HEADER_MARGIN_BOTTOM}px;
@@ -194,8 +198,8 @@ export const generateObservationPdf = async ({
 
   const renderPageHeader = () => `
     <header>
-      <img width="${logoAsset.width / 2}" height="${logoAsset.height / 2}" src="${logoAsset.uri}" />
-      <img width="${sloganAsset.width / 2}" height="${sloganAsset.height / 2}" src="${sloganAsset.uri}" />
+      <img width="${(logoAsset.width ?? 0) / 2}" height="${(logoAsset.height ?? 0) / 2}" src="${logoBase64}" />
+      <img width="${(sloganAsset.width ?? 0) / 2}" height="${(sloganAsset.height ?? 0) / 2}" src="${sloganBase64}" />
     </header>
   `;
 
@@ -209,10 +213,10 @@ export const generateObservationPdf = async ({
     <footer>
       <div class="wrapper">
         <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
-        <img style="width: ${logoIconAsset.width / 2}px; height: ${logoIconAsset.height / 2}px;" src="${logoIconAsset.uri}" />
-        <img style="width: ${logoAsset.width / 2}px; height: ${logoAsset.height / 2}px;" src="${logoAsset.uri}" />
+        <img style="width: ${(logoIconAsset.width ?? 0) / 2}px; height: ${(logoIconAsset.height ?? 0) / 2}px;" src="${logoIconBase64}" />
+        <img style="width: ${(logoAsset.width ?? 0) / 2}px; height: ${(logoAsset.height ?? 0) / 2}px;" src="${logoBase64}" />
         </div>
-        <img style="width: ${contactsAsset.width / 2}px; height: ${contactsAsset.height / 2}px;" src="${contactsAsset.uri}" />
+        <img style="width: ${(contactsAsset.width ?? 0) / 2}px; height: ${(contactsAsset.height ?? 0) / 2}px;" src="${contactsBase64}" />
       </div>
     </footer>
   `;
@@ -253,7 +257,7 @@ export const generateObservationPdf = async ({
     `;
   };
 
-  const calculateMaxFieldHeight = (...texts: Array<string | undefined>) => {
+  const calculateMaxFieldHeight = (...texts: (string | undefined)[]) => {
     const realWidth = FILE_WIDTH * SCALE_WORKAROUND;
     const fieldWidth =
       (realWidth - HORIZONTAL_MARGIN * 2 - OBSERVATION_ITEMS_GAP * 3) / 4;
@@ -414,7 +418,7 @@ export const generateObservationPdf = async ({
         pages[currentPage] = '';
         pages[currentPage] += renderPageHeader();
 
-        availableHeight -= HEADER_HEIGHT + HEADER_MARGIN_BOTTOM;
+        availableHeight -= headerHeight + HEADER_MARGIN_BOTTOM;
         if (currentPage === 0) {
           pages[currentPage] += renderHeader();
           availableHeight -= PROJECT_HEADER_HEIGHT;
@@ -447,36 +451,5 @@ export const generateObservationPdf = async ({
     </html>
   `;
 
-  const { uri } = await Print.printToFileAsync({
-    html,
-    width: FILE_WIDTH,
-    height: FILE_HEIGHT,
-    margins: {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-    },
-  });
-
-  const customName = fileNameGenerator(projectName, 'pdf', range);
-  const newPath = FileSystem.documentDirectory + customName;
-  if (showShare) {
-    await FileSystem.moveAsync({
-      from: uri,
-      to: newPath,
-    });
-    return { uri: newPath };
-  } else {
-    await FileSystem.copyAsync({
-      from: uri,
-      to: newPath,
-    });
-
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(newPath);
-    }
-  }
-
-  return { uri };
+  return { html, fileWidth: FILE_WIDTH, fileHeight: FILE_HEIGHT };
 };

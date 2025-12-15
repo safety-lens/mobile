@@ -1,24 +1,23 @@
 import { Observation } from '@/types/observation';
 import * as XLSX from 'xlsx';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import { fileNameGenerator } from './nameConvent';
 
 interface IGenerateObservationXLS {
-  projectName: string;
   data: Observation[];
-  showShare?: boolean;
   projectLocation: string;
-  range?: string;
 }
 
+const COLUMN_SIZES = {
+  xs: 15,
+  sm: 20,
+  md: 25,
+  lg: 30,
+  xl: 50,
+};
+
 export const generateObservationXLS = async ({
-  projectName,
   data,
-  showShare = false,
   projectLocation,
-  range,
-}: IGenerateObservationXLS): Promise<{ uri: string }> => {
+}: IGenerateObservationXLS): Promise<string> => {
   const observations = Array.isArray(data) ? data : [data];
 
   const worksheetData = observations.map((observation, index) => ({
@@ -51,45 +50,28 @@ export const generateObservationXLS = async ({
   const ws = XLSX.utils.json_to_sheet(worksheetData);
   const wb = XLSX.utils.book_new();
   const columnWidths = [
-    { wch: 15 }, // Observation #
-    { wch: 20 }, // Observation Name
-    { wch: 50 }, // Observation Picture
-    { wch: 20 }, // Reporter
-    { wch: 15 }, // Date
-    { wch: 25 }, // Location
-    { wch: 20 }, // General Contractor
-    { wch: 20 }, // Sub Contractor
-    { wch: 25 }, // Category of Observation
-    { wch: 20 }, // Status of Observation
-    { wch: 25 }, // Assignee
-    { wch: 20 }, // Deadline to Complete
-    { wch: 15 }, // Closed Date
-    { wch: 20 }, // Follow Up
-    { wch: 30 }, // Notes/Comments
+    { wch: COLUMN_SIZES.xs }, // Observation #
+    { wch: COLUMN_SIZES.sm }, // Observation Name
+    { wch: COLUMN_SIZES.xl }, // Observation Picture
+    { wch: COLUMN_SIZES.sm }, // Reporter
+    { wch: COLUMN_SIZES.xs }, // Date
+    { wch: COLUMN_SIZES.md }, // Location
+    { wch: COLUMN_SIZES.sm }, // General Contractor
+    { wch: COLUMN_SIZES.sm }, // Sub Contractor
+    { wch: COLUMN_SIZES.md }, // Category of Observation
+    { wch: COLUMN_SIZES.sm }, // Status of Observation
+    { wch: COLUMN_SIZES.md }, // Assignee
+    { wch: COLUMN_SIZES.sm }, // Deadline to Complete
+    { wch: COLUMN_SIZES.xs }, // Closed Date
+    { wch: COLUMN_SIZES.sm }, // Follow Up
+    { wch: COLUMN_SIZES.lg }, // Notes/Comments
   ];
 
   ws['!cols'] = columnWidths;
 
   XLSX.utils.book_append_sheet(wb, ws, 'Observation');
 
-  const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
+  const result = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
 
-  const fileName = fileNameGenerator(projectName, 'xlsx', range);
-  const uri = FileSystem.documentDirectory + fileName;
-
-  await FileSystem.writeAsStringAsync(uri, wbout, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-
-  if (!showShare && (await Sharing.isAvailableAsync())) {
-    await Sharing.shareAsync(uri, {
-      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      dialogTitle: 'Share Observations Report',
-      UTI: 'com.microsoft.excel.xlsx',
-    });
-  }
-
-  return {
-    uri,
-  };
+  return result;
 };

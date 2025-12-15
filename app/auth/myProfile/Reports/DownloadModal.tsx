@@ -1,11 +1,12 @@
 import Modal from '@/modal';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import IconClose from '../../../../assets/svgs/iconClose';
 import CustomButton from '@/components/CustomButton/button';
 import { RadioButton } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
+import { GenerateReportFunction } from '@/hooks/useGenerateReport';
 
 export type TChecked = 'PDF' | 'XLS' | 'CSV';
 
@@ -21,24 +22,35 @@ export default function DownloadModal({
   visible: boolean;
   hideModal: () => void;
   projectName: string;
-  createPdf: () => void;
-  createXLS: () => void;
-  createCSV: () => void;
+  createPdf: GenerateReportFunction;
+  createXLS: GenerateReportFunction;
+  createCSV: GenerateReportFunction;
   dateRange: string;
 }) {
   const { t } = useTranslation();
   const [checked, setChecked] = React.useState<TChecked>('PDF');
+  const [loading, setLoading] = React.useState(false);
 
-  const handleDownload = () => {
+  const resetState = useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    resetState();
+  }, [resetState, visible]);
+
+  const handleDownload = useCallback(async () => {
+    setLoading(true);
     if (checked === 'PDF') {
-      createPdf();
+      await createPdf();
     } else if (checked === 'XLS') {
-      createXLS();
+      await createXLS();
     } else if (checked === 'CSV') {
-      createCSV();
+      await createCSV();
     }
+    setLoading(false);
     hideModal();
-  };
+  }, [checked, createPdf, createXLS, createCSV, hideModal]);
 
   return (
     <Modal visible={visible} hideModal={hideModal}>
@@ -92,6 +104,8 @@ export default function DownloadModal({
             styleAppBtn={{ flex: 1 }}
             title={t('download')}
             onPress={handleDownload}
+            loading={loading}
+            disabled={loading}
           />
         </View>
       </>
