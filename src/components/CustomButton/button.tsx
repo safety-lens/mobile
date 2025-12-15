@@ -7,7 +7,8 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
 
 interface IField {
   onPress?: () => void;
@@ -20,19 +21,31 @@ interface IField {
   styleAppBtn?: StyleProp<ViewStyle>;
   outline?: boolean;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 export default function CustomButton({
   title = 'Button',
   onPress,
+  color = '#fff',
   backgroundColor = '#010101',
   padding,
   icon,
   styleBtn,
   styleAppBtn,
   outline,
+  loading,
   disabled,
 }: IField) {
+  const renderLeftIcon = useCallback(() => {
+    if (icon) {
+      return <View>{icon}</View>;
+    }
+    if (loading) {
+      return <ActivityIndicator size={16} color={color} />;
+    }
+    return null;
+  }, [icon, loading, color]);
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -45,14 +58,14 @@ export default function CustomButton({
         { opacity: !disabled ? 1 : 0.5 },
       ]}
     >
-      {icon && <View>{icon}</View>}
+      {renderLeftIcon()}
       <Text
         numberOfLines={1}
         style={[
           styles.appButtonText,
+          { color, padding: padding, maxWidth: '80%' },
           styleBtn,
           outline && styles.outlineBtn,
-          { padding: padding, maxWidth: '80%' },
         ]}
       >
         {title}
