@@ -36,7 +36,7 @@ export const useGenerateReportCsv = ({
     });
 
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(newPath, {
+      Sharing.shareAsync(newPath, {
         mimeType: 'text/csv',
         dialogTitle: 'Share Observations Report',
         UTI: 'public.comma-separated-values-text',

@@ -36,7 +36,7 @@ export const useGenerateReportXls = ({
     });
 
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(newPath, {
+      Sharing.shareAsync(newPath, {
         mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         dialogTitle: 'Share Observations Report',
         UTI: 'com.microsoft.excel.xlsx',

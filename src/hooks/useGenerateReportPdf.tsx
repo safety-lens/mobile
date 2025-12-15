@@ -56,7 +56,7 @@ export const useGenerateReportPdf = ({
     });
 
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(newPath);
+      Sharing.shareAsync(newPath);
     }
     return { uri: newPath };
   }, [newPath, printFile]);

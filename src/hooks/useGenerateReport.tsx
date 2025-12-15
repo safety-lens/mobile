@@ -10,7 +10,23 @@ interface UseGenerateReportProps {
   projectLocation: string;
 }
 
-export default function useGenerateReport(props: UseGenerateReportProps) {
+interface GenerateReportResult {
+  uri: string;
+}
+export type GenerateReportFunction = () => Promise<GenerateReportResult>;
+
+type UseGenerateReportReturn = {
+  generateReportCsv: GenerateReportFunction;
+  shareReportCsv: GenerateReportFunction;
+  generateReportPdf: GenerateReportFunction;
+  shareReportPdf: GenerateReportFunction;
+  generateReportXls: GenerateReportFunction;
+  shareReportXls: GenerateReportFunction;
+};
+
+export default function useGenerateReport(
+  props: UseGenerateReportProps
+): UseGenerateReportReturn {
   const { generateReportCsv, shareReportCsv } = useGenerateReportCsv(props);
   const { generateReportPdf, shareReportPdf } = useGenerateReportPdf(props);
   const { generateReportXls, shareReportXls } = useGenerateReportXls(props);
