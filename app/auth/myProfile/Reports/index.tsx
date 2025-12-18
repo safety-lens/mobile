@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  LayoutChangeEvent,
+} from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ScreenTopNav from '@/components/screenTopNav';
@@ -7,7 +14,7 @@ import ProjectDropdown from '@/components/projectDropdown';
 import DropdownItem from '@/components/dropdown';
 import CustomButton from '@/components/CustomButton/button';
 import TableReports from './tableReports';
-import { Divider, Menu } from 'react-native-paper';
+import { Menu } from 'react-native-paper';
 import ReportsFilter, { IReportsFilter } from './reportsFilter';
 import { DatePickerModal } from 'react-native-paper-dates';
 import useGetUserInfo from '@/hooks/getUserInfo';
@@ -53,6 +60,7 @@ export default function Reports() {
   const [projectName, setProjectName] = React.useState('');
   const [currentPage, setCurrentPage] = React.useState(1);
   const [limit, setLimit] = React.useState(10);
+  const [userActivityY, setUserActivityY] = React.useState(0);
 
   const [isLoadingShare, setIsLoadingShare] = React.useState(false);
 
@@ -143,7 +151,7 @@ export default function Reports() {
   const dataRange = Object.values(dataRangeCopy);
 
   const openMenu = () => {
-    scrollViewRef.current?.scrollTo({ y: 130, animated: true });
+    scrollViewRef.current?.scrollTo({ y: userActivityY, animated: true });
     setTimeout(() => {
       setVisible(true);
     }, 250);
@@ -338,13 +346,18 @@ export default function Reports() {
             label={t('dateRange')}
           />
         </View>
-        <View style={styles.userActivityContainer}>
+        <View
+          onLayout={(e: LayoutChangeEvent) => {
+            setUserActivityY(e.nativeEvent.layout.y);
+          }}
+          style={styles.userActivityContainer}
+        >
           <Text style={styles.userActivityText}>
             User Activity (
             {dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label})
           </Text>
           <Menu
-            anchorPosition="top"
+            anchorPosition="bottom"
             contentStyle={[styles.menuContent, { width: screenWidth - 30 }]}
             visible={visible}
             onDismiss={closeMenu}
@@ -375,7 +388,6 @@ export default function Reports() {
                   filters={getParams()}
                 />
               </View>
-              <Divider />
             </ScrollView>
           </Menu>
         </View>
@@ -461,6 +473,5 @@ const styles = StyleSheet.create({
   menuContent: {
     backgroundColor: 'white',
     borderRadius: 10,
-    marginTop: 50,
   },
 });
