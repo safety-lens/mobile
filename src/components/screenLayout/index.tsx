@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import React, { ReactNode } from 'react';
 import Toast, {
   ErrorToast,
@@ -19,6 +19,7 @@ const toastConfig = {
 export default function ScreenLayout({ children }: IScreenLayout) {
   return (
     <View style={styles.main}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F9F9F9" />
       <SafeAreaView style={styles.subMain}>
         <Portal>
           <View style={{ zIndex: 1000 }}>
