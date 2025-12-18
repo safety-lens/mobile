@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/safety-lens/mobile/compare/v1.3.1...v1.3.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* **components:** add number of selected items. refactor dropdown component to make it reusable ([eafe75b](https://github.com/safety-lens/mobile/commit/eafe75b95e3b543fdfa99940cf118918ff43d979))
+* **components:** add search palceholder to multiselect dropdown ([bf8c40e](https://github.com/safety-lens/mobile/commit/bf8c40ebfb54196ba455b5878539e37b913b0be2))
+* **dark-theme:** add statusbar color ([d4f9a07](https://github.com/safety-lens/mobile/commit/d4f9a07912dbf6432ba81fbf924eab15522e0d5e))
+* **dark-theme:** fix textinput font color in change observation status modal ([af39a82](https://github.com/safety-lens/mobile/commit/af39a829242202b303d11d89b3581d8f07560878))
+* **profile:** fix filter menu position to fit the content ([e1b9e5d](https://github.com/safety-lens/mobile/commit/e1b9e5d66fbbafdc6ddd0b33650dc13b2c2889e9))
+
 ### [1.3.1](https://github.com/safety-lens/mobile/compare/v1.3.0...v1.3.1) (2025-12-15)
 
 
