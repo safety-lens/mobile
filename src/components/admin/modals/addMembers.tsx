@@ -75,7 +75,6 @@ export default function AddMembers({
           data={usersDropdownData}
           defaultValue={selectedUser}
           onChange={(selectedItems) => {
-            console.log('🚀 ~ AddMembers ~ selectedItems:', selectedItems);
             setSelectedUser(selectedItems as string[]);
           }}
         />

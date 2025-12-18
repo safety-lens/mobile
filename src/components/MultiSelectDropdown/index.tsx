@@ -41,7 +41,6 @@ export default function MultiSelectDropdown({
   const { t } = useTranslation();
   const [value, setValue] = useState<string[]>(defaultValue as string[]);
   const [searchText, setSearchText] = useState<string>('');
-  const [isFocus, setIsFocus] = useState(false);
 
   const dropdownRef = useRef<IMultiSelectRef>(null);
 
@@ -49,7 +48,7 @@ export default function MultiSelectDropdown({
     setSearchText('');
   }, []);
 
-  const resolvedSearchPlaceholder = searchPlaceholder || `${t('search')} ...`;
+  const resolvedSearchPlaceholder = searchPlaceholder || `${t('search')}...`;
 
   useEffect(() => {
     if (defaultValue.length) setValue(defaultValue as string[]);
@@ -103,7 +102,7 @@ export default function MultiSelectDropdown({
           underlineStyle={{ display: 'none' }}
           textColor="black"
           style={styles.searchInputField}
-          placeholder={!isFocus ? searchPlaceholder : '...'}
+          placeholder={resolvedSearchPlaceholder}
           onChangeText={setSearchText}
           right={
             searchText.length && (
@@ -118,7 +117,7 @@ export default function MultiSelectDropdown({
         />
       </View>
     );
-  }, [handleClear, setSearchText, isFocus, searchPlaceholder, searchText]);
+  }, [handleClear, setSearchText, resolvedSearchPlaceholder, searchText]);
 
   const placeholder = `${value.length ? value.length + ' ' + t('selected') : t(placeholderInput)}`;
 
@@ -150,14 +149,11 @@ export default function MultiSelectDropdown({
         searchPlaceholder={resolvedSearchPlaceholder}
         placeholder={placeholder}
         onFocus={() => {
-          setIsFocus(true);
           handleClear();
         }}
-        onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item);
           onChange(item);
-          setIsFocus(false);
         }}
       />
     </View>
