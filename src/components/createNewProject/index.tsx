@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Keyboard,
   ScrollView,
@@ -132,6 +132,14 @@ export default function CreateNewProject() {
     if (visible) getCompanies();
   }, [visible]);
 
+  const usersDropdownData = useMemo(() => {
+    return users.map((item) => ({
+      label: item.name,
+      labelSelected: `${item.name} – ${item.email}`,
+      value: item.id,
+    }));
+  }, [users]);
+
   return (
     <>
       {user?.auth?.accountRole === 'admin' && (
@@ -216,9 +224,9 @@ export default function CreateNewProject() {
                 {hasSubscriptionFeature('teamInvitations') && (
                   <MultiSelectDropdown
                     label={t('Project members')}
-                    data={users}
+                    data={usersDropdownData}
                     onChange={(selectedItems) => {
-                      setValue('usersIds', selectedItems as string[]);
+                      setValue('usersIds', selectedItems);
                     }}
                   />
                 )}

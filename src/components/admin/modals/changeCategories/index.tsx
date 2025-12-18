@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import CustomButton from '@/components/CustomButton/button';
@@ -70,6 +70,14 @@ export default function ChangeCategories({
     getAllCategory().then((res) => setCategory(res || []));
   }, []);
 
+  const categoryDropdownItems = useMemo(() => {
+    return category.map((item) => ({
+      value: item.name,
+      label: item.name,
+      description: item.specification,
+    }));
+  }, [category]);
+
   return (
     <Modal visible={visible} hideModal={hideModal} keyboardUp>
       <>
@@ -85,11 +93,7 @@ export default function ChangeCategories({
           <MultiSelectDropdown
             required
             search
-            data={category.map((item) => ({
-              label: item.specification,
-              id: item.name,
-              name: item.name,
-            }))}
+            data={categoryDropdownItems}
             defaultValue={defaultValue}
             placeholderInput="chooseCategory"
             label={t('chooseCategory')}

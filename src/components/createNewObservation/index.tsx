@@ -173,6 +173,14 @@ export default function CreateNewObservation({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
+  const categoryDropdownItems = useMemo(() => {
+    return category.map((item) => ({
+      value: item.name,
+      label: item.name,
+      description: item.specification,
+    }));
+  }, [category]);
+
   return (
     <Modal visible={visible} hideModal={close}>
       <>
@@ -207,11 +215,7 @@ export default function CreateNewObservation({
           <MultiSelectDropdown
             required
             search
-            data={category.map((item) => ({
-              label: item.specification,
-              id: item.name,
-              name: item.name,
-            }))}
+            data={categoryDropdownItems}
             placeholderInput="chooseCategory"
             label={t('chooseCategory')}
             onChange={(selectedItems) => {
