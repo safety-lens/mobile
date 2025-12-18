@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 14,
     backgroundColor: 'white',
+    color: '#181D27',
   },
   buttonBox: {
     marginTop: 24,
