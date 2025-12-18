@@ -1,35 +1,33 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IMultiSelectRef, MultiSelect } from 'react-native-element-dropdown';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
-import { UserList } from '@/axios/api/auth';
+import { Typography } from '../Typography';
 
-interface IDropdownData {
+export interface IDropdownItem {
   label: string;
+  description?: string;
+  labelSelected?: string;
   value: string;
-  id?: string;
-  name?: string;
 }
 
-interface IDropdown<T = UserList> {
-  data: T[] | IDropdownData[];
-  placeholder?: string;
+interface IDropdown {
+  data: IDropdownItem[];
   searchPlaceholder?: string;
   search?: boolean;
-  onChange: (e: unknown[]) => void;
+  onChange: (e: string[]) => void;
   styleContainer?: StyleProp<ViewStyle>;
   label?: string;
   required?: boolean;
   error?: boolean;
-  defaultValue?: unknown[];
+  defaultValue?: string[];
   placeholderInput?: string;
 }
 
-export default function MultiSelectDropdown<T = UserList>({
+export default function MultiSelectDropdown({
   data,
-  placeholder = '...',
   placeholderInput = 'selectUser',
   searchPlaceholder,
   search,
@@ -39,26 +37,89 @@ export default function MultiSelectDropdown<T = UserList>({
   onChange,
   error,
   defaultValue = [],
-}: IDropdown<T>) {
+}: IDropdown) {
   const { t } = useTranslation();
   const [value, setValue] = useState<string[]>(defaultValue as string[]);
   const [searchText, setSearchText] = useState<string>('');
-  const [isFocus, setIsFocus] = useState(false);
 
   const dropdownRef = useRef<IMultiSelectRef>(null);
 
-  const handleSearch = (text: string) => {
-    setSearchText(text);
-  };
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setSearchText('');
-  };
+  }, []);
 
-  const resolvedSearchPlaceholder = searchPlaceholder || `${t('search')} ...`;
+  const resolvedSearchPlaceholder = searchPlaceholder || `${t('search')}...`;
 
   useEffect(() => {
     if (defaultValue.length) setValue(defaultValue as string[]);
   }, [defaultValue]);
+
+  const filteredData = useMemo(() => {
+    return data.filter(
+      (item) =>
+        item.label?.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [data, searchText]);
+
+  const renderItem = useCallback(
+    (item: IDropdownItem) => (
+      <View
+        key={item.value}
+        style={{
+          borderRadius: 4,
+          padding: 14,
+          gap: 8,
+        }}
+      >
+        <Text style={{ fontSize: 16, fontWeight: '500' }}>{item.label}</Text>
+        {item.description && <Text>{item.description}</Text>}
+      </View>
+    ),
+    []
+  );
+
+  const renderSelectedItem = useCallback((item: IDropdownItem) => {
+    return (
+      <View key={item.value} style={styles.selectedItemBadge}>
+        <Text style={{ flexShrink: 1 }} numberOfLines={1}>
+          {item.labelSelected ? item.labelSelected : item.label}
+        </Text>
+        <View style={styles.deleteIconContainer}>
+          <Typography fullWidth={false} size="xxs">
+            X
+          </Typography>
+        </View>
+      </View>
+    );
+  }, []);
+
+  const renderInputSearch = useCallback(() => {
+    return (
+      <View style={styles.searchContainer}>
+        <TextInput
+          value={searchText}
+          underlineStyle={{ display: 'none' }}
+          textColor="black"
+          style={styles.searchInputField}
+          placeholder={resolvedSearchPlaceholder}
+          onChangeText={setSearchText}
+          right={
+            searchText.length && (
+              <TextInput.Icon
+                style={{ left: 10 }}
+                icon="close"
+                onPress={handleClear}
+                forceTextInputFocus
+              />
+            )
+          }
+        />
+      </View>
+    );
+  }, [handleClear, setSearchText, resolvedSearchPlaceholder, searchText]);
+
+  const placeholder = `${value.length ? value.length + ' ' + t('selected') : t(placeholderInput)}`;
 
   return (
     <View>
@@ -69,79 +130,12 @@ export default function MultiSelectDropdown<T = UserList>({
         </Text>
       )}
       <MultiSelect
+        data={filteredData}
         ref={dropdownRef}
         value={value}
-        renderItem={(item) => (
-          <View
-            key={item.id}
-            style={{
-              borderRadius: 4,
-              padding: 14,
-              gap: 8,
-            }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: '500' }}>{item.name}</Text>
-            {item.label && <Text>{item.label}</Text>}
-          </View>
-        )}
-        renderInputSearch={() => (
-          <View style={styles.searchContainer}>
-            <TextInput
-              value={searchText}
-              underlineStyle={{ display: 'none' }}
-              textColor="black"
-              style={styles.searchInputField}
-              placeholder={!isFocus ? placeholder : '...'}
-              onChangeText={handleSearch}
-              right={
-                searchText.length && (
-                  <TextInput.Icon
-                    style={{ left: 10 }}
-                    icon="close"
-                    onPress={handleClear}
-                    forceTextInputFocus
-                  />
-                )
-              }
-            />
-          </View>
-        )}
-        renderSelectedItem={(item) => (
-          <View
-            key={item.id}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-
-              borderColor: '#d9d9d9',
-              borderWidth: 1,
-              borderRadius: 4,
-
-              padding: 4,
-              marginTop: 4,
-              backgroundColor: '#00000006',
-              gap: 12,
-              marginRight: 4,
-            }}
-          >
-            <Text>
-              {item.name} {`${item.email ? `- ${item?.email} ` : ''}`}
-            </Text>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 100,
-                borderColor: '#d9d9d9',
-                borderWidth: 1,
-                width: 20,
-                height: 20,
-              }}
-            >
-              <Text style={{ fontSize: 12 }}>X</Text>
-            </View>
-          </View>
-        )}
+        renderItem={renderItem}
+        renderInputSearch={renderInputSearch}
+        renderSelectedItem={renderSelectedItem}
         itemTextStyle={styles.selectedTextStyle}
         itemContainerStyle={{ borderRadius: 8 }}
         containerStyle={{ borderRadius: 8 }}
@@ -149,25 +143,17 @@ export default function MultiSelectDropdown<T = UserList>({
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
-        data={data.filter((item) =>
-          //@ts-expect-error  TODO: fix this
-          item.name?.toLowerCase().includes(searchText.toLowerCase())
-        )}
         search={search}
         labelField="name"
-        valueField="id"
+        valueField="value"
         searchPlaceholder={resolvedSearchPlaceholder}
-        placeholder={t(placeholderInput)}
+        placeholder={placeholder}
         onFocus={() => {
-          setIsFocus(true);
           handleClear();
         }}
-        onBlur={() => setIsFocus(false)}
         onChange={(item) => {
           setValue(item);
           onChange(item);
-          setIsFocus(false);
-          // dropdownRef.current?.close();
         }}
       />
     </View>
@@ -183,9 +169,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     backgroundColor: 'white',
   },
-  icon: {
-    marginRight: 5,
-  },
   placeholderStyle: {
     fontSize: 16,
   },
@@ -193,10 +176,6 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     fontSize: 16,
     borderRadius: 8,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
   },
   inputSearchStyle: {
     height: 40,
@@ -229,12 +208,28 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     color: 'black',
   },
-  clearButton: {
-    position: 'absolute',
-    right: 10,
-    padding: 8,
-    backgroundColor: 'yellow',
-    width: 10,
-    height: 10,
+  selectedItemBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
+    borderRadius: 4,
+
+    padding: 4,
+    marginTop: 4,
+    backgroundColor: '#00000006',
+    gap: 8,
+    marginRight: 4,
+    maxWidth: '100%',
+  },
+  deleteIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
+    width: 20,
+    height: 20,
   },
 });

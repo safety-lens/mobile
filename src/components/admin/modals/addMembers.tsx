@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from '@/modal';
 import IconClose from '../../../../assets/svgs/iconClose';
-import MultiSelectDropdown from '@/components/MultiSelectDropdown';
+import MultiSelectDropdown, { IDropdownItem } from '@/components/MultiSelectDropdown';
 import { useApiUser } from '@/axios/api/users';
 import { UserList } from '@/axios/api/auth';
 import CustomButton from '@/components/CustomButton/button';
@@ -35,11 +35,11 @@ export default function AddMembers({
   const { t } = useTranslation();
 
   const getUsers = async () => {
-    const users = await getUsersNameEmailList();
-    const selectedUser = await getProjectMembers({ projectId: id as string });
+    const userList = await getUsersNameEmailList();
+    const projectMembers = await getProjectMembers({ projectId: id as string });
 
-    setUsers(users);
-    setSelectedUser(selectedUser.map((item) => item.id));
+    setUsers(userList);
+    setSelectedUser(projectMembers.map((item) => item.id));
   };
 
   useEffect(() => {
@@ -53,6 +53,14 @@ export default function AddMembers({
     hideModal();
   };
 
+  const usersDropdownData: IDropdownItem[] = useMemo(() => {
+    return users.map((user) => ({
+      label: user.name,
+      labelSelected: `${user.name} – ${user.email}`,
+      value: user.id,
+    }));
+  }, [users]);
+
   return (
     <Modal visible={visible} hideModal={hideModal}>
       <>
@@ -64,7 +72,7 @@ export default function AddMembers({
         </View>
 
         <MultiSelectDropdown
-          data={users}
+          data={usersDropdownData}
           defaultValue={selectedUser}
           onChange={(selectedItems) => {
             setSelectedUser(selectedItems as string[]);
