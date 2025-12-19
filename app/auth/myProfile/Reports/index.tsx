@@ -15,7 +15,7 @@ import DropdownItem from '@/components/dropdown';
 import CustomButton from '@/components/CustomButton/button';
 import TableReports from './tableReports';
 import { Menu } from 'react-native-paper';
-import ReportsFilter, { IReportsFilter } from './reportsFilter';
+import ReportsFilter, { IReportsFilter } from './ObservationFiltersModal';
 import { DatePickerModal } from 'react-native-paper-dates';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import { dateFormatFull } from '@/utils/dateFormat';
@@ -33,6 +33,8 @@ import { useApiObservations } from '@/axios/api/observations';
 import Toast from 'react-native-toast-message';
 import { useProjects } from '@/context/projectsProvider';
 import useGenerateReport from '@/hooks/useGenerateReport';
+import useModal from '@/hooks/useModal';
+import ObservationFiltersModal from './ObservationFiltersModal';
 
 interface IRange {
   startDate: Date | undefined;
@@ -74,6 +76,8 @@ export default function Reports() {
     endDate: undefined,
   });
 
+  const filtersModal = useModal();
+
   const [selectRangeLabel, setSelectRangeLabel] =
     React.useState<TSelectRangeLabel>('allTime');
 
@@ -87,6 +91,14 @@ export default function Reports() {
     status: '',
     assigneeId: '',
   });
+
+  const hasFilters = !!(
+    filters.location ||
+    filters.contractor ||
+    filters.category ||
+    filters.status ||
+    filters.assigneeId
+  );
 
   const { uploads } = useApiUploads();
   const { reportShare } = useApiObservations();
@@ -149,14 +161,6 @@ export default function Reports() {
   };
 
   const dataRange = Object.values(dataRangeCopy);
-
-  const openMenu = () => {
-    scrollViewRef.current?.scrollTo({ y: userActivityY, animated: true });
-    setTimeout(() => {
-      setVisible(true);
-    }, 250);
-  };
-  const closeMenu = () => setVisible(false);
 
   const onDismiss = () => {
     setOpen(false);
@@ -276,6 +280,8 @@ export default function Reports() {
     }
   };
 
+  const hasObservations = (reports?.observations || []).length > 0;
+
   return (
     <ScreenLayout>
       <View style={styles.topNavContainer}>
@@ -356,40 +362,19 @@ export default function Reports() {
             User Activity (
             {dataRangeCopy[selectRangeLabel as keyof typeof dataRangeCopy]?.label})
           </Text>
-          <Menu
-            anchorPosition="bottom"
-            contentStyle={[styles.menuContent, { width: screenWidth - 30 }]}
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-              <CustomButton
-                title={t('filters')}
-                styleAppBtn={{
-                  width: 100,
-                  borderWidth: 1,
-                  borderColor: '#EBEBEB',
-                  elevation: 0,
-                }}
-                styleBtn={{ color: 'black' }}
-                backgroundColor="white"
-                onPress={openMenu}
-              />
-            }
-          >
-            <ScrollView style={{ flex: 1 }}>
-              <View style={{ padding: 16, borderBottomWidth: 1, borderColor: '#E9EAEB' }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{t('filters')}</Text>
-              </View>
-              <View style={{ padding: 10 }}>
-                <ReportsFilter
-                  projectId={projectId}
-                  onClose={closeMenu}
-                  onApply={setFilters}
-                  filters={getParams()}
-                />
-              </View>
-            </ScrollView>
-          </Menu>
+          <CustomButton
+            title={t('filters')}
+            styleAppBtn={{
+              width: 100,
+              borderWidth: 1,
+              borderColor: '#EBEBEB',
+              elevation: 0,
+            }}
+            disabled={!hasObservations && !hasFilters}
+            styleBtn={{ color: 'black' }}
+            backgroundColor="white"
+            onPress={filtersModal.show}
+          />
         </View>
         <TableReports
           reports={reports?.observations || []}
@@ -445,6 +430,12 @@ export default function Reports() {
         createPdf={generateReportPdf}
         createXLS={generateReportXls}
         createCSV={generateReportCsv}
+      />
+      <ObservationFiltersModal
+        filters={filters}
+        visible={filtersModal.isVisible}
+        onApply={setFilters}
+        onClose={filtersModal.hide}
       />
     </ScreenLayout>
   );

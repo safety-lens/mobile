@@ -11,11 +11,16 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
+import Animated from 'react-native-reanimated';
+import { screenHeight } from '@/utils/dimensions';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface IDropdown {
   data: { label: string; value: string | undefined }[];
   placeholder?: string;
   searchPlaceholder?: string;
+  mode?: 'default' | 'modal' | 'auto';
+  dropdownPosition?: 'top' | 'bottom';
   search?: boolean;
   onChange: (e: { label: string; value: string }) => void;
   isFetchingNextPage?: boolean;
@@ -35,12 +40,15 @@ export default function DropdownItem({
   styleContainer,
   label,
   required,
+  mode = 'default',
+  dropdownPosition = 'bottom',
   defaultValue = '',
   isFetchingNextPage = false,
   onEndReached,
   onChange,
   error,
 }: IDropdown) {
+  const { top, bottom } = useSafeAreaInsets();
   const { t } = useTranslation();
   const [value, setValue] = useState<string>('Archived');
   const [searchText, setSearchText] = useState<string>('');
@@ -58,7 +66,7 @@ export default function DropdownItem({
   }, [defaultValue]);
 
   const resolvedSearchPlaceholder = searchPlaceholder || `${t('search')} ...`;
-
+  const maxHeight = screenHeight * 0.5 - top - bottom;
   return (
     <View>
       {label && (
@@ -70,7 +78,11 @@ export default function DropdownItem({
       <Dropdown
         itemTextStyle={styles.selectedTextStyle}
         itemContainerStyle={{ borderRadius: 8 }}
-        containerStyle={{ borderRadius: 8 }}
+        containerStyle={{
+          borderRadius: 8,
+          ...(mode === 'modal' ? { maxHeight: maxHeight } : null),
+          ...(mode === 'modal' && searchText ? { height: maxHeight } : null),
+        }}
         style={[styles.dropdown, styleContainer, error && { borderColor: 'red' }]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
@@ -78,8 +90,9 @@ export default function DropdownItem({
         data={data.filter((item) =>
           item?.label?.toLowerCase()?.includes(searchText.toLowerCase())
         )}
-        dropdownPosition="bottom"
+        dropdownPosition={dropdownPosition}
         search={search}
+        mode={mode}
         labelField="label"
         valueField="value"
         searchPlaceholder={resolvedSearchPlaceholder}
