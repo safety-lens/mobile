@@ -6,12 +6,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native-paper';
-import Animated from 'react-native-reanimated';
 import { screenHeight } from '@/utils/dimensions';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

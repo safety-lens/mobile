@@ -8,9 +8,11 @@ import { useTranslation } from 'react-i18next';
 function ChangeStatusButton({
   observation,
   status,
+  onUpdate,
 }: {
   observation: Observation;
   status: StatusTitle;
+  onUpdate?: () => void;
 }) {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
@@ -33,7 +35,7 @@ function ChangeStatusButton({
           observationId={observation._id}
           visible={visible}
           hideModal={showModal}
-          returnSameStatus={observation}
+          onUpdate={onUpdate}
         />
       )}
     </>

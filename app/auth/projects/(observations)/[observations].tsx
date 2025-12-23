@@ -14,12 +14,13 @@ import { useObservations } from '@/context/observationProvider';
 import { statusTitle } from '@/utils/statusTitle';
 import { useTranslation } from 'react-i18next';
 import { IStatus, Observation } from '@/types/observation';
-import { useDebugPropChanges } from '@/hooks/useDebugPropChanges';
+import { ObservationActionModalsProvider } from '@/context/ObservationActionModalsProvider';
+import { ObservationActionModals } from '@/components/modals/ObservationActionModals';
 
-export default function Observations() {
+function Observations() {
   const { getFilterObservations } = useApiObservations();
   const { singleProjects } = useProjects();
-  const { singleObservation } = useObservations();
+  const { singleObservation, currentObservationPage } = useObservations();
   const { observations: status, id } = useLocalSearchParams();
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
@@ -29,16 +30,19 @@ export default function Observations() {
     finishPeriod: undefined,
   });
 
-  const searchObservations = async () => {
-    setRefreshing(true);
-    await getFilterObservations({
-      projectId: singleProjects?.id as string,
-      status: statusTitle[status as IStatus],
-      page: 1,
-      ...range,
-    });
-    setRefreshing(false);
-  };
+  const searchObservations = useCallback(
+    async (page: number = 1) => {
+      setRefreshing(true);
+      await getFilterObservations({
+        projectId: singleProjects?.id as string,
+        status: statusTitle[status as IStatus],
+        page,
+        ...range,
+      });
+      setRefreshing(false);
+    },
+    [getFilterObservations, range, singleProjects?.id, status]
+  );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -46,9 +50,13 @@ export default function Observations() {
     }, [id, status, range])
   );
 
+  const refreshPage = useCallback(async () => {
+    await searchObservations(currentObservationPage);
+  }, [currentObservationPage, searchObservations]);
+
   const renderItem = useCallback<ListRenderItem<Observation>>(
-    (itemInfo) => <ObservationsCard observation={itemInfo} />,
-    []
+    (itemInfo) => <ObservationsCard observation={itemInfo} onUpdate={refreshPage} />,
+    [refreshPage]
   );
 
   const renderSeparator = useCallback(() => <View style={{ height: 16 }} />, []);
@@ -72,7 +80,19 @@ export default function Observations() {
         ItemSeparatorComponent={renderSeparator}
         renderItem={renderItem}
       />
+      <ObservationActionModals
+        projectId={singleProjects?.id}
+        onUpdateObservation={refreshPage}
+      />
     </ScreenLayout>
+  );
+}
+
+export default function ObservationWithProviders() {
+  return (
+    <ObservationActionModalsProvider>
+      <Observations />
+    </ObservationActionModalsProvider>
   );
 }
 

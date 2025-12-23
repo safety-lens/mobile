@@ -1,16 +1,19 @@
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
-import { FlashList } from '@shopify/flash-list';
+import React, { useCallback, useState } from 'react';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import ScreenLayout from '@/components/screenLayout';
-import MyObservationCard from '@/components/myObservationCard';
+import MyObservationCard, { APPROX_ITEM_HEIGHT } from '@/components/myObservationCard';
 import ScreenTopNav from '@/components/screenTopNav';
 import { useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
 import Pagination from '@/components/pagination';
 import { router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Observation } from '@/types/observation';
+import { ObservationActionModals } from '@/components/modals/ObservationActionModals';
+import { ObservationActionModalsProvider } from '@/context/ObservationActionModalsProvider';
 
-export default function ObservationList() {
+function ObservationList() {
   const { t } = useTranslation();
   const { getAllObservations } = useApiObservations();
   const { currentObservationPage, setObservationCurrentPage, observation } =
@@ -40,6 +43,13 @@ export default function ObservationList() {
     router.back();
   };
 
+  const renderItem = useCallback<ListRenderItem<Observation>>(
+    ({ item }) => <MyObservationCard observation={item} />,
+    []
+  );
+
+  const keyExtractor = useCallback((item: Observation) => item._id, []);
+
   return (
     <ScreenLayout>
       <ScreenTopNav
@@ -53,10 +63,11 @@ export default function ObservationList() {
       >
         {observation?.count ? (
           <FlashList
-            estimatedItemSize={6}
+            estimatedItemSize={APPROX_ITEM_HEIGHT}
             data={observation?.observations}
+            keyExtractor={keyExtractor}
             ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-            renderItem={({ item }) => <MyObservationCard observation={item} />}
+            renderItem={renderItem}
           />
         ) : (
           <View style={styles.noObservationsBox}>
@@ -69,7 +80,16 @@ export default function ObservationList() {
         count={observation.count}
         onPageChange={searchObservation}
       />
+      <ObservationActionModals onUpdateObservation={onRefresh} />
     </ScreenLayout>
+  );
+}
+
+export default function ObservationListWithProviders() {
+  return (
+    <ObservationActionModalsProvider>
+      <ObservationList />
+    </ObservationActionModalsProvider>
   );
 }
 

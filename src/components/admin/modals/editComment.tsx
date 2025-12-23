@@ -6,7 +6,6 @@ import IconClose from '../../../../assets/svgs/iconClose';
 import { useForm } from 'react-hook-form';
 import TextField from '@/components/form/textField';
 import { useApiObservations } from '@/axios/api/observations';
-import { StatusTitle } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 
@@ -16,8 +15,7 @@ interface IEditComment {
   title?: string;
   value?: string;
   observationId: string;
-  selectedStatus?: StatusTitle;
-  projectId?: string;
+  onUpdate?: () => void;
 }
 
 interface IEditCommentForm {
@@ -30,8 +28,7 @@ export default function EditComment({
   title,
   value = '',
   observationId,
-  selectedStatus,
-  projectId,
+  onUpdate,
 }: IEditComment) {
   const { updateObservations, getFilterObservations, getAllObservations } =
     useApiObservations();
@@ -62,14 +59,7 @@ export default function EditComment({
           text1: t('success'),
           text2: t('observationUpdate'),
         });
-        if (projectId) {
-          await getFilterObservations({
-            status: selectedStatus,
-            projectId: projectId,
-          });
-        } else {
-          await getAllObservations({});
-        }
+        onUpdate && onUpdate();
       })
       .finally(() => hideModal());
     reset();

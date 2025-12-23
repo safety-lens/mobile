@@ -20,8 +20,7 @@ interface IChangeAssignee {
   id?: string;
   status?: status;
   observationId?: string;
-  selectedStatus?: string;
-  projectId?: string;
+  onUpdate?: () => void;
   defaultValue?: {
     _id: string;
     email: string;
@@ -34,13 +33,11 @@ export default function ChangeAssignee({
   title,
   id,
   observationId,
-  selectedStatus,
-  projectId,
   defaultValue,
+  onUpdate,
 }: IChangeAssignee) {
   const { getUsersNameEmailList } = useApiUser();
-  const { updateObservations, getFilterObservations, getAllObservations } =
-    useApiObservations();
+  const { updateObservations } = useApiObservations();
 
   const [users, setUsers] = useState<UserList[]>([]);
   const [selectedUser, setSelectedUser] = useState<string[]>([]);
@@ -66,14 +63,7 @@ export default function ChangeAssignee({
       },
     })
       .then(async () => {
-        if (projectId) {
-          await getFilterObservations({
-            status: selectedStatus,
-            projectId: projectId,
-          });
-        } else {
-          await getAllObservations({});
-        }
+        onUpdate && onUpdate();
         Toast.show({
           type: 'success',
           text1: t('success'),
@@ -139,17 +129,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 24,
     marginBottom: 20,
-  },
-  textAreaBox: {
-    marginVertical: 40,
-  },
-  textArea: {
-    color: '#0A2540',
-    fontSize: 16,
-    lineHeight: 21,
-  },
-  textProject: {
-    fontWeight: '700',
   },
   buttonBox: {
     marginTop: 10,

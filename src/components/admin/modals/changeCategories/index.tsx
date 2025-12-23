@@ -30,7 +30,6 @@ export default function ChangeCategories({
   const [category, setCategory] = useState<IGetAllCategory[]>([]);
   const [text, setText] = useState<string>('');
   const [hasError, setHasError] = useState<boolean>(false);
-  console.log('🚀 ~ ChangeCategories ~ hasError:', hasError);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
 
   const onSubmit = async () => {
@@ -67,8 +66,11 @@ export default function ChangeCategories({
   }, [selectedCategory]);
 
   useEffect(() => {
-    getAllCategory().then((res) => setCategory(res || []));
-  }, []);
+    if (visible) {
+      getAllCategory().then((res) => setCategory(res || []));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   const categoryDropdownItems = useMemo(() => {
     return category.map((item) => ({
@@ -144,30 +146,9 @@ const styles = StyleSheet.create({
   dropdownItem: {
     marginTop: 20,
   },
-  textBox: {
-    marginTop: 24,
-    gap: 8,
-  },
-  textTitle: {
-    color: '#0A2540',
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  textInput: {
-    height: 100,
-    borderColor: '#D0D5DD',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 14,
-    backgroundColor: 'white',
-  },
   buttonBox: {
     marginTop: 24,
     flexDirection: 'row',
     gap: 8,
-  },
-  error: {
-    borderColor: 'red',
-    color: 'red',
   },
 });

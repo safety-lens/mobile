@@ -18,9 +18,8 @@ interface IChangeDeadline {
   projectName?: string;
   status?: status;
   observationId?: string;
-  selectedStatus?: string;
-  projectId?: string;
   defaultValue?: Date;
+  onUpdate?: () => void;
 }
 
 export default function ChangeDeadline({
@@ -28,9 +27,8 @@ export default function ChangeDeadline({
   hideModal,
   title,
   observationId,
-  selectedStatus,
-  projectId,
   defaultValue,
+  onUpdate,
 }: IChangeDeadline) {
   const { updateObservations, getFilterObservations, getAllObservations } =
     useApiObservations();
@@ -47,14 +45,7 @@ export default function ChangeDeadline({
       },
     })
       .then(async () => {
-        if (projectId) {
-          await getFilterObservations({
-            status: selectedStatus,
-            projectId: projectId,
-          });
-        } else {
-          await getAllObservations({});
-        }
+        onUpdate && onUpdate();
         Toast.show({
           type: 'success',
           text1: t('success'),

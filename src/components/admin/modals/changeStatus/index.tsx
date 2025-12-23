@@ -5,7 +5,7 @@ import CustomButton from '@/components/CustomButton/button';
 import IconClose from '../../../../../assets/svgs/iconClose';
 import DropdownItem from '@/components/dropdown';
 import { useApiObservations } from '@/axios/api/observations';
-import { Observation, StatusTitle } from '@/types/observation';
+import { StatusTitle } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 
@@ -14,7 +14,7 @@ interface IChangeStatus {
   hideModal: () => void;
   observationId: string;
   currentStatus?: StatusTitle;
-  returnSameStatus?: Observation | boolean;
+  onUpdate?: () => void;
 }
 
 const dataStatus = (t: (key: string) => string) => [
@@ -28,10 +28,9 @@ export default function ChangeStatus({
   hideModal,
   observationId,
   currentStatus,
-  returnSameStatus,
+  onUpdate,
 }: IChangeStatus) {
-  const { updateObservations, getFilterObservations, getAllObservations } =
-    useApiObservations();
+  const { updateObservations } = useApiObservations();
   const { t } = useTranslation();
   const data = dataStatus(t);
 
@@ -60,15 +59,7 @@ export default function ChangeStatus({
         text1: t('success'),
         text2: t('observationUpdate'),
       });
-      if (returnSameStatus as Observation) {
-        await getFilterObservations({
-          status: (returnSameStatus as Observation).status,
-          projectId: (returnSameStatus as Observation).projectId,
-        });
-      } else {
-        await getAllObservations({});
-      }
-      // setStatusFilter((returnSameStatus as Observation).status);
+      onUpdate && onUpdate();
       setSelectedStatus(undefined);
       hideModal();
     });

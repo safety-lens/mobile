@@ -6,16 +6,17 @@ import { Colors } from '@/constants/Colors';
 import { IStatus, Observation } from '@/types/observation';
 import { ListRenderItemInfo } from '@shopify/flash-list';
 import { dateFormat, dateTimeFormat } from '@/utils/dateFormat';
-import ObservationAction from '../observationAction';
 import MessageMarkdown from '../messageMarkdown';
 import MessageImage from '../messageImage';
 import MapLocation from '../../../assets/svgs/mapLocation';
 import { Href, Link, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import ObservationAction from '../observationAction';
 
-interface IObservationsCard {
+interface Props {
   observation: ListRenderItemInfo<Observation>;
+  onUpdate?: () => void;
 }
 
 const statusTitle = {
@@ -27,7 +28,7 @@ const statusTitle = {
 const PADDING = 24;
 const DESCRIPTION_MAX_CHARACTERS = 200;
 
-export default function ObservationsCard({ observation }: IObservationsCard) {
+export default function ObservationsCard({ observation, onUpdate }: Props) {
   const { t } = useTranslation();
   const { hasSubscriptionFeature } = useSubscription();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -84,11 +85,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <ObservationAction
-              observationId={observation.item.projectId}
-              observation={observation.item}
-              returnSameStatus={true}
-            />
+            <ObservationAction observation={observation.item} />
             <TouchableOpacity onPress={push}>
               <MapLocation />
             </TouchableOpacity>
@@ -208,6 +205,7 @@ export default function ObservationsCard({ observation }: IObservationsCard) {
         <ChangeStatusButton
           status={observation.item.status}
           observation={observation.item}
+          onUpdate={onUpdate}
         />
       </View>
     </View>

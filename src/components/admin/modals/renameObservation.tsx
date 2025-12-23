@@ -6,7 +6,6 @@ import IconClose from '../../../../assets/svgs/iconClose';
 import { useForm } from 'react-hook-form';
 import TextField from '@/components/form/textField';
 import { useApiObservations } from '@/axios/api/observations';
-import { StatusTitle } from '@/types/observation';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 
@@ -16,8 +15,7 @@ interface IRenameObservation {
   title?: string;
   value?: string;
   observationId: string;
-  selectedStatus?: StatusTitle;
-  projectId?: string;
+  onUpdate?: () => void;
 }
 
 interface IRenameObservationForm {
@@ -30,8 +28,7 @@ export default function RenameObservation({
   title,
   value = '',
   observationId,
-  selectedStatus,
-  projectId,
+  onUpdate,
 }: IRenameObservation) {
   const { updateObservations, getFilterObservations, getAllObservations } =
     useApiObservations();
@@ -62,14 +59,7 @@ export default function RenameObservation({
           text1: t('success'),
           text2: t('observationUpdate'),
         });
-        if (projectId) {
-          await getFilterObservations({
-            status: selectedStatus,
-            projectId: projectId,
-          });
-        } else {
-          await getAllObservations({});
-        }
+        onUpdate && onUpdate();
       })
       .finally(() => hideModal());
     reset();
@@ -136,14 +126,6 @@ const styles = StyleSheet.create({
   },
   textAreaBox: {
     marginVertical: 40,
-  },
-  textArea: {
-    color: '#0A2540',
-    fontSize: 16,
-    lineHeight: 21,
-  },
-  textProject: {
-    fontWeight: '700',
   },
   buttonBox: {
     flexDirection: 'row',
