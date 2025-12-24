@@ -14,7 +14,7 @@ import useObservationsPaginatedQuery from '@/hooks/queries/useObservationsPagina
 import { useRouter } from 'expo-router';
 import { ActivityIndicator } from 'react-native-paper';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 20;
 
 function ObservationList() {
   const router = useRouter();
