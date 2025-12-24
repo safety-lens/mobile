@@ -13,7 +13,7 @@ interface IUseUploadObservation {
 export default function useUploadObservation({ callback }: IUseUploadObservation) {
   const { singleProjects } = useProjects();
   const { observationResult } = useObservations();
-  const { createObservation, getAllObservations, isLoading } = useApiObservations();
+  const { createObservation, isLoading } = useApiObservations();
   const { t } = useTranslation();
 
   const createTwoButtonAlert = (text: string) => {
@@ -70,11 +70,6 @@ export default function useUploadObservation({ callback }: IUseUploadObservation
           } else {
             router.navigate('/auth/projects');
           }
-          await getAllObservations({
-            projectId: singleProjects.id,
-            page: 1,
-            rowsPerPage: 100,
-          });
           callback?.();
         })
         .catch((error) => {

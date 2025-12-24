@@ -12,6 +12,7 @@ import { ObservationsResponse } from '@/types/observation';
 import { ChatResponse } from '@/types/chatTypes';
 
 type ObservationsContextType = {
+  /** @deprecated due to cache intersection. use useObservationQuery instead*/
   observation: ObservationsResponse;
   setObservation: Dispatch<SetStateAction<ObservationsResponse>>;
   singleObservation: ObservationsResponse | null;
@@ -23,7 +24,6 @@ type ObservationsContextType = {
 };
 
 const ObservationContext = createContext<ObservationsContextType | undefined>(undefined);
-
 function useObservations(): ObservationsContextType {
   const context = useContext(ObservationContext);
   if (!context) {

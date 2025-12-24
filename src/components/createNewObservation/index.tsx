@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
 import Modal from '@/modal';
 import TextField from '@/components/form/textField';
@@ -16,7 +16,6 @@ import { Colors } from '@/constants/Colors';
 import DropdownItem from '../dropdown';
 import { useApiProject } from '@/axios/api/projects';
 import useUploadObservation from '@/hooks/useUploadObservation';
-import useGetAllProjects from '@/hooks/useGetAllProjects';
 import { IGetAllCategory, useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
 import { useApiUser } from '@/axios/api/users';
@@ -25,6 +24,7 @@ import useGetUserInfo from '@/hooks/getUserInfo';
 import MultiSelectDropdown from '../MultiSelectDropdown';
 import SelectTime from '../SelectTime/SelectTime';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import useProjectsQuery from '@/hooks/queries/useProjectsQuery';
 
 interface ICreateNewObservation {
   visible: boolean;
@@ -68,11 +68,14 @@ export default function CreateNewObservation({
 
   const { isAdmin } = useGetUserInfo();
 
-  const { getProjects } = useGetAllProjects();
-  const { singleProjects, projects, setSingleProject } = useProjects();
+  const projectsQuery = useProjectsQuery({
+    status: 'Active',
+    enabled: visible,
+  });
+
+  const { singleProjects, setSingleProject } = useProjects();
   const { getSingleProject } = useApiProject();
   const { uploads, isLoading: isLoadingUploads } = useApiUploads();
-  const { getAllObservations } = useApiObservations();
   const { observation } = useObservations();
   const { getAllCategory } = useApiObservations();
   const { getUsersNameEmailList } = useApiUser();
@@ -106,15 +109,24 @@ export default function CreateNewObservation({
   }, [formValues, singleProjects, selectedCategory]);
 
   const renamedData = useMemo(() => {
-    return projects.projects.map(({ id, name }) => ({
-      value: id,
-      label: name,
-    }));
-  }, [projects.projects]);
+    return (
+      projectsQuery.data?.pages
+        .flatMap((page) => page.projects)
+        .map((project) => ({
+          label: project.name,
+          value: project.id,
+        })) || []
+    );
+  }, [projectsQuery]);
+
+  const onProjectsEndReached = useCallback(() => {
+    if (projectsQuery.hasNextPage) {
+      projectsQuery.fetchNextPage();
+    }
+  }, [projectsQuery]);
 
   const updateSingleProject = async (id: string) => {
     await getSingleProject({ id });
-    await getAllObservations({ projectId: id, page: 1, rowsPerPage: 1000 });
     await getUsersNameEmailList(id).then((res) => setUsers(res || []));
   };
 
@@ -159,9 +171,10 @@ export default function CreateNewObservation({
   };
 
   useEffect(() => {
-    getProjects({ status: 'Active', rowsPerPage: 1000 });
-    getAllCategory().then((res) => setCategory(res || []));
-  }, []);
+    if (visible) {
+      getAllCategory().then((res) => setCategory(res || []));
+    }
+  }, [visible]);
 
   useEffect(() => {
     setSingleProject(null);
@@ -211,6 +224,8 @@ export default function CreateNewObservation({
             }}
             required
             label={t('chooseProject')}
+            onEndReached={onProjectsEndReached}
+            isFetchingNextPage={projectsQuery.isFetchingNextPage}
           />
           <MultiSelectDropdown
             required
