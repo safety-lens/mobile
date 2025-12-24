@@ -4,6 +4,7 @@ import 'react-native-reanimated';
 import { PaperProvider } from 'react-native-paper';
 import { en, registerTranslation } from 'react-native-paper-dates';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { DevToolsBubble } from 'react-native-react-query-devtools';
 import Router from './router';
 import { AuthProvider } from '@/context/AuthProvider';
 import NotificationProvider from '@/context/NotificationProvider';
@@ -31,7 +32,10 @@ export default function RootLayout() {
             <SubscriptionProvider>
               <NotificationProvider>
                 <PaperProvider>
-                  <Router />
+                  <>
+                    <Router />
+                    {__DEV__ ? <DevToolsBubble queryClient={queryClient} /> : null}
+                  </>
                 </PaperProvider>
               </NotificationProvider>
             </SubscriptionProvider>
