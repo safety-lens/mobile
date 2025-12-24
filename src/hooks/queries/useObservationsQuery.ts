@@ -56,7 +56,7 @@ const getObservations = async ({
 
   const response = await observationsApi.getObservations({
     page: pageParam,
-    rowsPerPage: limit,
+    pageSize: limit,
     ...rest,
   });
   return response;

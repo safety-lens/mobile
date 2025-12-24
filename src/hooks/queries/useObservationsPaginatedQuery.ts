@@ -9,6 +9,7 @@ type ObservationsParams = Omit<IGetObservationsParams, 'rowsPerPage'>;
 
 interface ObservationsQueryProps<T> extends ObservationsParams {
   limit?: number;
+  page?: number;
   select?: (data: ObservationsResponse) => T;
   enabled?: boolean;
 }
@@ -52,7 +53,7 @@ const getObservations = async ({
   const { limit, ...rest } = queryKey[2];
 
   const response = await observationsApi.getObservations({
-    rowsPerPage: limit,
+    pageSize: limit,
     ...rest,
   });
   return response;
@@ -65,11 +66,12 @@ const defaultProps = {
 
 function useObservationsPaginatedQuery<T = ObservationsResponse>({
   limit = OBSERVATIONS_DEFAULT_LIMIT,
+  page,
   select,
   enabled = true,
 }: ObservationsQueryProps<T> = defaultProps) {
   return useQuery({
-    queryKey: observationsKeys.default({ limit }),
+    queryKey: observationsKeys.default({ page, limit }),
     queryFn: getObservations,
     select,
     enabled,

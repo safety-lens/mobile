@@ -7,6 +7,7 @@ import { useObservations } from '@/context/observationProvider';
 import Toast from 'react-native-toast-message';
 import { IStartChat, ChatResponse, IConversationIdResponse } from '@/types/chatTypes';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_PAGE_SIZE } from '../constants';
 
 interface ICreateObservation {
   name: string;
@@ -29,7 +30,7 @@ export interface IGetObservationsParams {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   page?: number;
-  rowsPerPage?: number;
+  pageSize?: number;
   status?: string;
   startPeriod?: Date | undefined;
   finishPeriod?: Date | undefined;
@@ -140,7 +141,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
     finishPeriod,
     sortDirection = 'desc',
     page,
-    rowsPerPage = 6,
+    pageSize = DEFAULT_PAGE_SIZE,
   }: IGetObservationsParams): Promise<ObservationsResponse | void> => {
     try {
       setIsLoading(true);
@@ -152,7 +153,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
         status,
         sortDirection,
         page,
-        rowsPerPage,
+        pageSize,
         startPeriod,
         finishPeriod,
       });
@@ -176,7 +177,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
     finishPeriod,
     sortDirection = 'desc',
     // page = 1,
-    rowsPerPage = 100,
+    pageSize = 100,
   }: IGetObservationsParams): Promise<ObservationsResponse | void> => {
     try {
       setIsLoading(true);
@@ -187,7 +188,7 @@ export const useApiObservations = (): UseApiSignInReturn => {
         status,
         sortDirection,
         page: currentObservationPage,
-        rowsPerPage,
+        pageSize,
         startPeriod,
         finishPeriod,
       });
@@ -395,7 +396,7 @@ export const observationsApi = {
     finishPeriod,
     sortDirection = 'desc',
     page,
-    rowsPerPage = 6,
+    pageSize = DEFAULT_PAGE_SIZE,
   }: IGetObservationsParams): Promise<ObservationsResponse> {
     try {
       const response: AxiosResponse<ObservationsResponse> = await apiInstance({
@@ -407,7 +408,7 @@ export const observationsApi = {
           status,
           sortDirection,
           page: page,
-          rowsPerPage,
+          pageSize,
           startPeriod,
           finishPeriod,
         },
