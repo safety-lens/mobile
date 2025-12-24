@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useCallback, useRef, useState } from 'react';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import ScreenLayout from '@/components/screenLayout';
@@ -21,6 +21,7 @@ function ObservationList() {
   const listRef = useRef<FlashList<Observation>>(null);
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { data, refetch, isLoading } = useObservationsPaginatedQuery({
     page,
     limit: PAGE_SIZE,
@@ -46,6 +47,12 @@ function ObservationList() {
     setPage(newPage);
   }, []);
 
+  const refresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  }, [refetch]);
+
   return (
     <ScreenLayout>
       <ScreenTopNav
@@ -61,6 +68,7 @@ function ObservationList() {
         keyExtractor={keyExtractor}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         renderItem={renderItem}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={refresh} />}
         ListEmptyComponent={
           <View style={styles.noObservationsBox}>
             {isLoading ? (
@@ -74,7 +82,7 @@ function ObservationList() {
         }
         contentContainerStyle={styles.content}
       />
-      {data ? (
+      {data?.count ? (
         <Pagination
           currentPage={page}
           pageSize={PAGE_SIZE}
