@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/safety-lens/mobile/compare/v1.3.2...v1.3.3) (2025-12-24)
+
+
+### Bug Fixes
+
+* **create-observation:** use projects list from react-query to not mix up the cache ([f1b2ef5](https://github.com/safety-lens/mobile/commit/f1b2ef5cbf15da21608a4abe677d019b155a3ab7))
+* **obserrvations:** scroll back to the top on page switching ([d298912](https://github.com/safety-lens/mobile/commit/d2989125f9910f64018f4dce91534037447495e7))
+* **observations:** add react-query hooks for paginated and infinite data ([0e5786c](https://github.com/safety-lens/mobile/commit/0e5786c70b9915c216d89e0a896676caef184981))
+* **observations:** decrease limit per page ([b8a9332](https://github.com/safety-lens/mobile/commit/b8a933226c78f6ed82dd100f4474e148c747d0ac))
+* **observations:** fix pagination issue. connect react-query with observation list ([ab88370](https://github.com/safety-lens/mobile/commit/ab88370ab221053312357502ba7aa972f11701db))
+* **observations:** fix pull-to-refresh logic ([9304b94](https://github.com/safety-lens/mobile/commit/9304b949b43b9ef51964f9da9126ab17d87c3483))
+* **observations:** use modals from context. fix callbacks. reduce amount of excess requests ([ec0d397](https://github.com/safety-lens/mobile/commit/ec0d3971af362887bda7e8e72d6ab72b11e19c3e))
+* **projects:** separate observations cache. use react-query to manage observations data ([806894b](https://github.com/safety-lens/mobile/commit/806894b91e5c824cd0357fb28990fc0c40358de9))
+* **report:** change filters dropdown menu to modal. change nested dropdowns behavior ([25587b4](https://github.com/safety-lens/mobile/commit/25587b4b4d0cded861a320a0be3413938fd61629))
+
 ### [1.3.2](https://github.com/safety-lens/mobile/compare/v1.3.1...v1.3.2) (2025-12-18)
 
 
