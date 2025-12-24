@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import ScreenLayout from '@/components/screenLayout';
 import MyObservationCard, { APPROX_ITEM_HEIGHT } from '@/components/myObservationCard';
@@ -18,6 +18,7 @@ const PAGE_SIZE = 50;
 
 function ObservationList() {
   const router = useRouter();
+  const listRef = useRef<FlashList<Observation>>(null);
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const { data, refetch, isLoading } = useObservationsPaginatedQuery({
@@ -40,6 +41,11 @@ function ObservationList() {
     refetch();
   }, [refetch]);
 
+  const switchPage = useCallback((newPage: number) => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    setPage(newPage);
+  }, []);
+
   return (
     <ScreenLayout>
       <ScreenTopNav
@@ -49,6 +55,7 @@ function ObservationList() {
       />
 
       <FlashList
+        ref={listRef}
         estimatedItemSize={APPROX_ITEM_HEIGHT}
         data={data?.observations}
         keyExtractor={keyExtractor}
@@ -72,7 +79,7 @@ function ObservationList() {
           currentPage={page}
           pageSize={PAGE_SIZE}
           count={data?.count}
-          onPageChange={setPage}
+          onPageChange={switchPage}
         />
       ) : null}
       <ObservationActionModals onUpdateObservation={refreshPage} />
