@@ -7,6 +7,7 @@ import { useObservations } from '@/context/observationProvider';
 import Toast from 'react-native-toast-message';
 import { IStartChat, ChatResponse, IConversationIdResponse } from '@/types/chatTypes';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_PAGE_SIZE } from '../constants';
 
 interface ICreateObservation {
   name: string;
@@ -23,13 +24,13 @@ interface ICreateObservation {
   contractor?: string;
   subContractor?: string;
 }
-interface IGetAllObservations {
+export interface IGetObservationsParams {
   projectId?: string;
   searchQuery?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   page?: number;
-  rowsPerPage?: number;
+  pageSize?: number;
   status?: string;
   startPeriod?: Date | undefined;
   finishPeriod?: Date | undefined;
@@ -65,9 +66,11 @@ interface IGetConversationId {
 
 interface UseApiSignInReturn {
   createObservation: (data: ICreateObservation) => Promise<void>;
-  getAllObservations: (data: IGetAllObservations) => Promise<ObservationsResponse | void>;
+  getAllObservations: (
+    data: IGetObservationsParams
+  ) => Promise<ObservationsResponse | void>;
   getFilterObservations: (
-    data: IGetAllObservations
+    data: IGetObservationsParams
   ) => Promise<ObservationsResponse | void>;
   deleteObservation: (data: IRemoveObservation) => Promise<void>;
   updateObservations: (data: IUpdateObservation) => Promise<IProjectCart | void>;
@@ -138,28 +141,25 @@ export const useApiObservations = (): UseApiSignInReturn => {
     finishPeriod,
     sortDirection = 'desc',
     page,
-    rowsPerPage = 6,
-  }: IGetAllObservations): Promise<ObservationsResponse | void> => {
+    pageSize = DEFAULT_PAGE_SIZE,
+  }: IGetObservationsParams): Promise<ObservationsResponse | void> => {
     try {
       setIsLoading(true);
       setError(null);
-      const response: AxiosResponse<ObservationsResponse> = await apiInstance({
-        method: 'get',
-        url: '/observations',
-        params: {
-          projectId,
-          sortBy,
-          status,
-          sortDirection,
-          page: page || currentObservationPage,
-          rowsPerPage,
-          startPeriod,
-          finishPeriod,
-        },
+
+      const data = await observationsApi.getObservations({
+        projectId,
+        sortBy,
+        status,
+        sortDirection,
+        page,
+        pageSize,
+        startPeriod,
+        finishPeriod,
       });
 
-      if (response.data) {
-        setObservation(response.data);
+      if (data) {
+        setObservation(data);
       }
     } catch (e: any) {
       handelError(e.response.data.message || 'Fetch error observations');
@@ -177,28 +177,24 @@ export const useApiObservations = (): UseApiSignInReturn => {
     finishPeriod,
     sortDirection = 'desc',
     // page = 1,
-    rowsPerPage = 100,
-  }: IGetAllObservations): Promise<ObservationsResponse | void> => {
+    pageSize = 100,
+  }: IGetObservationsParams): Promise<ObservationsResponse | void> => {
     try {
       setIsLoading(true);
       setError(null);
-      const response: AxiosResponse<ObservationsResponse> = await apiInstance({
-        method: 'get',
-        url: '/observations',
-        params: {
-          projectId,
-          sortBy,
-          status,
-          sortDirection,
-          page: currentObservationPage,
-          rowsPerPage,
-          startPeriod,
-          finishPeriod,
-        },
+      const data = await observationsApi.getObservations({
+        projectId,
+        sortBy,
+        status,
+        sortDirection,
+        page: currentObservationPage,
+        pageSize,
+        startPeriod,
+        finishPeriod,
       });
 
-      if (response.data) {
-        setSingleObservation(response.data);
+      if (data) {
+        setSingleObservation(data); // why setSingleObservation? it is the same list as in getAllObservations
       }
     } catch (e: any) {
       handelError(e.response.data.message || 'error getFilterObservations');
@@ -389,4 +385,38 @@ export const useApiObservations = (): UseApiSignInReturn => {
     isLoading,
     error,
   };
+};
+
+export const observationsApi = {
+  async getObservations({
+    projectId,
+    sortBy = 'createdAt',
+    status,
+    startPeriod,
+    finishPeriod,
+    sortDirection = 'desc',
+    page,
+    pageSize = DEFAULT_PAGE_SIZE,
+  }: IGetObservationsParams): Promise<ObservationsResponse> {
+    try {
+      const response: AxiosResponse<ObservationsResponse> = await apiInstance({
+        method: 'get',
+        url: '/observations',
+        params: {
+          projectId,
+          sortBy,
+          status,
+          sortDirection,
+          page: page,
+          pageSize,
+          startPeriod,
+          finishPeriod,
+        },
+      });
+
+      return response.data;
+    } catch (e: any) {
+      throw new Error(e.response.data.message);
+    }
+  },
 };

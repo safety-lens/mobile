@@ -1,273 +1,137 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Menu } from 'react-native-paper';
 import { Colors } from '@/constants/Colors';
-import RenameObservation from '../admin/modals/renameObservation';
-import RemoveObservation from '../admin/modals/removeObservation';
-import { Observation } from '@/types/observation';
-import ChangeStatus from '../admin/modals/changeStatus';
 import { useTranslation } from 'react-i18next';
-import EditComment from '../admin/modals/editComment';
-import ChangeAssignee from '../admin/modals/changeAssignee';
-import ChangeDeadline from '../admin/modals/changeDeadline';
 import useGetUserInfo from '@/hooks/getUserInfo';
-import ChangeCategories from '../admin/modals/changeCategories';
-import { useApiObservations } from '@/axios/api/observations';
 import { useSubscription } from '@/context/SubscriptionProvider';
+import useModal from '@/hooks/useModal';
+import { useObservationActionModals } from '@/context/ObservationActionModalsProvider';
+import { Observation } from '@/types/observation';
 
-interface IObservationsCard {
+type Props = {
   observation: Observation;
-  observationId?: string;
-  returnSameStatus?: boolean;
-}
+  onClose?: () => void;
+};
 
-export default function ObservationAction({
-  observation,
-  observationId,
-  returnSameStatus = false,
-}: IObservationsCard) {
+export default function ObservationAction({ observation, onClose }: Props) {
   const { t } = useTranslation();
-  const { getFilterObservations } = useApiObservations();
   const { hasSubscriptionFeature } = useSubscription();
-
   const { isAdmin } = useGetUserInfo();
 
-  const [visibleMenu, setVisibleMenu] = useState(false);
+  const menu = useModal();
 
-  const [visibleRename, setVisibleRename] = useState(false);
-  const [removeModal, setRemoveModal] = useState(false);
-  const [visibleChangeStatus, setVisibleChangeStatus] = useState(false);
-  const [visibleEditComment, setVisibleEditComment] = useState(false);
-  const [visibleChangeAssignee, setVisibleChangeAssignee] = useState(false);
-  const [visibleChangeDeadline, setVisibleChangeDeadline] = useState(false);
-  const [visibleChangeCategories, setVisibleChangeCategories] = useState(false);
-  const openVisibleMenu = () => {
-    setVisibleMenu(!visibleMenu);
-  };
+  const {
+    renameModal,
+    removeModal,
+    changeStatusModal,
+    editCommentModal,
+    changeAssigneeModal,
+    changeDeadlineModal,
+    changeCategoriesModal,
+    setObservation,
+  } = useObservationActionModals();
 
-  const openChangeStatus = () => {
-    setVisibleChangeStatus(!visibleChangeStatus);
-    setVisibleMenu(false);
-  };
+  const handleChangeStatusPress = useCallback(() => {
+    setObservation(observation);
+    changeStatusModal.show();
+    menu.hide();
+  }, [changeStatusModal, menu, observation, setObservation]);
 
-  const showRenameModal = () => {
-    setVisibleRename(!visibleRename);
-    setVisibleMenu(false);
-  };
+  const handleRenamePress = useCallback(() => {
+    setObservation(observation);
+    renameModal.show();
+    menu.hide();
+  }, [observation, setObservation, renameModal, menu]);
 
-  const showRemoveModal = () => {
-    setRemoveModal(!removeModal);
-    setVisibleMenu(false);
-  };
+  const handleRemovePress = useCallback(() => {
+    setObservation(observation);
+    removeModal.show();
+    menu.hide();
+  }, [observation, setObservation, removeModal, menu]);
 
-  const showEditCommentModal = () => {
-    setVisibleEditComment(!visibleEditComment);
-    setVisibleMenu(false);
-  };
+  const handleEditCommentPress = useCallback(() => {
+    setObservation(observation);
+    editCommentModal.show();
+    menu.hide();
+  }, [editCommentModal, menu, observation, setObservation]);
 
-  const showChangeAssignee = () => {
-    setVisibleChangeAssignee(!visibleChangeAssignee);
-    setVisibleMenu(false);
-  };
+  const handleChangeAssigneePress = useCallback(() => {
+    setObservation(observation);
+    changeAssigneeModal.show();
+    menu.hide();
+  }, [changeAssigneeModal, menu, observation, setObservation]);
 
-  const showChangeDeadline = () => {
-    setVisibleChangeDeadline(!visibleChangeDeadline);
-    setVisibleMenu(false);
-  };
+  const handleChangeDeadlinePress = useCallback(() => {
+    setObservation(observation);
+    changeDeadlineModal.show();
+    menu.hide();
+  }, [changeDeadlineModal, menu, observation, setObservation]);
 
-  const showChangeCategories = () => {
-    setVisibleChangeCategories(!visibleChangeCategories);
-    setVisibleMenu(false);
-  };
-
-  const onUpdateCategories = useCallback(() => {
-    getFilterObservations({
-      status: observation.status,
-      projectId: observation.projectId,
-    });
-  }, [getFilterObservations, observation.projectId, observation.status]);
+  const handleChangeCategoriesPress = useCallback(() => {
+    setObservation(observation);
+    changeCategoriesModal.show();
+    menu.hide();
+  }, [changeCategoriesModal, menu, observation, setObservation]);
 
   return (
     <View>
       <Menu
         contentStyle={styles.menuContentStyle}
         style={styles.menu}
-        visible={visibleMenu}
-        onDismiss={openVisibleMenu}
+        visible={menu.isVisible}
+        onDismiss={menu.hide}
         anchor={
-          <TouchableOpacity onPress={openVisibleMenu} style={styles.dotsBox}>
+          <TouchableOpacity onPress={menu.toggle} style={styles.dotsBox}>
             <Text style={styles.dots}>...</Text>
           </TouchableOpacity>
         }
       >
         <Menu.Item
           titleStyle={styles.menuItem}
-          onPress={showRenameModal}
+          onPress={handleRenamePress}
           title={t('rename')}
         />
         <Menu.Item
           titleStyle={styles.menuItem}
-          onPress={showEditCommentModal}
+          onPress={handleEditCommentPress}
           title={t('editComment')}
         />
         <Menu.Item
           titleStyle={styles.menuItem}
-          onPress={openChangeStatus}
+          onPress={handleChangeStatusPress}
           title={t('changeStatus')}
         />
         {hasSubscriptionFeature('teamInvitations') && isAdmin && (
           <Menu.Item
             titleStyle={styles.menuItem}
-            onPress={showChangeDeadline}
+            onPress={handleChangeDeadlinePress}
             title={t('changeDeadline')}
           />
         )}
         <Menu.Item
           title={t('changeCategories')}
           titleStyle={styles.menuItem}
-          onPress={showChangeCategories}
+          onPress={handleChangeCategoriesPress}
         />
         {hasSubscriptionFeature('teamInvitations') && (
           <Menu.Item
             title={t('changeAssignee')}
             titleStyle={styles.menuItem}
-            onPress={showChangeAssignee}
+            onPress={handleChangeAssigneePress}
           />
         )}
         <Menu.Item
           titleStyle={styles.menuItem}
-          onPress={showRemoveModal}
+          onPress={handleRemovePress}
           title={t('delete')}
         />
       </Menu>
-
-      <ChangeStatus
-        currentStatus={observation.status}
-        observationId={observation._id}
-        visible={visibleChangeStatus}
-        hideModal={openChangeStatus}
-        returnSameStatus={returnSameStatus ? observation : false}
-      />
-      <RenameObservation
-        selectedStatus={observation.status}
-        projectId={observationId}
-        observationId={observation._id}
-        value={observation.name}
-        title={t('renameObservation')}
-        visible={visibleRename}
-        hideModal={showRenameModal}
-      />
-      {hasSubscriptionFeature('teamInvitations') && (
-        <ChangeAssignee
-          id={observationId}
-          observationId={observation._id}
-          title={t('changeAssignee')}
-          visible={visibleChangeAssignee}
-          hideModal={showChangeAssignee}
-          selectedStatus={observation.status}
-          projectId={observationId}
-          defaultValue={observation.assignees || []}
-        />
-      )}
-      {hasSubscriptionFeature('teamInvitations') && (
-        <ChangeDeadline
-          projectId={observationId}
-          observationId={observation._id}
-          title={t('changeDeadline')}
-          visible={visibleChangeDeadline}
-          hideModal={showChangeDeadline}
-          defaultValue={observation.deadline || new Date()}
-        />
-      )}
-      <EditComment
-        selectedStatus={observation.status}
-        projectId={observationId}
-        observationId={observation._id}
-        value={observation.locationComment}
-        title={t('editComment')}
-        visible={visibleEditComment}
-        hideModal={showEditCommentModal}
-      />
-      <ChangeCategories
-        observationId={observation._id}
-        visible={visibleChangeCategories}
-        hideModal={showChangeCategories}
-        onUpdate={onUpdateCategories}
-        defaultValue={observation.categories?.map((item) => item.name) || []}
-      />
-
-      <RemoveObservation
-        observationId={observation._id}
-        observationName={`${observation.name || ''}`}
-        title={t('deleteObservation')}
-        visible={removeModal}
-        hideModal={showRemoveModal}
-        returnSameStatus={returnSameStatus ? observation : false}
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cardBox: {
-    borderColor: '#EBEBEB',
-    borderWidth: 1,
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 24,
-  },
-  statusBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  statusBoxLeft: {
-    gap: 8,
-    flexDirection: 'row',
-  },
-  statusDot: {
-    width: 16,
-    height: 16,
-    borderRadius: 100,
-  },
-  statusString: {
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 17,
-    color: Colors.light.text,
-  },
-  observationDate: {
-    marginTop: 8,
-    fontSize: 16,
-    fontWeight: '500',
-    color: Colors.light.gray,
-  },
-  observationMain: {
-    marginTop: 24,
-    gap: 8,
-  },
-  observationTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: Colors.light.text,
-  },
-  observationBody: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: Colors.light.text,
-  },
-  changeStatusButton: {
-    marginTop: 32,
-  },
-  addressed: {
-    backgroundColor: '#2C875D',
-  },
-  inProgress: {
-    backgroundColor: '#FFBF00',
-  },
-  notAddressed: {
-    backgroundColor: '#FF0D31',
-  },
-
   dotsBox: {
     paddingHorizontal: 10,
   },

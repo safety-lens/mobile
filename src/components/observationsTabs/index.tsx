@@ -3,20 +3,20 @@ import React from 'react';
 import { router } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { statusTitleText } from '@/utils/statusTitle';
-import { useObservations } from '@/context/observationProvider';
 import { useTranslation } from 'react-i18next';
 import { IStatus } from '@/types/observation';
 
 interface IObservationStatusCard {
   status: IStatus;
+  count: number;
   active: string;
 }
 
 export default function ObservationsTabs({
   status = 'notAddressed',
+  count,
   active,
 }: IObservationStatusCard) {
-  const { singleObservation } = useObservations();
   const { t } = useTranslation();
 
   const push = () => {
@@ -33,7 +33,7 @@ export default function ObservationsTabs({
       <View style={styles.statusBox}>
         <View style={[styles.statusDot, styles[status]]} />
         <Text style={styles.statusString}>{statusTitleText(t)[status]}</Text>
-        <Text style={styles.statusNumber}>{singleObservation?.[`${status}Count`]}</Text>
+        <Text style={styles.statusNumber}>{count}</Text>
       </View>
     </TouchableOpacity>
   );

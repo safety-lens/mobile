@@ -8,7 +8,20 @@ import ObservationAction from '../observationAction';
 interface IMyObservationCard {
   observation: Observation;
   isActions?: boolean;
+  onRenamePress?: () => void;
+  onEditCommentPress?: () => void;
+  onChangeStatusPress?: () => void;
+  onChangeDeadlinePress?: () => void;
+  onChangeAssigneePress?: () => void;
+  onChangeCategoriesPress?: () => void;
+  onRemovePress?: () => void;
 }
+
+const PADDING = 16;
+const LINE_HEIGHT = 20;
+const GAP = 4;
+
+export const APPROX_ITEM_HEIGHT = PADDING * 2 + LINE_HEIGHT * 2 + GAP;
 
 export default function MyObservationCard({
   observation,
@@ -16,8 +29,8 @@ export default function MyObservationCard({
 }: IMyObservationCard) {
   if (!observation) return;
   return (
-    <View style={styles.observationBox}>
-      <View>
+    <View style={styles.container}>
+      <View style={styles.wrapper}>
         <Text style={styles.observationId}>{observation.name || 'not found'}</Text>
         <Text style={styles.createdAt}>{dateFormat(observation.createdAt)}</Text>
       </View>
@@ -27,8 +40,7 @@ export default function MyObservationCard({
 }
 
 const styles = StyleSheet.create({
-  observationBox: {
-    gap: 8,
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -38,20 +50,19 @@ const styles = StyleSheet.create({
     borderColor: '#D0D5DD',
     backgroundColor: '#F3F4F5',
   },
+  wrapper: {
+    gap: GAP,
+  },
   observationId: {
     fontSize: 16,
+    lineHeight: 20,
     fontWeight: '500',
     color: Colors.light.text,
   },
   createdAt: {
     color: '#6D7176',
     fontSize: 16,
+    lineHeight: 20,
     fontWeight: '500',
-  },
-  dots: {
-    fontWeight: '900',
-    fontSize: 30,
-    marginTop: -18,
-    color: Colors.light.text,
   },
 });

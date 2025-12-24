@@ -5,9 +5,6 @@ import CustomButton from '@/components/CustomButton/button';
 import IconClose from '../../../../assets/svgs/iconClose';
 import { useApiObservations } from '@/axios/api/observations';
 import { useTranslation } from 'react-i18next';
-import { Observation } from '@/types/observation';
-import { useSegments } from 'expo-router';
-import { useObservations } from '@/context/observationProvider';
 import Toast from 'react-native-toast-message';
 
 interface IRemoveObservation {
@@ -16,7 +13,7 @@ interface IRemoveObservation {
   title?: string;
   observationName?: string;
   observationId: string;
-  returnSameStatus: Observation | boolean;
+  onUpdate?: () => void;
 }
 
 export default function RemoveObservation({
@@ -25,19 +22,10 @@ export default function RemoveObservation({
   title,
   observationName,
   observationId,
-  returnSameStatus,
+  onUpdate,
 }: IRemoveObservation) {
-  const { currentObservationPage } = useObservations();
-  const { deleteObservation, getAllObservations, getFilterObservations } =
-    useApiObservations();
+  const { deleteObservation } = useApiObservations();
   const { t } = useTranslation();
-  const segments = useSegments();
-
-  //check user rout for correct delete logic
-  const isObservationList =
-    segments[segments.length - 1] === 'observationList'
-      ? currentObservationPage
-      : undefined;
 
   const onSubmit = async () => {
     await deleteObservation({ observationId })
@@ -47,15 +35,7 @@ export default function RemoveObservation({
           text1: t('success'),
           text2: t('observationDeleted'),
         });
-        if (returnSameStatus as Observation) {
-          // await new Promise((resolve) => setTimeout(resolve, 100));
-          await getFilterObservations({
-            status: (returnSameStatus as Observation).status,
-            projectId: (returnSameStatus as Observation).projectId,
-          });
-        } else {
-          await getAllObservations({ page: isObservationList });
-        }
+        onUpdate && onUpdate();
       })
       .finally(() => hideModal());
   };

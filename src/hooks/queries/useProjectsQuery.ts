@@ -1,4 +1,4 @@
-import { IGetAllProject, projectsApi, useApiProject } from '@/axios/api/projects';
+import { IGetAllProject, projectsApi } from '@/axios/api/projects';
 import { IGetProjects } from '@/types/project';
 import { createGetNextPageParam } from '@/utils/query';
 import {
@@ -75,9 +75,10 @@ function useProjectsQuery<T = InfiniteData<IGetProjects>>({
   limit = PROJECTS_DEFAULT_LIMIT,
   select,
   enabled = true,
+  ...rest
 }: ProjectsQueryProps<T> = defaultProps) {
   return useInfiniteQuery({
-    queryKey: projectsKeys.default({ limit }),
+    queryKey: projectsKeys.default({ limit, ...rest }),
     queryFn,
     getNextPageParam: createGetNextPageParam(limit),
     initialPageParam: 1,

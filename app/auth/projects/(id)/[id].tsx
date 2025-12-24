@@ -9,35 +9,34 @@ import ProjectAction from '@/components/admin/projectAction';
 import ProjectDropdown from '@/components/projectDropdown';
 import { useApiProject } from '@/axios/api/projects';
 import { useProjects } from '@/context/projectsProvider';
-import { useApiObservations } from '@/axios/api/observations';
 import { useObservations } from '@/context/observationProvider';
 import Skeleton from '@/components/skeleton';
 import { useTranslation } from 'react-i18next';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import SLLogo from '../../../../assets/svgs/SLlogo';
 import { useApiSignIn } from '@/axios/api/auth';
+import useObservationsPaginatedQuery from '@/hooks/queries/useObservationsPaginatedQuery';
 
 const ProjectId = memo(function ProjectId() {
   const { t } = useTranslation();
   const { saveLastVisitedProject } = useApiSignIn();
   const { id } = useLocalSearchParams();
   const { getSingleProject, isLoading } = useApiProject();
-  const { getAllObservations } = useApiObservations();
   const { singleProjects, setSingleProject } = useProjects();
-  const { observation, setObservation } = useObservations();
+  const { setObservation } = useObservations();
   const { isAdmin, user } = useGetUserInfo();
+  const observationsQuery = useObservationsPaginatedQuery({
+    page: 1,
+    limit: 1000, // TODO: Need to have lightweight endpoint to get only points and counters
+    projectId: singleProjects?.id as string,
+  });
 
   const [refreshing, setRefreshing] = useState(false);
 
   const searchProject = async () => {
     if (id) {
-      const singleProject = await getSingleProject({
+      await getSingleProject({
         id: id as string,
-      });
-      await getAllObservations({
-        projectId: singleProject?.id as string,
-        page: 1,
-        rowsPerPage: 1000,
       });
     }
   };
@@ -99,7 +98,7 @@ const ProjectId = memo(function ProjectId() {
           <PinOnMap
             editable={false}
             imageMap={singleProjects?.mainPhoto}
-            observations={observation.observations}
+            observations={observationsQuery.data?.observations || []}
           />
         </View>
 
@@ -109,17 +108,17 @@ const ProjectId = memo(function ProjectId() {
           <ObservationStatusCard
             id={id as string}
             status="addressed"
-            number={observation.addressedCount}
+            number={observationsQuery.data?.addressedCount || 0}
           />
           <ObservationStatusCard
             id={id as string}
             status="inProgress"
-            number={observation.inProgressCount}
+            number={observationsQuery.data?.inProgressCount || 0}
           />
           <ObservationStatusCard
             id={id as string}
             status="notAddressed"
-            number={observation.notAddressedCount}
+            number={observationsQuery.data?.notAddressedCount || 0}
           />
         </View>
       </ScrollView>
