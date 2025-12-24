@@ -69,9 +69,10 @@ function useObservationsPaginatedQuery<T = ObservationsResponse>({
   page,
   select,
   enabled = true,
+  ...rest
 }: ObservationsQueryProps<T> = defaultProps) {
   return useQuery({
-    queryKey: observationsKeys.default({ page, limit }),
+    queryKey: observationsKeys.default({ page, limit, ...rest }),
     queryFn: getObservations,
     select,
     enabled,

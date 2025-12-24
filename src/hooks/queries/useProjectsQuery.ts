@@ -1,4 +1,4 @@
-import { IGetAllProject, projectsApi, useApiProject } from '@/axios/api/projects';
+import { IGetAllProject, projectsApi } from '@/axios/api/projects';
 import { IGetProjects } from '@/types/project';
 import { createGetNextPageParam } from '@/utils/query';
 import {

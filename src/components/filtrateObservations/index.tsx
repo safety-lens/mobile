@@ -9,17 +9,26 @@ import { useTranslation } from 'react-i18next';
 import useGetUserInfo from '@/hooks/getUserInfo';
 import IconClose from '../../../assets/svgs/iconClose';
 
-export interface DareRange {
+export interface RangeParams {
   startPeriod: undefined | Date;
   finishPeriod: undefined | Date;
 }
+
 interface FiltrateObservations {
-  onRange: ({ startPeriod, finishPeriod }: DareRange) => void;
+  onRange: ({ startPeriod, finishPeriod }: RangeParams) => void;
 }
+
+export type DateRange = {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+};
 
 export default function FiltrateObservations({ onRange }: FiltrateObservations) {
   const { t } = useTranslation();
-  const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
+  const [range, setRange] = useState<DateRange>({
+    startDate: undefined,
+    endDate: undefined,
+  });
   const [open, setOpen] = useState(false);
   const { lang, refreshUserInfo } = useGetUserInfo();
 
@@ -27,27 +36,26 @@ export default function FiltrateObservations({ onRange }: FiltrateObservations) 
     setOpen(false);
   }, [setOpen]);
 
-   
-  const onConfirm = ({ startDate, endDate }: any) => {
-    const dateE = new Date(endDate);
-    dateE.setDate(dateE.getDate() + 1);
+  const onConfirm = ({ startDate, endDate }: DateRange) => {
+    const dateTo = new Date(endDate || '');
+    const dateFrom = new Date(startDate || '');
 
-    const dateS = new Date(endDate);
-    dateS.setDate(dateS.getDate() - 1);
+    dateTo.setHours(23, 59, 59, 999);
+    dateFrom.setHours(0, 0, 0, 0);
 
     setOpen(false);
-    setRange({ startDate, endDate });
-    if (isNaN(dateS as unknown as number)) {
+    setRange({ startDate: dateFrom, endDate: dateTo });
+    if (!dateFrom) {
       onRange({ startPeriod: undefined, finishPeriod: undefined });
     } else {
-      onRange({ startPeriod: dateS, finishPeriod: dateE });
+      onRange({ startPeriod: dateFrom, finishPeriod: dateTo });
     }
   };
 
   const clearData = () => {
     onConfirm({
-      startPeriod: undefined,
-      finishPeriod: undefined,
+      startDate: undefined,
+      endDate: undefined,
     });
   };
 

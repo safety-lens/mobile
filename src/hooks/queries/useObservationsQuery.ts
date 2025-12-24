@@ -71,9 +71,10 @@ function useObservationsQuery<T = InfiniteData<ObservationsResponse>>({
   limit = OBSERVATIONS_DEFAULT_LIMIT,
   select,
   enabled = true,
+  ...rest
 }: ObservationsQueryProps<T> = defaultProps) {
   return useInfiniteQuery({
-    queryKey: observationsKeys.default({ limit }),
+    queryKey: observationsKeys.default({ limit, ...rest }),
     queryFn: getObservations,
     getNextPageParam: createGetNextPageParam(limit),
     initialPageParam: 1,
